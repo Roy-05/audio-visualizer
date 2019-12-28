@@ -3,8 +3,15 @@
     <head>
         <title>Audio Visualizer</title>
         <script type = "text/javascript" src = "js/audio.js" defer></script>
+        <link rel = "stylesheet" src = "audio.css">
     </head>
     <body>
+        <canvas id ="canvas" width="600" height = "200"></canvas>
         <audio src="tb.mp3" type = "audio/mpeg"></audio>
+        <div id= "button-container">
+            <button data-playing = "false" role="switch" aria-checked="false">
+                <span>Play/Pause</span>
+            </button>
+        </div>
     </body>
 </html>
