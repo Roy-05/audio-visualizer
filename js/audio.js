@@ -9,6 +9,18 @@ let drawVisual,
     HEIGHT = canvas.height,
     analyser = audioCtx.createAnalyser();
 
+/**
+ * minDecibels and maxDecibels are double values to scale FFT data
+ * 0 dB is loudest possible sound. 
+ * -100dB is the default value for mindB -30dB is the default value for maxdB
+ * smoothingTimeConstraint represents an average between the current buffer and the last buffer 
+ * the AnalyserNode processed, rsulting in a smoother set of value changes. Default: 0.8
+ * Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
+ */
+
+analyser.minDecibels = -90;
+analyser.maxDecibels = -10;
+analyser.smoothingTimeConstraint = 0.85;
 
 //Create canvas
 const canvasCtx = canvas.getContext('2d');
@@ -18,33 +30,6 @@ canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 const source = audioCtx.createMediaElementSource(audioElem);
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
-
-
-//Add the Play/Pause Functionality
-playButton.addEventListener('click', ()=>{
-
-    //Chrome policy: suspended state = Autoplay is denied
-    //Need to resume audioCtx initially
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-
-    //PLAY/PAUSE based on current state
-    if (playButton.dataset.playing === 'false') {
-        audioElem.play();
-        playButton.dataset.playing =  'true';
-        visualize()
-    }
-    else if (playButton.dataset.playing === 'true') {
-        audioElem.pause();
-        playButton.dataset.playing =  'false';  
-    }
-}, false);
-
-
-audioElem.addEventListener('ended', ()=> {
-    playButton.dataset.playing = 'false';
-}, false);
 
 
 function visualize() {
@@ -82,3 +67,31 @@ function visualize() {
 
     draw();
 }
+
+
+//Add the Play/Pause Functionality
+playButton.addEventListener('click', ()=>{
+
+    //Chrome policy: suspended state = Autoplay is denied
+    //Need to resume audioCtx initially
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    //PLAY/PAUSE based on current state
+    if (playButton.dataset.playing === 'false') {
+        audioElem.play();
+        playButton.dataset.playing =  'true';
+        visualize()
+    }
+    else if (playButton.dataset.playing === 'true') {
+        audioElem.pause();
+        playButton.dataset.playing =  'false';  
+    }
+}, false);
+
+
+audioElem.addEventListener('ended', ()=> {
+    playButton.dataset.playing = 'false';
+}, false);
+
