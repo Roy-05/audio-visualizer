@@ -46,19 +46,19 @@ function visualize() {
         drawVisual = requestAnimationFrame(draw);
 
         analyser.getByteFrequencyData(dataArray);
-        console.log(dataArray);
 
         canvasCtx.fillStyle = 'rgb(0, 0, 0)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        let barWidth = (WIDTH/bufferLength) * 2.5,
+        let barWidth = (WIDTH/bufferLength) * 2.25,
             barHeight,
-            x = 0;
-        
-        for(let i = 0; i<bufferLength; i++) {
+            x = 2,
+            numOfBars = Math.ceil(WIDTH/(barWidth+1));
+
+        for(let i = 0; i<numOfBars; i++) {
             barHeight = dataArray[i];
             
-            canvasCtx.fillStyle = 'rgb(' + (barHeight+100) + ', 50, 50)';
+            canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; //Color Gradient red -> yellow
             canvasCtx.fillRect(x, HEIGHT - barHeight/2, barWidth, barHeight/2);
             
             x += barWidth + 1;
