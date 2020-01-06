@@ -66,7 +66,6 @@ function visualize() {
         barWidth = barWidth < 15 ? barWidth : 15;
 
         let numOfBars = Math.floor(WIDTH/(barWidth+1)),
-            x = Math.floor((WIDTH - (barWidth+1)*numOfBars)/2), //dynamically assign starting position
             points = [],
             degree = 315;
 
@@ -79,7 +78,7 @@ function visualize() {
         degree = 225;
         for(let i = 0; i<numOfBars; i++) {
             barHeight = Math.floor((dataArray[i]/255) * 200); //scale heights
-
+            barHeight = barHeight > 0 ? barHeight : 4;
             canvasCtx.save();
             canvasCtx.translate(points[i][0], points[i][1]);
             canvasCtx.rotate(degree*Math.PI/180);
@@ -146,25 +145,24 @@ audioElem.addEventListener('ended', ()=> {
  * by Juan Mendes. Edited by Me for the specific use-case.
  * 
  * Draws a rounded rectangle using the current state of the canvas.
- * If you omit the last three params, it will draw a rectangle
- * outline with a 5 pixel border radius
  * @param {CanvasRenderingContext2D} ctx
  * @param {Number} x The top left x coordinate
  * @param {Number} y The top left y coordinate
  * @param {Number} width The width of the rectangle
  * @param {Number} height The height of the rectangle
- * @param {Number} [radius = 5] The corner radius; It can also be an object 
- *                 to specify different radii for corners
+ * @param {Number} radius The corner radius
  * @param {Number} [radius.tl = 0] Top left
  * @param {Number} [radius.tr = 0] Top right
  * @param {Number} [radius.br = 0] Bottom right
  * @param {Number} [radius.bl = 0] Bottom left
- * @param {Boolean} [fill = false] Whether to fill the rectangle.
  */ 
-function roundRect(ctx, x, y, width, height, radius, fill) {
-    
+function roundRect(ctx, x, y, width, height, radius) {
+
+    if(height < 5){
+        radius = 2;
+    }
+
     radius = {tl: radius, tr: radius, br: radius, bl: radius};
-    
     ctx.beginPath();
     ctx.moveTo(x + radius.tl, y);
     ctx.lineTo(x + width - radius.tr, y);
