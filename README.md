@@ -8,7 +8,8 @@ A simple web app to visualize sound using the FFT ([Fast Fourier Transform](http
 - [ ] CSS tasks:  
     * ~Format Audio Bar heights~  
     * ~Format Canvas Size and position in middle of the screen~  
-    * Add background, button CSS and general improvements  
-    * Make canvas size and no. of Audio Bars responsive  
+    * ~Make canvas size and no. of Audio Bars responsive~
+    * Add transition effect on pause for audio bars  
+    * Add background, button CSS and general improvements    
 
 - [ ] Convert horizontal visualization into circular
