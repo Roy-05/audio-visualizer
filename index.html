@@ -3,7 +3,7 @@
     <head>
         <title>Audio Visualizer</title>
         <script type = "text/javascript" src = "js/audio.js" defer></script>
-        <link rel = "stylesheet" src = "audio.css">
+        <link rel = "stylesheet" type = "text/css" href = "audio.css">
         <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
@@ -13,12 +13,14 @@
         <meta name="theme-color" content="#000000">
     </head>
     <body>
-        <canvas id ="canvas" width="800" height = "155"></canvas>
-        <audio src="tb.mp3" type = "audio/mpeg"></audio>
-        <div id= "button-container">
-            <button data-playing = "false" role="switch" aria-checked="false">
-                <span>Play/Pause</span>
-            </button>
+        <div id = "canvas-container">
+            <canvas id ="canvas" height = "155"></canvas>
+            <div id= "button-container">
+                <button data-playing = "false" role="switch" aria-checked="false">
+                    <span>Play/Pause</span>
+                </button>
+            </div>
         </div>
+        <audio src="tb.mp3" type = "audio/mpeg"></audio>
     </body>
 </html>

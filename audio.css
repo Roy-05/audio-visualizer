@@ -1,6 +1,13 @@
-/*
-canvas {
-    width: 500px;
-    height: 200px;
+html, body {
+    margin: 0;
+    padding: 0;
 }
-*/
+
+#canvas-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
