@@ -8,12 +8,14 @@ const canvas = document.getElementById("canvas"),
 
 let drawVisual,
     WIDTH,
-    HEIGHT;
+    HEIGHT,
+    numOfBars;
 
 //Initialize canvas
 window.addEventListener('DOMContentLoaded', ()=>{
     setCanvasSize();
     drawCanvas();
+    circle();
 });
 
 /**
@@ -24,20 +26,15 @@ window.addEventListener('DOMContentLoaded', ()=>{
  * the AnalyserNode processed, rsulting in a smoother set of value changes. Default: 0.8
  * Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
  */
-
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.88;
-
-//Create canvas
-
-canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
 const source = audioCtx.createMediaElementSource(audioElem);
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
 
+/*
 function visualize() {
 
     //Create Analyser Node to extract data from Audio Source
@@ -68,9 +65,9 @@ function visualize() {
             barWidth = Math.floor((WIDTH/bufferLength) * 2.25);
 
         barWidth = barWidth < 15 ? barWidth : 15;
-
-        let numOfBars = Math.floor(WIDTH/(barWidth+1)),
-            x = Math.floor((WIDTH - (barWidth+1)*numOfBars)/2); //dynamically assign starting position
+        numOfBars = Math.floor(WIDTH/(barWidth+1)),
+            
+        let x = Math.floor((WIDTH - (barWidth+1)*numOfBars)/2); //dynamically assign starting position
 
         for(let i = 0; i<numOfBars; i++) {
             barHeight = Math.floor((dataArray[i]/255) * 150); //scale heights
@@ -86,9 +83,11 @@ function visualize() {
     draw();
 
 }
+*/
 
 function setCanvasSize() {
     canvas.width =  window.innerWidth > 1000? 1000 : window.innerWidth;
+    canvas.height = 600
     WIDTH = canvas.width;
     HEIGHT = canvas.height;
 }
@@ -129,4 +128,35 @@ audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false';
     visualize()
 }, false);
+
+function circle() {
+    canvasCtx.beginPath();
+    canvasCtx.arc(WIDTH/2, HEIGHT/2,150, 0,2*Math.PI);
+    canvasCtx.strokeStyle ='white';
+    canvasCtx.stroke();
+    let points = [],
+        degree = 0;
+
+    for(let i =0; i<12; i++){
+        let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*150,HEIGHT/2+Math.sin(degree*Math.PI/180)*150];
+        points[i] = point;
+        degree += 30;
+    }
+
+    degree = 270;
+    console.log(points);
+
+    points.forEach(point => {
+        canvasCtx.save();
+
+        canvasCtx.translate(point[0], point[1]);
+        canvasCtx.rotate(degree*Math.PI/180);
+        canvasCtx.fillStyle = 'red';
+        canvasCtx.fillRect(0, 0, 10, 50);
+        degree+=30;
+        canvasCtx.restore();
+    });
+        
+}
+
 
