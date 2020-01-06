@@ -81,7 +81,7 @@ function visualize() {
 
         degree = 225;
         for(let i = 0; i<numOfBars; i++) {
-            barHeight = Math.floor((dataArray[i]/255) * 200); //scale heights
+            barHeight = Math.floor((dataArray[i]/255) * 140); //scale heights
             barHeight = barHeight > 0 ? barHeight : 4;
             canvasCtx.save();
             canvasCtx.translate(points[i][0], points[i][1]);
@@ -140,33 +140,6 @@ window.addEventListener('resize', ()=>{
     drawDefaultCanvas();
 });
 
-//Add the Play/Pause Functionality
-playButton.addEventListener('click', ()=>{
-
-    //Chrome policy: suspended state = Autoplay is denied
-    //Need to resume audioCtx initially
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-
-    //PLAY/PAUSE based on current state
-    if (playButton.dataset.playing === 'false') {
-        audioElem.play();
-        playButton.dataset.playing =  'true';
-        visualize()
-    }
-    else if (playButton.dataset.playing === 'true') {
-        audioElem.pause();
-        playButton.dataset.playing =  'false';  
-        visualize()
-    }
-}, false);
-
-audioElem.addEventListener('ended', ()=> {
-    playButton.dataset.playing = 'false';
-    visualize()
-}, false);
-
 /**
  * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
  * by Juan Mendes. Edited by Me for the specific use-case.
@@ -202,4 +175,31 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.quadraticCurveTo(x, y, x + radius.tl, y);
     ctx.closePath();
     ctx.fill();
-  }
+}
+
+//Add the Play/Pause Functionality
+playButton.addEventListener('click', ()=>{
+
+    //Chrome policy: suspended state = Autoplay is denied
+    //Need to resume audioCtx initially
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    //PLAY/PAUSE based on current state
+    if (playButton.dataset.playing === 'false') {
+        audioElem.play();
+        playButton.dataset.playing =  'true';
+        visualize()
+    }
+    else if (playButton.dataset.playing === 'true') {
+        audioElem.pause();
+        playButton.dataset.playing =  'false';  
+        visualize()
+    }
+}, false);
+
+audioElem.addEventListener('ended', ()=> {
+    playButton.dataset.playing = 'false'; 
+    visualize()
+}, false);
