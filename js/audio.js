@@ -3,11 +3,18 @@ const canvas = document.getElementById("canvas"),
     audioCtx = new (window.AudioContext || window.webkitAudioContext),
     audioElem = document.querySelector("audio"),
     playButton = document.querySelector("button"),
-    WIDTH = canvas.width;
-    HEIGHT = canvas.height,
-    analyser = audioCtx.createAnalyser();
+    analyser = audioCtx.createAnalyser(),
+    canvasCtx = canvas.getContext('2d');
 
-let drawVisual;
+let drawVisual,
+    WIDTH,
+    HEIGHT;
+
+//Initialize canvas
+window.addEventListener('DOMContentLoaded', ()=>{
+    setCanvasSize();
+    drawCanvas();
+});
 
 /**
  * minDecibels and maxDecibels are double values to scale FFT data
@@ -23,14 +30,13 @@ analyser.maxDecibels = -10;
 analyser.smoothingTimeConstant = 0.88;
 
 //Create canvas
-const canvasCtx = canvas.getContext('2d');
+
 canvasCtx.fillStyle = 'rgb(0, 0, 0)';
 canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
 const source = audioCtx.createMediaElementSource(audioElem);
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
-
 
 function visualize() {
 
@@ -81,6 +87,22 @@ function visualize() {
 
 }
 
+function setCanvasSize() {
+    canvas.width =  window.innerWidth > 1000? 1000 : window.innerWidth;
+    WIDTH = canvas.width;
+    HEIGHT = canvas.height;
+}
+
+function drawCanvas(){
+    canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+}
+
+window.addEventListener('resize', ()=>{
+    setCanvasSize();
+    drawCanvas();
+});
+
 //Add the Play/Pause Functionality
 playButton.addEventListener('click', ()=>{
 
@@ -102,7 +124,6 @@ playButton.addEventListener('click', ()=>{
         visualize()
     }
 }, false);
-
 
 audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false';
