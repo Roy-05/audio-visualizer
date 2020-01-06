@@ -15,7 +15,6 @@ let drawVisual,
 window.addEventListener('DOMContentLoaded', ()=>{
     setCanvasSize();
     drawCanvas();
-    //circle();
 });
 
 /**
@@ -69,7 +68,7 @@ function visualize() {
         let numOfBars = Math.floor(WIDTH/(barWidth+1)),
             x = Math.floor((WIDTH - (barWidth+1)*numOfBars)/2), //dynamically assign starting position
             points = [],
-            degree = 0;
+            degree = 315;
 
         for(let i =0; i<numOfBars; i++){
             let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*150,HEIGHT/2+Math.sin(degree*Math.PI/180)*150];
@@ -78,9 +77,11 @@ function visualize() {
     
         }
 
-        degree = 270;
+        console.log(points);
+
+        degree = 225;
         for(let i = 0; i<numOfBars; i++) {
-            barHeight = Math.floor((dataArray[i]/255) * 100); //scale heights
+            barHeight = Math.floor((dataArray[i]/255) * 200); //scale heights
 
             canvasCtx.save();
             canvasCtx.translate(points[i][0], points[i][1]);
@@ -99,8 +100,8 @@ function visualize() {
 
 
 function setCanvasSize() {
-    canvas.width =  window.innerWidth > 1000? 1000 : window.innerWidth;
-    canvas.height = 600
+    canvas.width =  window.innerWidth > 750? 750 : window.innerWidth;
+    canvas.height = window.innerHeight < 650 ? window.innerHeight : 650;
     WIDTH = canvas.width;
     HEIGHT = canvas.height;
 }
@@ -141,37 +142,3 @@ audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false';
     visualize()
 }, false);
-
-function circle() {
-    // canvasCtx.beginPath();
-    // canvasCtx.arc(WIDTH/2, HEIGHT/2,150, 0,2*Math.PI);
-    // canvasCtx.strokeStyle ='white';
-    // canvasCtx.stroke();
-    let points = [],
-        degree = 0;
-
-    let barWidth = Math.floor((WIDTH/128) * 2.25);
-    
-    numOfBars = Math.floor(WIDTH/(barWidth+1));
-
-    for(let i =0; i<numOfBars; i++){
-        let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*150,HEIGHT/2+Math.sin(degree*Math.PI/180)*150];
-        points[i] = point;
-        degree += 360/numOfBars;
-
-    }
-
-    degree = 270;
-    points.forEach(point => {
-        canvasCtx.save();
-        canvasCtx.translate(point[0], point[1]);
-        canvasCtx.rotate(degree*Math.PI/180);
-        canvasCtx.fillStyle = degree === 270? 'yellow' : 'red';
-        canvasCtx.fillRect(0, 0, 10, 50);
-        degree+=360/numOfBars;
-        canvasCtx.restore();
-    });
-        
-}
-
-
