@@ -20,7 +20,7 @@ let drawVisual;
 
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
-analyser.smoothingTimeConstant = 0.9;
+analyser.smoothingTimeConstant = 0.88;
 
 //Create canvas
 const canvasCtx = canvas.getContext('2d');
@@ -55,6 +55,7 @@ function visualize() {
     
         drawVisual = requestAnimationFrame(draw);
 
+        //Returns frequency data on a scale of 0-255
         analyser.getByteFrequencyData(dataArray);
 
         canvasCtx.fillStyle = 'rgb(0, 0, 0)';
@@ -65,9 +66,8 @@ function visualize() {
             x = 2,
             numOfBars = Math.ceil(WIDTH/(barWidth+1));
 
-        console.log(dataArray, numOfBars);
         for(let i = 0; i<numOfBars; i++) {
-            barHeight = dataArray[i];
+            barHeight = Math.floor((dataArray[i]/255) * 150); //scale heights
             
             //Color Gradient red -> yellow
             canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
