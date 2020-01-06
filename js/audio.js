@@ -137,23 +137,28 @@ function circle() {
     let points = [],
         degree = 0;
 
-    for(let i =0; i<12; i++){
+    let barWidth = Math.floor((WIDTH/128) * 2.25);
+    
+    numOfBars = Math.floor(WIDTH/(barWidth+1));
+
+    for(let i =1; i<=numOfBars; i++){
         let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*150,HEIGHT/2+Math.sin(degree*Math.PI/180)*150];
-        points[i] = point;
-        degree += 30;
+        points[i-1] = point;
+        degree += 360/numOfBars;
     }
 
     degree = 270;
-    console.log(points);
+    console.log(numOfBars);
 
     points.forEach(point => {
         canvasCtx.save();
 
         canvasCtx.translate(point[0], point[1]);
         canvasCtx.rotate(degree*Math.PI/180);
-        canvasCtx.fillStyle = 'red';
-        canvasCtx.fillRect(0, 0, 10, 50);
-        degree+=30;
+        canvasCtx.fillStyle = degree === 270? 'yellow' : 'red';
+        canvasCtx.fillRect(-5, 0, 10, 50);
+        degree+=360/numOfBars;
+        console.log(degree);
         canvasCtx.restore();
     });
         
