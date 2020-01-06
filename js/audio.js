@@ -1,3 +1,5 @@
+//Created by Saket Roy on 12/25/19
+
 //Global Variables:
 const canvas = document.getElementById("canvas"),
     audioCtx = new (window.AudioContext || window.webkitAudioContext),
@@ -9,19 +11,24 @@ const canvas = document.getElementById("canvas"),
 let drawVisual,
     WIDTH,
     HEIGHT,
-    numOfBars;
+    RADIUS = 150;
+
+//Initialize values to paint default canvas
+let numOfBars = 56,
+    barHeight = 4,
+    barWidth = 15;
 
 //Initialize canvas
 window.addEventListener('DOMContentLoaded', ()=>{
     setCanvasSize();
-    drawCanvas();
+    drawDefaultCanvas();
 });
 
 /**
  * minDecibels and maxDecibels are double values to scale FFT data
  * 0 dB is loudest possible sound. 
  * -100dB is the default value for mindB -30dB is the default value for maxdB
- * smoothingTimeConstraint represents an average between the current buffer and the last buffer 
+ * smoothingTimeConstant represents an average between the current buffer and the last buffer 
  * the AnalyserNode processed, rsulting in a smoother set of value changes. Default: 0.8
  * Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
  */
@@ -32,7 +39,6 @@ analyser.smoothingTimeConstant = 0.88;
 const source = audioCtx.createMediaElementSource(audioElem);
 source.connect(analyser);
 analyser.connect(audioCtx.destination);
-
 
 function visualize() {
 
@@ -46,9 +52,7 @@ function visualize() {
 
     const draw = () => {
         if(playButton.dataset.playing === 'false') {
-            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-            canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-            canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+            drawDefaultCanvas()
             return;
         }
     
@@ -60,17 +64,17 @@ function visualize() {
         canvasCtx.fillStyle = 'rgb(0, 0, 0)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        let barHeight,
-            barWidth = Math.floor((WIDTH/bufferLength) * 2.25);
+        barWidth = Math.floor((WIDTH/bufferLength) * 2.25);
+        numOfBars = Math.floor(WIDTH/barWidth);
 
-        barWidth = barWidth < 15 ? barWidth : 15;
-
-        let numOfBars = Math.floor(WIDTH/(barWidth+1)),
-            points = [],
+        barWidth = barWidth < 10 ? barWidth : 10;
+        numOfBars = numOfBars < 60 ? numOfBars : 60;
+        
+        let points = [],
             degree = 315;
 
         for(let i =0; i<numOfBars; i++){
-            let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*150,HEIGHT/2+Math.sin(degree*Math.PI/180)*150];
+            let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*RADIUS,HEIGHT/2+Math.sin(degree*Math.PI/180)*RADIUS];
             points[i] = point;
             degree += 360/numOfBars;
         }
@@ -103,14 +107,37 @@ function setCanvasSize() {
     HEIGHT = canvas.height;
 }
 
-function drawCanvas(){
+function drawDefaultCanvas(){
+    let points = [],
+        degree = 315;
+
+    for(let i =0; i<numOfBars; i++){
+        let point = [WIDTH/2+Math.cos(degree*Math.PI/180)*RADIUS,HEIGHT/2+Math.sin(degree*Math.PI/180)*RADIUS];
+        points[i] = point;
+        degree += 360/numOfBars;
+    }
+
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
     canvasCtx.fillStyle = 'rgb(0, 0, 0)';
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+    
+    degree = 225;
+    for(let i = 0; i<numOfBars; i++) {
+        canvasCtx.save();
+        canvasCtx.translate(points[i][0], points[i][1]);
+        canvasCtx.rotate(degree*Math.PI/180);
+        canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
+
+        roundRect(canvasCtx, 0, 0, barWidth, barHeight, 5, true)
+        
+        degree+=360/numOfBars;
+        canvasCtx.restore();
+    }
 }
 
 window.addEventListener('resize', ()=>{
     setCanvasSize();
-    drawCanvas();
+    drawDefaultCanvas();
 });
 
 //Add the Play/Pause Functionality
