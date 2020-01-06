@@ -2,12 +2,12 @@
 const canvas = document.getElementById("canvas"),
     audioCtx = new (window.AudioContext || window.webkitAudioContext),
     audioElem = document.querySelector("audio"),
-    playButton = document.querySelector("button");
-
-let drawVisual,
+    playButton = document.querySelector("button"),
     WIDTH = canvas.width;
     HEIGHT = canvas.height,
     analyser = audioCtx.createAnalyser();
+
+let drawVisual;
 
 /**
  * minDecibels and maxDecibels are double values to scale FFT data
@@ -33,7 +33,7 @@ analyser.connect(audioCtx.destination);
 
 
 function visualize() {
-    
+
     //Create Analyser Node to extract data from Audio Source
     analyser.fftSize = 256;
     
@@ -43,6 +43,15 @@ function visualize() {
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
     const draw = () => {
+        if(playButton.dataset.playing === 'false') {
+            setTimeout(()=>{
+                canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+                canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+                return;
+            }, 200);
+        }
+    
         drawVisual = requestAnimationFrame(draw);
 
         analyser.getByteFrequencyData(dataArray);
@@ -58,7 +67,8 @@ function visualize() {
         for(let i = 0; i<numOfBars; i++) {
             barHeight = dataArray[i];
             
-            canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; //Color Gradient red -> yellow
+            //Color Gradient red -> yellow
+            canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
             canvasCtx.fillRect(x, HEIGHT - barHeight/2, barWidth, barHeight/2);
             
             x += barWidth + 1;
@@ -66,8 +76,8 @@ function visualize() {
     };
 
     draw();
-}
 
+}
 
 //Add the Play/Pause Functionality
 playButton.addEventListener('click', ()=>{
@@ -87,11 +97,13 @@ playButton.addEventListener('click', ()=>{
     else if (playButton.dataset.playing === 'true') {
         audioElem.pause();
         playButton.dataset.playing =  'false';  
+        visualize()
     }
 }, false);
 
 
 audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false';
+    visualize()
 }, false);
 
