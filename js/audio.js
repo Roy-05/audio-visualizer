@@ -50,13 +50,10 @@ function visualize() {
 
     const draw = () => {
         if(playButton.dataset.playing === 'false') {
-            //Timeout add a better transition effect instead of just clearing out the canvas
-            setTimeout(()=>{
-                canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-                canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-                return;
-            }, 200);
+            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+            canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+            canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+            return;
         }
     
         drawVisual = requestAnimationFrame(draw);
@@ -67,10 +64,13 @@ function visualize() {
         canvasCtx.fillStyle = 'rgb(0, 0, 0)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        let barWidth = (WIDTH/bufferLength) * 2.25,
-            barHeight,
-            x = 2,
-            numOfBars = Math.ceil(WIDTH/(barWidth+1));
+        let barHeight,
+            barWidth = Math.floor((WIDTH/bufferLength) * 2.25);
+
+        barWidth = barWidth < 15 ? barWidth : 15;
+
+        let numOfBars = Math.floor(WIDTH/(barWidth+1)),
+            x = Math.floor((WIDTH - (barWidth+1)*numOfBars)/2); //dynamically assign starting position
 
         for(let i = 0; i<numOfBars; i++) {
             barHeight = Math.floor((dataArray[i]/255) * 150); //scale heights
