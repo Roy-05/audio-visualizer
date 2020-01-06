@@ -20,7 +20,7 @@ let drawVisual;
 
 analyser.minDecibels = -90;
 analyser.maxDecibels = -10;
-analyser.smoothingTimeConstraint = 0.85;
+analyser.smoothingTimeConstant = 0.9;
 
 //Create canvas
 const canvasCtx = canvas.getContext('2d');
@@ -44,6 +44,7 @@ function visualize() {
 
     const draw = () => {
         if(playButton.dataset.playing === 'false') {
+            //Timeout add a better transition effect instead of just clearing out the canvas
             setTimeout(()=>{
                 canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
                 canvasCtx.fillStyle = 'rgb(0, 0, 0)';
@@ -64,12 +65,13 @@ function visualize() {
             x = 2,
             numOfBars = Math.ceil(WIDTH/(barWidth+1));
 
+        console.log(dataArray, numOfBars);
         for(let i = 0; i<numOfBars; i++) {
             barHeight = dataArray[i];
             
             //Color Gradient red -> yellow
             canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
-            canvasCtx.fillRect(x, HEIGHT - barHeight/2, barWidth, barHeight/2);
+            canvasCtx.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
             
             x += barWidth + 1;
         }
