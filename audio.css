@@ -5,13 +5,33 @@ html, body {
 }
 
 
-#canvas-container {
+#main-container {
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
+   
+}
+
+canvas {
+  position: absolute;
+  z-index: 1;
+} 
+
+#button-container {
+  z-index: 3;
 }
 
 
+#audio-data-container {
+  background: red;
+  width: 220px;
+  height: 175px;
+  z-index: 3;
+  position: absolute;
+  display: grid;
+  grid-template-rows: 80% 20%;
+} 
