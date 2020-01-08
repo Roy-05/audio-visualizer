@@ -24,11 +24,11 @@ canvas {
 #audio-data-container {
   /* background: red; */
   width: 200px;
-  height: 120px;
+  height: 150px;
   z-index: 3;
   position: absolute;
   display: grid;
-  grid-template-rows: 35% 30% 35%;
+  grid-template-rows: 33% 27% 40%;
   font-family: 'Courier New', sans-serif;
   font-weight: bold;
 } 
@@ -68,6 +68,26 @@ canvas {
 
 #button-container {
   margin: 0 auto;
-  display: flex;
-  align-items: center;
+  /* display: flex;
+  align-items: center; */
+}
+
+#button {
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 0;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  width: 50px;
+  height: 50px;
+}
+
+.play {
+  background: url('./play.png') no-repeat;
+}
+
+.pause {
+  background: url('./pause.png') no-repeat;
 }

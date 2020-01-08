@@ -3,7 +3,7 @@
 //Global Variables:
 const canvas = document.getElementById("canvas"),
     audioElem = document.querySelector("audio"),
-    playButton = document.querySelector("button"),
+    playButton = document.getElementById("button"),
     audioCtx = new (window.AudioContext || window.webkitAudioContext),
     source = audioCtx.createMediaElementSource(audioElem),
     analyser = audioCtx.createAnalyser(),
@@ -48,19 +48,22 @@ playButton.addEventListener('click', ()=>{
         audioElem.play();
         document.getElementById('song-name').className = 'animate';
         playButton.dataset.playing =  'true';
-        visualize()
+        togglePlayPause();
+        visualize();
     }
     else if (playButton.dataset.playing === 'true') {
         audioElem.pause();
         document.getElementById('song-name').className = '';
         playButton.dataset.playing =  'false';  
-        visualize()
+        togglePlayPause();
+        visualize();
     }
 }, false);
 
 audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false'; 
     playButton.dataset.initialLoad = 'true';
+    togglePlayPause();
     removeAudioInfo();
     visualize()
 }, false);
@@ -228,3 +231,14 @@ function removeAudioInfo() {
     songNameElem.removeChild(songNameElem.firstChild);
     artistNameElem.removeChild(artistNameElem.firstChild);
 }
+
+function togglePlayPause() {
+    if(playButton.dataset.playing === 'true'){
+        playButton.className = "pause";
+    }
+    else {
+        playButton.className = "play";
+    }
+}
+
+//function
