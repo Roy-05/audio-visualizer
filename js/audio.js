@@ -46,11 +46,13 @@ playButton.addEventListener('click', ()=>{
             playButton.dataset.initialLoad = 'false';
         }
         audioElem.play();
+        document.getElementById('song-name').className = 'animate';
         playButton.dataset.playing =  'true';
         visualize()
     }
     else if (playButton.dataset.playing === 'true') {
         audioElem.pause();
+        document.getElementById('song-name').className = '';
         playButton.dataset.playing =  'false';  
         visualize()
     }
@@ -58,6 +60,7 @@ playButton.addEventListener('click', ()=>{
 
 audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false'; 
+    playButton.dataset.initialLoad = 'true';
     removeAudioInfo();
     visualize()
 }, false);
@@ -215,12 +218,13 @@ function addAudioInfo(songName, artistName) {
 
     songNameElem.appendChild(song);
     artistNameElem.appendChild(artist);
+
 }
 
 function removeAudioInfo() {
     const songNameElem = document.getElementById('song-name'),
         artistNameElem = document.getElementById('artist-name');
 
-    songNameElem.removeChild();
-    artistNameElem.removeChild();
+    songNameElem.removeChild(songNameElem.firstChild);
+    artistNameElem.removeChild(artistNameElem.firstChild);
 }
