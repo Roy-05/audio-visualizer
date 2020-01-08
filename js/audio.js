@@ -13,7 +13,7 @@ let drawVisual,
     points = [],
     WIDTH,
     HEIGHT,
-    RADIUS = 150;
+    RADIUS = 130;
 
 //Initialize values to paint default canvas
 let numOfBars = 60,
@@ -104,7 +104,9 @@ function drawDefaultCanvas(){
         canvasCtx.save();
         canvasCtx.translate(points[i][0], points[i][1]);
         canvasCtx.rotate(degree*Math.PI/180);
-        canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
+        
+        let gdt = i/(numOfBars-1);
+        canvasCtx.fillStyle = 'rgb('+ (245 - 4*gdt) +','+ (175 - 136*gdt) +', '+ (25 - 8*gdt) +')';
 
         roundRect(canvasCtx, 0, 0, barWidth, 5, 2, true)
         
@@ -140,14 +142,16 @@ function visualize() {
         for(let i = 0; i<numOfBars; i++) {
 
             //scale bar heights
-            barHeight = Math.floor((dataArray[i]/255) * 140); 
+            barHeight = Math.floor((dataArray[i]/255) * 175); 
             barHeight = barHeight > 5 ? barHeight : 5;
 
             canvasCtx.save();
             canvasCtx.translate(points[i][0], points[i][1]);
             canvasCtx.rotate(degree*Math.PI/180);
-            canvasCtx.fillStyle = 'rgb(255, ' + Math.ceil(i*255/numOfBars) + ', 0)'; 
 
+            let gdt = i/(numOfBars-1);
+            canvasCtx.fillStyle = 'rgb('+ (245 - 4*gdt) +','+ (175 - 136*gdt) +', '+ (25 - 8*gdt) +')';
+            
             roundRect(canvasCtx, 0, 0, barWidth, barHeight, 2, true)
             
             degree+=360/numOfBars;
