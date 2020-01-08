@@ -41,6 +41,10 @@ playButton.addEventListener('click', ()=>{
 
     //PLAY/PAUSE based on current state
     if (playButton.dataset.playing === 'false') {
+        if(playButton.dataset.initialLoad === 'true'){
+            addAudioInfo("Dog Soldier Stand Down", "Aglow Hollow")
+            playButton.dataset.initialLoad = 'false';
+        }
         audioElem.play();
         playButton.dataset.playing =  'true';
         visualize()
@@ -54,6 +58,7 @@ playButton.addEventListener('click', ()=>{
 
 audioElem.addEventListener('ended', ()=> {
     playButton.dataset.playing = 'false'; 
+    removeAudioInfo();
     visualize()
 }, false);
 
@@ -195,4 +200,27 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.quadraticCurveTo(x, y, x + radius.tl, y);
     ctx.closePath();
     ctx.fill();
+}
+/**
+ * 
+ * @param {String} songName Name of the current Song
+ * @param {String} artistName Name of the current Artist
+ */
+function addAudioInfo(songName, artistName) {
+    const songNameElem = document.getElementById('song-name'),
+        artistNameElem = document.getElementById('artist-name');
+
+    let song = document.createTextNode(songName),
+        artist = document.createTextNode(artistName);
+
+    songNameElem.appendChild(song);
+    artistNameElem.appendChild(artist);
+}
+
+function removeAudioInfo() {
+    const songNameElem = document.getElementById('song-name'),
+        artistNameElem = document.getElementById('artist-name');
+
+    songNameElem.removeChild();
+    artistNameElem.removeChild();
 }
