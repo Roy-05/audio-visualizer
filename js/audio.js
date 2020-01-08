@@ -56,7 +56,6 @@ playButton.addEventListener('click', ()=>{
         document.getElementById('song-name').className = '';
         playButton.dataset.playing =  'false';  
         togglePlayPause();
-        visualize();
     }
 }, false);
 
