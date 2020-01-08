@@ -21,17 +21,47 @@ canvas {
   z-index: 1;
 } 
 
-#button-container {
-  z-index: 3;
-}
-
-
 #audio-data-container {
-  background: red;
-  width: 220px;
-  height: 175px;
+  /* background: red; */
+  width: 200px;
+  height: 120px;
   z-index: 3;
   position: absolute;
   display: grid;
-  grid-template-rows: 80% 20%;
+  grid-template-rows:  35% 30% 35%;
+  font-family: 'Courier New', sans-serif;
 } 
+
+#button-container {
+  z-index: 3;
+  text-align: center;
+}
+
+#song-name-container {
+  overflow: hidden;
+  white-space: nowrap;
+  
+}
+
+#song-name {
+  font-size: 25px;
+  margin: 0 auto;
+  display: inline-block;
+  color: blanchedalmond;
+  padding-left: 100%;
+  padding-right: 100%;
+  animation: overflow 20s linear infinite;
+}
+
+@keyframes overflow {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+#artist-name {
+  font-size: 20px;
+  margin: 0 auto;
+  display: inline-block;
+  color: blanchedalmond;
+  text-align: center;
+}
