@@ -27,9 +27,10 @@ canvas {
   height: 120px;
   z-index: 3;
   position: absolute;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 35% 30% 35%;
   font-family: 'Courier New', sans-serif;
+  font-weight: bold;
 } 
 
 
@@ -37,9 +38,6 @@ canvas {
   overflow: hidden;
   white-space: nowrap;
   display: flex;
-  height: 35%;
-  order: 1;
-  border: wheat 2px;
   align-items: center;
 }
 
@@ -61,21 +59,15 @@ canvas {
 }
 
 #artist-name {
-  height: 30%;
   font-size: 20px;
   margin: 0 auto;
   display: flex;
   color: blanchedalmond;
   align-items: center;
-  order: 2;
-  border: wheat 2px;
 }
 
 #button-container {
-  height: 35%;
-  z-index: 3;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  order: 3;
 }
