@@ -6,14 +6,13 @@ A simple web app to visualize sound using the FFT ([Fast Fourier Transform](http
 
 - [x] ~Need to stop requests to draw function on pause~
 - [x] ~Convert horizontal visualization into circular~
-- [ ] Need to remove redundant code [drawDefaultCanvas]. 
-- [ ] Make number of Audio bars a function of circle radius
+- [ ] Need to remove redundant code
 - [ ] CSS tasks:  
     * ~Format Audio Bar heights~  
     * ~Format Canvas Size and position in middle of the screen~  
     * ~Make canvas size and no. of Audio Bars responsive~
     * ~Make Audio Bars have rounded edges~
-    * Add transition effect on pause for audio bars  
-    * Add background, button CSS and general improvements    
+    * ~Add background, button CSS and general improvements~ 
+     * Add transition effect on pause for audio bars  
 
 - [ ] Responsiveness
