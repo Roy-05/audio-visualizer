@@ -31,6 +31,10 @@ window.addEventListener("resize", () => {
   drawDefaultCanvas();
 });
 
+ if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+
 /*
 //Add the Play/Pause Functionality
 playButton.addEventListener(
