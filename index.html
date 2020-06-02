@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Audio Visualizer</title>
-        <script type = "text/javascript" src = "js/audio.js" defer></script>
-        <link rel = "stylesheet" type = "text/css" href = "audio.css">
-        <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-        <link rel="manifest" href="favicons/site.webmanifest">
-        <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="msapplication-TileColor" content="#2b5797">
-        <meta name="theme-color" content="#000000">
-    </head>
-    <body>
-        <div id = "main-container">
-            <canvas id ="canvas"></canvas>
-            <div id ="audio-data-container">
-                <div id="song-name-container">
-                    <p id="song-name"></p>
-                </div>
-                <div id="artist-name"></div>
-                <div id= "button-container">
-                    <button id="button" class = "play" data-playing = "false" data-initial-load = "true" role="switch" aria-checked="false">
-                    </button>
-                </div>
-            </div>
+  <head>
+    <title>Audio Visualizer</title>
+    <script type="text/javascript" src="js/audio.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="audio.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="favicons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="favicons/site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="favicons/safari-pinned-tab.svg"
+      color="#5bbad5"
+    />
+    <meta name="msapplication-TileColor" content="#2b5797" />
+    <meta name="theme-color" content="#000000" />
+  </head>
+  <body>
+    <div id="main-container">
+      <canvas id="canvas"></canvas>
+      <div id="audio-data-container">
+        <div id="song-name-container">
+          <p id="song-name"></p>
         </div>
-        <audio src="Aglow_Hollow.mp3" type = "audio/mpeg"></audio>
-    </body>
+        <div id="artist-name"></div>
+        <div id="button-container">
+          <button
+            id="button"
+            class="play"
+            data-playing="false"
+            data-initial-load="true"
+            role="switch"
+            aria-checked="false"
+          ></button>
+        </div>
+      </div>
+    </div>
+    <!-- <audio src="Aglow_Hollow.mp3" type = "audio/mpeg"></audio> -->
+  </body>
 </html>
