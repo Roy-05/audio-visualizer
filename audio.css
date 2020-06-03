@@ -1,25 +1,24 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    background: #00000f
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #00000f;
 }
 
-
 #main-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-   
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
 }
 
 canvas {
   position: absolute;
   z-index: 1;
-} 
+}
 
 #audio-data-container {
   /* background: red; */
@@ -29,10 +28,9 @@ canvas {
   position: absolute;
   display: grid;
   grid-template-rows: 33% 27% 40%;
-  font-family: 'Courier New', sans-serif;
+  font-family: "Courier New", sans-serif;
   font-weight: bold;
-} 
-
+}
 
 #song-name-container {
   overflow: hidden;
@@ -54,8 +52,12 @@ canvas {
 }
 
 @keyframes overflow {
-  0%   { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
 }
 
 #artist-name {
@@ -85,9 +87,9 @@ canvas {
 }
 
 .play {
-  background: url('./play.png') no-repeat;
+  background: url("./play.png") no-repeat;
 }
 
 .pause {
-  background: url('./pause.png') no-repeat;
+  background: url("./pause.png") no-repeat;
 }

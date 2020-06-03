@@ -17,7 +17,7 @@ let drawVisual,
   RADIUS = 130;
 
 //Initialize values to paint default canvas
-let numOfBars = 60,
+let numOfBars = 180,
   barHeight = 10,
   barWidth;
 
@@ -32,9 +32,10 @@ window.addEventListener("resize", () => {
 });
 
 playButton.addEventListener("click", () => {
- if (audioCtx.state === "suspended") {
-      audioCtx.resume();
-    }
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  playButton.style.display = "none";
 });
 
 /*
@@ -114,7 +115,7 @@ function setCanvasSize() {
 function setBarWidth() {
   let circumference = 2 * Math.PI * RADIUS;
   barWidth = Math.floor((circumference / numOfBars) * 2.25);
-  barWidth = barWidth < 10 ? barWidth : 10;
+  barWidth = barWidth < 4 ? barWidth : 3;
 }
 
 function drawDefaultCanvas() {
@@ -155,7 +156,7 @@ function drawDefaultCanvas() {
 
 function visualize() {
   //Create Analyser Node to extract data from Audio Source
-  analyser.fftSize = 256;
+  analyser.fftSize = 2048;
 
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
