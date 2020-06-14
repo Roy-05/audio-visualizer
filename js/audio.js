@@ -7,15 +7,26 @@ const canvas = document.getElementById("canvas"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
   analyser = audioCtx.createAnalyser(),
   canvasCtx = canvas.getContext("2d"),
-  dpi = window.devicePixelRatio;
+  DPI = window.devicePixelRatio;
 
-var source;
+let source;
 
 let drawVisual,
   points = [],
   WIDTH,
   HEIGHT,
-  RADIUS = 130;
+  RADIUS = 130,
+  RGB = {
+    r1: 0,
+    g1: 0,
+    b1: 0,
+    r2: 0,
+    g2: 0,
+    b2: 0,
+    r3: 0,
+    g3: 0,
+    b3: 0,
+  };
 
 //Initialize values to paint default canvas
 let numOfBars = 180,
@@ -24,75 +35,8 @@ let numOfBars = 180,
 
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
-  init();
-});
+  let constraints = { audio: true };
 
-window.addEventListener("resize", () => {
-  setCanvasSize();
-  drawDefaultCanvas();
-  visualize();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" || e.key === "f" || e.key === "F") {
-    toggleFullScreen();
-  }
-});
-
-playButton.addEventListener("click", () => {
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-  playButton.style.display = "none";
-});
-
-/*
-//Add the Play/Pause Functionality
-playButton.addEventListener(
-  "click",
-  () => {
-    //Chrome policy: suspended state = Autoplay is denied
-    //Need to resume audioCtx initially
-    if (audioCtx.state === "suspended") {
-      audioCtx.resume();
-    }
-
-    //PLAY/PAUSE based on current state
-    if (playButton.dataset.playing === "false") {
-      if (playButton.dataset.initialLoad === "true") {
-        addAudioInfo("Dog Soldier Stand Down", "Aglow Hollow");
-        playButton.dataset.initialLoad = "false";
-      }
-      audioElem.play();
-      document.getElementById("song-name").className = "animate";
-      playButton.dataset.playing = "true";
-      togglePlayPause();
-      visualize();
-    } else if (playButton.dataset.playing === "true") {
-      audioElem.pause();
-      document.getElementById("song-name").className = "";
-      playButton.dataset.playing = "false";
-      togglePlayPause();
-    }
-  },
-  false
-);
-
-audioElem.addEventListener(
-  "ended",
-  () => {
-    playButton.dataset.playing = "false";
-    playButton.dataset.initialLoad = "true";
-    togglePlayPause();
-    removeAudioInfo();
-    visualize();
-  },
-  false
-);
-*/
-
-function init() {
-  var constraints = { audio: true, video: false };
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     source = audioCtx.createMediaStreamSource(stream);
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
@@ -101,16 +45,34 @@ function init() {
     analyser.smoothingTimeConstant = 0.95;
 
     source.connect(analyser);
-    //analyser.connect(audioCtx.destination);
-
-    //Set the height and width of the canvas
-    setCanvasSize();
-    //Set the bar width based on the size of the canvas;
-    setBarWidth();
-    //Draw the default canvas image
-    drawDefaultCanvas();
-    visualize();
   });
+  init();
+});
+
+window.addEventListener("resize", init);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" || e.key === "f" || e.key === "F") {
+    toggleFullScreen();
+  }
+});
+
+document.addEventListener("click", () => {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+});
+
+function init() {
+  setGradient("#26f596", "#0499f2");
+  console.log(RGB);
+  //Set the height and width of the canvas
+  setCanvasSize();
+  //Set the bar width based on the size of the canvas;
+  setBarWidth();
+  //Draw the default canvas image
+  drawDefaultCanvas();
+  visualize();
 }
 
 function setCanvasSize() {
@@ -120,16 +82,18 @@ function setCanvasSize() {
   canvas.style.width = WIDTH + "px";
   canvas.style.height = HEIGHT + "px";
 
-  canvas.width = Math.floor(WIDTH * dpi);
-  canvas.height = Math.floor(HEIGHT * dpi);
+  //Scale for dpi
+  canvas.width = Math.floor(WIDTH * DPI);
+  canvas.height = Math.floor(HEIGHT * DPI);
 
-  canvasCtx.scale(dpi, dpi);
+  canvasCtx.scale(DPI, DPI);
 }
 
 function setBarWidth() {
   let circumference = 2 * Math.PI * RADIUS;
-  barWidth = Math.floor((circumference / numOfBars) * 2.25);
-  barWidth = barWidth < 4 ? barWidth : 3;
+  barWidth = Math.floor(circumference / (numOfBars * 1.5));
+
+  //barWidth = barWidth > 3 ? barWidth : 3;
 }
 
 function drawDefaultCanvas() {
@@ -154,13 +118,12 @@ function drawDefaultCanvas() {
     let gdt = i / (numOfBars - 1);
     canvasCtx.fillStyle =
       "rgb(" +
-      (245 - 4 * gdt) +
+      (RGB["r1"] - RGB["r3"] * gdt) +
       "," +
-      (175 - 136 * gdt) +
+      (RGB["g1"] - RGB["g3"] * gdt) +
       ", " +
-      (25 - 8 * gdt) +
+      (RGB["b1"] - RGB["b3"] * gdt) +
       ")";
-
     roundRect(canvasCtx, 0, 0, barWidth, 5, 2, true);
 
     degree += 360 / numOfBars;
@@ -175,15 +138,9 @@ function visualize() {
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
 
-  console.log(dataArray);
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   const draw = () => {
-    // if (playButton.dataset.playing === "false") {
-    //   drawDefaultCanvas();
-    //   return;
-    // }
-
     drawVisual = requestAnimationFrame(draw);
 
     //Returns frequency data on a scale of 0-255
@@ -191,7 +148,6 @@ function visualize() {
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let degree = 90;
-    //let shift = Math.floor(dataArray.length / numOfBars);
     for (let i = 0; i < numOfBars; i++) {
       //scale bar heights
       barHeight = Math.floor((dataArray[i] / 255) * 175);
@@ -204,13 +160,12 @@ function visualize() {
       let gdt = i / (numOfBars - 1);
       canvasCtx.fillStyle =
         "rgb(" +
-        (38 - 34 * gdt) +
+        (RGB["r1"] - RGB["r3"] * gdt) +
         "," +
-        (245 - 95 * gdt) +
+        (RGB["g1"] - RGB["g3"] * gdt) +
         ", " +
-        (150 + 92 * gdt) +
+        (RGB["b1"] - RGB["b3"] * gdt) +
         ")";
-
       roundRect(canvasCtx, 0, 0, barWidth, barHeight, 2, true);
 
       degree += 360 / numOfBars;
@@ -220,6 +175,8 @@ function visualize() {
 
   draw();
 }
+
+function drawAudioBar() {}
 
 /**
  * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
@@ -237,7 +194,6 @@ function visualize() {
  * @param {Number} [radius.br = 0] Bottom right
  * @param {Number} [radius.bl = 0] Bottom left
  */
-
 function roundRect(ctx, x, y, width, height, radius) {
   radius = height <= 5 ? 2 : radius;
   radius = { tl: radius, tr: radius, br: radius, bl: radius };
@@ -259,37 +215,6 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
   ctx.fill();
 }
-/**
- *
- * @param {String} songName Name of the current Song
- * @param {String} artistName Name of the current Artist
- */
-function addAudioInfo(songName, artistName) {
-  const songNameElem = document.getElementById("song-name"),
-    artistNameElem = document.getElementById("artist-name");
-
-  let song = document.createTextNode(songName),
-    artist = document.createTextNode(artistName);
-
-  songNameElem.appendChild(song);
-  artistNameElem.appendChild(artist);
-}
-
-function removeAudioInfo() {
-  const songNameElem = document.getElementById("song-name"),
-    artistNameElem = document.getElementById("artist-name");
-
-  songNameElem.removeChild(songNameElem.firstChild);
-  artistNameElem.removeChild(artistNameElem.firstChild);
-}
-
-function togglePlayPause() {
-  if (playButton.dataset.playing === "true") {
-    playButton.className = "pause";
-  } else {
-    playButton.className = "play";
-  }
-}
 
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
@@ -299,4 +224,43 @@ function toggleFullScreen() {
       document.exitFullscreen();
     }
   }
+}
+
+function setGradient(start, end) {
+  if (start[0] === "#" && start.length === 7) {
+    RGB["r1"] = parseInt(start.slice(1, 3), 16);
+    RGB["g1"] = parseInt(start.slice(3, 5), 16);
+    RGB["b1"] = parseInt(start.slice(5, 7), 16);
+  } else if (start[0] === "#" && start.length === 4) {
+    RGB["r1"] = parseInt(start.slice(1, 2), 16);
+    RGB["g1"] = parseInt(start.slice(2, 3), 16);
+    RGB["b1"] = parseInt(start.slice(3, 4), 16);
+  } else if (Array.isArray(start) && start.length === 3) {
+    RGB["r1"] = start[0];
+    RGB["g1"] = start[1];
+    RGB["b1"] = start[2];
+  } else {
+    console.log("Invalid Value");
+    // RGB["start"] = { r: 38, g: 245, b: 150 };
+  }
+
+  if (end[0] === "#" && end.length === 7) {
+    RGB["r2"] = parseInt(end.slice(1, 3), 16);
+    RGB["g2"] = parseInt(end.slice(3, 5), 16);
+    RGB["b2"] = parseInt(end.slice(5, 7), 16);
+  } else if (end[0] === "#" && end.length === 4) {
+    RGB["r2"] = parseInt(end.slice(1, 2), 16);
+    RGB["g2"] = parseInt(end.slice(2, 3), 16);
+    RGB["b2"] = parseInt(end.slice(3, 4), 16);
+  } else if (Array.isArray(end) && end.length === 3) {
+    RGB["r2"] = end[0];
+    RGB["g2"] = end[1];
+    RGB["b2"] = end[2];
+  } else {
+    console.log("Invalid Value");
+    // RGB["end"] = { r: 4, g: 153, b: 242 };
+  }
+  RGB["r3"] = RGB["r1"] - RGB["r2"];
+  RGB["g3"] = RGB["g1"] - RGB["g2"];
+  RGB["b3"] = RGB["b1"] - RGB["b2"];
 }
