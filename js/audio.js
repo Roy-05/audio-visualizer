@@ -30,6 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("resize", () => {
   setCanvasSize();
   drawDefaultCanvas();
+  visualize();
 });
 
 document.addEventListener("keydown", (e) => {
@@ -97,7 +98,7 @@ function init() {
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
-    analyser.smoothingTimeConstant = 0.88;
+    analyser.smoothingTimeConstant = 0.95;
 
     source.connect(analyser);
     //analyser.connect(audioCtx.destination);
@@ -190,10 +191,10 @@ function visualize() {
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let degree = 90;
-    let shift = Math.floor(dataArray.length / numOfBars);
+    //let shift = Math.floor(dataArray.length / numOfBars);
     for (let i = 0; i < numOfBars; i++) {
       //scale bar heights
-      barHeight = Math.floor((dataArray[i * shift] / 255) * 175);
+      barHeight = Math.floor((dataArray[i] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
       canvasCtx.save();
