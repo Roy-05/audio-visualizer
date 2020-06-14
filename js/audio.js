@@ -32,6 +32,12 @@ window.addEventListener("resize", () => {
   drawDefaultCanvas();
 });
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" || e.key === "f" || e.key === "F") {
+    toggleFullScreen();
+  }
+});
+
 playButton.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
@@ -110,11 +116,12 @@ function setCanvasSize() {
   WIDTH = window.innerWidth < 600 ? window.innerWidth : 600;
   HEIGHT = window.innerHeight < 600 ? window.innerHeight : 600;
 
-  canvas.style.width = WIDTH+"px";
-  canvas.style.height = HEIGHT+"px";
+  canvas.style.width = WIDTH + "px";
+  canvas.style.height = HEIGHT + "px";
 
-  canvas.width = Math.round(WIDTH*dpi);
-  canvas.height = Math.round(HEIGHT*dpi);
+  canvas.width = Math.floor(WIDTH * dpi);
+  canvas.height = Math.floor(HEIGHT * dpi);
+
   canvasCtx.scale(dpi, dpi);
 }
 
@@ -125,7 +132,7 @@ function setBarWidth() {
 }
 
 function drawDefaultCanvas() {
-  let degree = 210;
+  let degree = 180;
   for (let i = 0; i < numOfBars; i++) {
     let point = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
@@ -137,7 +144,7 @@ function drawDefaultCanvas() {
 
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  degree = 120;
+  degree = 90;
   for (let i = 0; i < numOfBars; i++) {
     canvasCtx.save();
     canvasCtx.translate(points[i][0], points[i][1]);
@@ -182,7 +189,7 @@ function visualize() {
     analyser.getByteFrequencyData(dataArray);
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    let degree = 120;
+    let degree = 90;
     let shift = Math.floor(dataArray.length / numOfBars);
     for (let i = 0; i < numOfBars; i++) {
       //scale bar heights
@@ -196,11 +203,11 @@ function visualize() {
       let gdt = i / (numOfBars - 1);
       canvasCtx.fillStyle =
         "rgb(" +
-        (245 - 4 * gdt) +
+        (38 - 34 * gdt) +
         "," +
-        (175 - 136 * gdt) +
+        (245 - 95 * gdt) +
         ", " +
-        (25 - 8 * gdt) +
+        (150 + 92 * gdt) +
         ")";
 
       roundRect(canvasCtx, 0, 0, barWidth, barHeight, 2, true);
@@ -283,3 +290,12 @@ function togglePlayPause() {
   }
 }
 
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}
