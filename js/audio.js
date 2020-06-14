@@ -6,7 +6,8 @@ const canvas = document.getElementById("canvas"),
   playButton = document.getElementById("button"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
   analyser = audioCtx.createAnalyser(),
-  canvasCtx = canvas.getContext("2d");
+  canvasCtx = canvas.getContext("2d"),
+  dpi = window.devicePixelRatio;
 
 var source;
 
@@ -106,10 +107,15 @@ function init() {
 }
 
 function setCanvasSize() {
-  canvas.width = window.innerWidth < 600 ? window.innerWidth : 600;
-  canvas.height = window.innerHeight < 600 ? window.innerHeight : 600;
-  WIDTH = canvas.width;
-  HEIGHT = canvas.height;
+  WIDTH = window.innerWidth < 600 ? window.innerWidth : 600;
+  HEIGHT = window.innerHeight < 600 ? window.innerHeight : 600;
+
+  canvas.style.width = WIDTH+"px";
+  canvas.style.height = HEIGHT+"px";
+
+  canvas.width = Math.round(WIDTH*dpi);
+  canvas.height = Math.round(HEIGHT*dpi);
+  canvasCtx.scale(dpi, dpi);
 }
 
 function setBarWidth() {
@@ -119,7 +125,7 @@ function setBarWidth() {
 }
 
 function drawDefaultCanvas() {
-  let degree = 315;
+  let degree = 210;
   for (let i = 0; i < numOfBars; i++) {
     let point = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
@@ -131,7 +137,7 @@ function drawDefaultCanvas() {
 
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  degree = 225;
+  degree = 120;
   for (let i = 0; i < numOfBars; i++) {
     canvasCtx.save();
     canvasCtx.translate(points[i][0], points[i][1]);
@@ -156,7 +162,7 @@ function drawDefaultCanvas() {
 
 function visualize() {
   //Create Analyser Node to extract data from Audio Source
-  analyser.fftSize = 2048;
+  analyser.fftSize = 1024;
 
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
@@ -174,13 +180,13 @@ function visualize() {
 
     //Returns frequency data on a scale of 0-255
     analyser.getByteFrequencyData(dataArray);
-
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    let degree = 225;
+    let degree = 120;
+    let shift = Math.floor(dataArray.length / numOfBars);
     for (let i = 0; i < numOfBars; i++) {
       //scale bar heights
-      barHeight = Math.floor((dataArray[i] / 255) * 175);
+      barHeight = Math.floor((dataArray[i * shift] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
       canvasCtx.save();
@@ -277,4 +283,3 @@ function togglePlayPause() {
   }
 }
 
-//function
