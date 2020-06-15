@@ -3,6 +3,7 @@
   <head>
     <title>Audio Visualizer</title>
     <script type="text/javascript" src="js/audio.js" defer></script>
+    <script type="text/javascript" src="js/ui.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
     <link rel="stylesheet" type="text/css" href="./css/ui.css" />
     <link
@@ -35,11 +36,34 @@
     <div id="main-container">
       <div id="sidenav">
         <div id="drawer">
-          <button class="closebtn" onclick="closeNav()">
-            &times;
-          </button>
+          <div>
+            <button id="closebtn">
+              &times;
+            </button>
+          </div>
+          <div id="gdt-ipt-box">
+            <p><label for="start_gdt">Starting Hex Code:</label></p>
+            <p>
+              <input
+                type="text"
+                id="start_gdt_data"
+                name="start_gdt"
+                value="#2b5797"
+              />
+            </p>
+            <p><label for="end_gdt">Ending Hex Code:</label></p>
+            <p>
+              <input
+                type="text"
+                id="end_gdt_data"
+                name="end_gdt"
+                value="#5bbad5"
+              />
+            </p>
+            <p><input type="submit" id="submit" value="Submit" /></p>
+          </div>
         </div>
-        <div id="hamburger" onclick="openNav()">
+        <div id="hamburger">
           &#9776;
         </div>
       </div>
@@ -48,17 +72,5 @@
         <canvas id="canvas"></canvas>
       </div>
     </div>
-
-    <script>
-      function openNav() {
-        document.getElementById("drawer").style.width = "400px";
-        document.getElementById("main").style.marginLeft = "400px";
-      }
-
-      function closeNav() {
-        document.getElementById("drawer").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
-      }
-    </script>
   </body>
 </html>

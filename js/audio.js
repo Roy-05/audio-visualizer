@@ -40,20 +40,16 @@ window.addEventListener("DOMContentLoaded", () => {
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
-    analyser.smoothingTimeConstant = 0.95;
+    analyser.smoothingTimeConstant = 0.92;
 
     source.connect(analyser);
   });
+  //Set initial gradient
+  setGradient("#26f596", "#0499f2");
   init();
 });
 
 window.addEventListener("resize", init);
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" || e.key === "f" || e.key === "F") {
-    toggleFullScreen();
-  }
-});
 
 document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
@@ -62,7 +58,6 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  setGradient("#26f596", "#0499f2");
   //Set the height and width of the canvas
   setCanvasSize();
   //Set the bar width based on the size of the canvas;
@@ -181,56 +176,6 @@ function roundRect(ctx, x, y, width, height, radius, color) {
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
-}
-
-function toggleFullScreen() {
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
-  }
-}
-
-function setGradient(start, end) {
-  if (start[0] === "#" && start.length === 7) {
-    RGB["r1"] = parseInt(start.slice(1, 3), 16);
-    RGB["g1"] = parseInt(start.slice(3, 5), 16);
-    RGB["b1"] = parseInt(start.slice(5, 7), 16);
-  } else if (start[0] === "#" && start.length === 4) {
-    RGB["r1"] = parseInt(start.slice(1, 2), 16);
-    RGB["g1"] = parseInt(start.slice(2, 3), 16);
-    RGB["b1"] = parseInt(start.slice(3, 4), 16);
-  } else if (Array.isArray(start) && start.length === 3) {
-    RGB["r1"] = start[0];
-    RGB["g1"] = start[1];
-    RGB["b1"] = start[2];
-  } else {
-    console.error("Invalid Value");
-    RGB["r2"] = 38;
-    RGB["g2"] = 245;
-    RGB["b2"] = 150;
-  }
-
-  if (end[0] === "#" && end.length === 7) {
-    RGB["r2"] = parseInt(end.slice(1, 3), 16);
-    RGB["g2"] = parseInt(end.slice(3, 5), 16);
-    RGB["b2"] = parseInt(end.slice(5, 7), 16);
-  } else if (end[0] === "#" && end.length === 4) {
-    RGB["r2"] = parseInt(end.slice(1, 2), 16);
-    RGB["g2"] = parseInt(end.slice(2, 3), 16);
-    RGB["b2"] = parseInt(end.slice(3, 4), 16);
-  } else if (Array.isArray(end) && end.length === 3) {
-    RGB["r2"] = end[0];
-    RGB["g2"] = end[1];
-    RGB["b2"] = end[2];
-  } else {
-    console.error("Invalid Value");
-    RGB["r2"] = 4;
-    RGB["g2"] = 153;
-    RGB["b2"] = 242;
-  }
 }
 
 /**

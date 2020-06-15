@@ -7,6 +7,8 @@
   background-color: #fff;
   overflow-x: hidden;
   transition: 0.5s;
+  display: grid;
+  grid-template-rows: 10% 90%;
 }
 
 #hamburger {
@@ -19,7 +21,8 @@
   align-items: center;
 }
 
-#drawer .closebtn {
+#closebtn {
+  grid-row: 1;
   position: absolute;
   top: 0;
   right: 25px;
