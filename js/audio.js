@@ -23,11 +23,10 @@ let drawVisual,
     r2: 0,
     g2: 0,
     b2: 0,
-    gdt: [0, 0, 0],
   };
 
 //Initialize values to paint default canvas
-let numOfBars = 180,
+let numBars = 12,
   barHeight = 10,
   barWidth;
 
@@ -64,7 +63,6 @@ document.addEventListener("click", () => {
 
 function init() {
   setGradient("#26f596", "#0499f2");
-  console.log(RGB);
   //Set the height and width of the canvas
   setCanvasSize();
   //Set the bar width based on the size of the canvas;
@@ -90,25 +88,25 @@ function setCanvasSize() {
 
 function setBarWidth() {
   let circumference = 2 * Math.PI * RADIUS;
-  barWidth = Math.floor(circumference / (numOfBars * 1.5));
+  barWidth = Math.floor(circumference / (numBars * 1.5));
 }
 
 function drawDefaultCanvas() {
   let degree = 180;
-  for (let i = 0; i < numOfBars; i++) {
+  for (let i = 0; i < numBars; i++) {
     points[i] = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
       HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
     ];
-    degree += 360 / numOfBars;
+    degree += 360 / numBars;
   }
 
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   degree = 90;
-  for (let i = 0; i < numOfBars; i++) {
+  for (let i = 0; i < numBars; i++) {
     drawAudioBar(canvasCtx, points[i], degree, i);
-    degree += 360 / numOfBars;
+    degree += 360 / numBars;
   }
 }
 
@@ -129,13 +127,13 @@ function visualize() {
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
     let degree = 90;
-    for (let i = 0; i < numOfBars; i++) {
+    for (let i = 0; i < numBars; i++) {
       //scale bar heights
       barHeight = Math.floor((dataArray[i] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
       drawAudioBar(canvasCtx, points[i], degree, i);
-      degree += 360 / numOfBars;
+      degree += 360 / numBars;
     }
   };
   draw();
@@ -145,18 +143,8 @@ function drawAudioBar(ctx, point, degree, i) {
   ctx.save();
   ctx.translate(point[0], point[1]);
   ctx.rotate((degree * Math.PI) / 180);
-
-  let gdt = RGB["gdt"].map((elem) => elem * (i / (numOfBars - 1)));
-
-  ctx.fillStyle =
-    "rgb(" +
-    (RGB["r1"] - gdt[0]) +
-    "," +
-    (RGB["g1"] - gdt[1]) +
-    ", " +
-    (RGB["b1"] - gdt[2]) +
-    ")";
-  roundRect(ctx, 0, 0, barWidth, barHeight, 2, true);
+  ctx.fillStyle = getGdt(i);
+  roundRect(ctx, -barWidth / 2, 0, barWidth, barHeight, 2, true);
   ctx.restore();
 }
 
@@ -241,10 +229,17 @@ function setGradient(start, end) {
     console.log("Invalid Value");
     // RGB["end"] = { r: 4, g: 153, b: 242 };
   }
-
-  RGB["gdt"] = [
-    RGB["r1"] - RGB["r2"],
-    RGB["g1"] - RGB["g2"],
-    RGB["b1"] - RGB["b2"],
+}
+/**
+ * Return the color of the i-th audio bar based on the chosen color gradient
+ * @param {int} i The index of the current audio bar
+ */
+function getGdt(i) {
+  let gdt = [
+    RGB["r1"] - (RGB["r1"] - RGB["r2"]) * (i / (numBars - 1)),
+    RGB["g1"] - (RGB["g1"] - RGB["g2"]) * (i / (numBars - 1)),
+    RGB["b1"] - (RGB["b1"] - RGB["b2"]) * (i / (numBars - 1)),
   ];
+
+  return `rgb(${gdt[0]},${gdt[1]},${gdt[2]})`;
 }
