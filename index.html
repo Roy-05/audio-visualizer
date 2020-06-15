@@ -3,7 +3,8 @@
   <head>
     <title>Audio Visualizer</title>
     <script type="text/javascript" src="js/audio.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="audio.css" />
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" href="./css/ui.css" />
     <link
       rel="apple-touch-icon"
       sizes="76x76"
@@ -31,8 +32,37 @@
     <meta name="theme-color" content="#000000" />
   </head>
   <body>
-    <div id="main-container">
-      <canvas id="canvas"></canvas>
+    <div id="container">
+      <div id="sidenav">
+        <div id="drawer">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
+            &times;
+          </a>
+          <a href="#">About</a>
+          <a href="#">Services</a>
+          <a href="#">Clients</a>
+          <a href="#">Contact</a>s
+        </div>
+        <span style="cursor: pointer; color: aliceblue;" onclick="openNav()">
+          &#9776; open
+        </span>
+      </div>
+
+      <div id="main">
+        <canvas id="canvas"></canvas>
+      </div>
     </div>
+
+    <script>
+      function openNav() {
+        document.getElementById("drawer").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+      }
+
+      function closeNav() {
+        document.getElementById("drawer").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      }
+    </script>
   </body>
 </html>

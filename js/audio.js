@@ -26,7 +26,7 @@ let drawVisual,
   };
 
 //Initialize values to paint default canvas
-let numBars = 12,
+let numBars = 120,
   barHeight = 10,
   barWidth;
 
@@ -86,12 +86,8 @@ function setCanvasSize() {
   canvasCtx.scale(DPI, DPI);
 }
 
-function setBarWidth() {
-  let circumference = 2 * Math.PI * RADIUS;
-  barWidth = Math.floor(circumference / (numBars * 1.5));
-}
-
 function drawDefaultCanvas() {
+  // Get starting points for each audio bar and store it in a global array
   let degree = 180;
   for (let i = 0; i < numBars; i++) {
     points[i] = [
@@ -128,43 +124,44 @@ function visualize() {
 
     let degree = 90;
     for (let i = 0; i < numBars; i++) {
-      //scale bar heights
+      //scale bar heights to max height of 175
       barHeight = Math.floor((dataArray[i] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
-      drawAudioBar(canvasCtx, points[i], degree, i);
+      let fillColor = getGdt(i); //The color of the audio bar
+
+      drawAudioBar(canvasCtx, points[i], degree, fillColor);
       degree += 360 / numBars;
     }
   };
   draw();
 }
 
-function drawAudioBar(ctx, point, degree, i) {
+function drawAudioBar(ctx, point, degree, color) {
   ctx.save();
   ctx.translate(point[0], point[1]);
   ctx.rotate((degree * Math.PI) / 180);
-  ctx.fillStyle = getGdt(i);
-  roundRect(ctx, -barWidth / 2, 0, barWidth, barHeight, 2, true);
+  roundRect(ctx, -barWidth / 2, 0, barWidth, barHeight, 2, color);
   ctx.restore();
+}
+
+function setBarWidth() {
+  barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 1.5));
 }
 
 /**
  * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
- * by Juan Mendes.
  * Edited by Me for the specific use-case.
  * Draws a rounded rectangle using the current state of the canvas.
  * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x The top left x coordinate
- * @param {Number} y The top left y coordinate
- * @param {Number} width The width of the rectangle
+ * @param {Number} x      The top left x coordinate
+ * @param {Number} y      The top left y coordinate
+ * @param {Number} width  The width of the rectangle
  * @param {Number} height The height of the rectangle
  * @param {Number} radius The corner radius
- * @param {Number} [radius.tl = 0] Top left
- * @param {Number} [radius.tr = 0] Top right
- * @param {Number} [radius.br = 0] Bottom right
- * @param {Number} [radius.bl = 0] Bottom left
+ * @param {String} color  The fill color of the rectangle
  */
-function roundRect(ctx, x, y, width, height, radius) {
+function roundRect(ctx, x, y, width, height, radius, color) {
   radius = { tl: radius, tr: radius, br: radius, bl: radius };
   ctx.beginPath();
   ctx.moveTo(x + radius.tl, y);
@@ -182,6 +179,7 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.lineTo(x, y + radius.tl);
   ctx.quadraticCurveTo(x, y, x + radius.tl, y);
   ctx.closePath();
+  ctx.fillStyle = color;
   ctx.fill();
 }
 
@@ -209,8 +207,10 @@ function setGradient(start, end) {
     RGB["g1"] = start[1];
     RGB["b1"] = start[2];
   } else {
-    console.log("Invalid Value");
-    // RGB["start"] = { r: 38, g: 245, b: 150 };
+    console.error("Invalid Value");
+    RGB["r2"] = 38;
+    RGB["g2"] = 245;
+    RGB["b2"] = 150;
   }
 
   if (end[0] === "#" && end.length === 7) {
@@ -226,13 +226,16 @@ function setGradient(start, end) {
     RGB["g2"] = end[1];
     RGB["b2"] = end[2];
   } else {
-    console.log("Invalid Value");
-    // RGB["end"] = { r: 4, g: 153, b: 242 };
+    console.error("Invalid Value");
+    RGB["r2"] = 4;
+    RGB["g2"] = 153;
+    RGB["b2"] = 242;
   }
 }
+
 /**
  * Return the color of the i-th audio bar based on the chosen color gradient
- * @param {int} i The index of the current audio bar
+ * @param {Number} i The index of the current audio bar
  */
 function getGdt(i) {
   let gdt = [
