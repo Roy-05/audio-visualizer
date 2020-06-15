@@ -5,18 +5,18 @@ body {
   background: #00000f;
 }
 
-#container {
+#main-container {
   width: 100vw;
   height: 100vh;
   display: grid;
   grid-template-rows: 5% 95%;
 }
 
-#main {
+#canvas-container {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   position: relative;
 }
 
