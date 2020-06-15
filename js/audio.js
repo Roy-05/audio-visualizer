@@ -23,9 +23,7 @@ let drawVisual,
     r2: 0,
     g2: 0,
     b2: 0,
-    r3: 0,
-    g3: 0,
-    b3: 0,
+    gdt: [0, 0, 0],
   };
 
 //Initialize values to paint default canvas
@@ -39,6 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     source = audioCtx.createMediaStreamSource(stream);
+
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
@@ -82,7 +81,7 @@ function setCanvasSize() {
   canvas.style.width = WIDTH + "px";
   canvas.style.height = HEIGHT + "px";
 
-  //Scale for dpi
+  //Scale for dpi for retina display
   canvas.width = Math.floor(WIDTH * DPI);
   canvas.height = Math.floor(HEIGHT * DPI);
 
@@ -92,18 +91,15 @@ function setCanvasSize() {
 function setBarWidth() {
   let circumference = 2 * Math.PI * RADIUS;
   barWidth = Math.floor(circumference / (numOfBars * 1.5));
-
-  //barWidth = barWidth > 3 ? barWidth : 3;
 }
 
 function drawDefaultCanvas() {
   let degree = 180;
   for (let i = 0; i < numOfBars; i++) {
-    let point = [
+    points[i] = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
       HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
     ];
-    points[i] = point;
     degree += 360 / numOfBars;
   }
 
@@ -111,23 +107,8 @@ function drawDefaultCanvas() {
 
   degree = 90;
   for (let i = 0; i < numOfBars; i++) {
-    canvasCtx.save();
-    canvasCtx.translate(points[i][0], points[i][1]);
-    canvasCtx.rotate((degree * Math.PI) / 180);
-
-    let gdt = i / (numOfBars - 1);
-    canvasCtx.fillStyle =
-      "rgb(" +
-      (RGB["r1"] - RGB["r3"] * gdt) +
-      "," +
-      (RGB["g1"] - RGB["g3"] * gdt) +
-      ", " +
-      (RGB["b1"] - RGB["b3"] * gdt) +
-      ")";
-    roundRect(canvasCtx, 0, 0, barWidth, 5, 2, true);
-
+    drawAudioBar(canvasCtx, points[i], degree, i);
     degree += 360 / numOfBars;
-    canvasCtx.restore();
   }
 }
 
@@ -153,35 +134,36 @@ function visualize() {
       barHeight = Math.floor((dataArray[i] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
-      canvasCtx.save();
-      canvasCtx.translate(points[i][0], points[i][1]);
-      canvasCtx.rotate((degree * Math.PI) / 180);
-
-      let gdt = i / (numOfBars - 1);
-      canvasCtx.fillStyle =
-        "rgb(" +
-        (RGB["r1"] - RGB["r3"] * gdt) +
-        "," +
-        (RGB["g1"] - RGB["g3"] * gdt) +
-        ", " +
-        (RGB["b1"] - RGB["b3"] * gdt) +
-        ")";
-      roundRect(canvasCtx, 0, 0, barWidth, barHeight, 2, true);
-
+      drawAudioBar(canvasCtx, points[i], degree, i);
       degree += 360 / numOfBars;
-      canvasCtx.restore();
     }
   };
-
   draw();
 }
 
-function drawAudioBar() {}
+function drawAudioBar(ctx, point, degree, i) {
+  ctx.save();
+  ctx.translate(point[0], point[1]);
+  ctx.rotate((degree * Math.PI) / 180);
+
+  let gdt = RGB["gdt"].map((elem) => elem * (i / (numOfBars - 1)));
+
+  ctx.fillStyle =
+    "rgb(" +
+    (RGB["r1"] - gdt[0]) +
+    "," +
+    (RGB["g1"] - gdt[1]) +
+    ", " +
+    (RGB["b1"] - gdt[2]) +
+    ")";
+  roundRect(ctx, 0, 0, barWidth, barHeight, 2, true);
+  ctx.restore();
+}
 
 /**
  * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
- * by Juan Mendes. Edited by Me for the specific use-case.
- *
+ * by Juan Mendes.
+ * Edited by Me for the specific use-case.
  * Draws a rounded rectangle using the current state of the canvas.
  * @param {CanvasRenderingContext2D} ctx
  * @param {Number} x The top left x coordinate
@@ -195,7 +177,6 @@ function drawAudioBar() {}
  * @param {Number} [radius.bl = 0] Bottom left
  */
 function roundRect(ctx, x, y, width, height, radius) {
-  radius = height <= 5 ? 2 : radius;
   radius = { tl: radius, tr: radius, br: radius, bl: radius };
   ctx.beginPath();
   ctx.moveTo(x + radius.tl, y);
@@ -260,7 +241,10 @@ function setGradient(start, end) {
     console.log("Invalid Value");
     // RGB["end"] = { r: 4, g: 153, b: 242 };
   }
-  RGB["r3"] = RGB["r1"] - RGB["r2"];
-  RGB["g3"] = RGB["g1"] - RGB["g2"];
-  RGB["b3"] = RGB["b1"] - RGB["b2"];
+
+  RGB["gdt"] = [
+    RGB["r1"] - RGB["r2"],
+    RGB["g1"] - RGB["g2"],
+    RGB["b1"] - RGB["b2"],
+  ];
 }
