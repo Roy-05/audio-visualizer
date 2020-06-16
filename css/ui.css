@@ -32,3 +32,8 @@
 #canvas-container {
   transition: margin-left 0.5s;
 }
+
+.range_slider {
+  display: flex;
+  align-items: center;
+}

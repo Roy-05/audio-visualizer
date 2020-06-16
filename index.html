@@ -77,10 +77,28 @@
                 Pick
               </button>
             </p>
+            <p><label for="bg_color">Background Color:</label></p>
+            <p>
+              <input
+                type="text"
+                id="bg_color"
+                class="settings bg"
+                name="bg_color"
+                value="#00000f"
+                data-jscolor="{width:243, height:150, position:'right',
+              borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
+              />
+              <button
+                onclick="document.getElementById('bg_color').jscolor.show()"
+              >
+                Pick
+              </button>
+            </p>
             <p>
               <label for="audio_slider">Number of Audio Bars</label>
             </p>
-            <p>
+            <p class="range_slider">
+              <label for="audio_slider">50</label>
               <input
                 type="range"
                 name="audio_slider"
@@ -91,11 +109,13 @@
                 step="10"
                 value="150"
               />
+              <label for="audio_slider">250</label>
             </p>
             <p>
               <label for="radius_slider">Circle Radius</label>
             </p>
-            <p>
+            <p class="range_slider">
+              <label for="radius_slider">80</label>
               <input
                 type="range"
                 name="radius_slider"
@@ -106,6 +126,7 @@
                 step="10"
                 value="140"
               />
+              <label for="radius_slider">200</label>
             </p>
           </div>
         </div>
