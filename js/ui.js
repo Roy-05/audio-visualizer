@@ -57,37 +57,25 @@ function toggleDrawer() {
 }
 
 function setGradient(start, end) {
-  if (start[0] === "#" && start.length === 7) {
-    RGB["r1"] = parseInt(start.slice(1, 3), 16);
-    RGB["g1"] = parseInt(start.slice(3, 5), 16);
-    RGB["b1"] = parseInt(start.slice(5, 7), 16);
-  } else if (start[0] === "#" && start.length === 4) {
-    RGB["r1"] = parseInt(start.slice(1, 2), 16);
-    RGB["g1"] = parseInt(start.slice(2, 3), 16);
-    RGB["b1"] = parseInt(start.slice(3, 4), 16);
-  } else if (Array.isArray(start) && start.length === 3) {
-    RGB["r1"] = start[0];
-    RGB["g1"] = start[1];
-    RGB["b1"] = start[2];
+  let validHex = /^#?[\dA-F]{6}$/i;
+
+  if (validHex.test(start)) {
+    let result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(start);
+    console.log(result);
+    RGB["r1"] = parseInt(result[1], 16);
+    RGB["g1"] = parseInt(result[2], 16);
+    RGB["b1"] = parseInt(result[3], 16);
   } else {
     console.error("Invalid Value");
     RGB["r2"] = 38;
     RGB["g2"] = 245;
     RGB["b2"] = 150;
   }
-
-  if (end[0] === "#" && end.length === 7) {
-    RGB["r2"] = parseInt(end.slice(1, 3), 16);
-    RGB["g2"] = parseInt(end.slice(3, 5), 16);
-    RGB["b2"] = parseInt(end.slice(5, 7), 16);
-  } else if (end[0] === "#" && end.length === 4) {
-    RGB["r2"] = parseInt(end.slice(1, 2), 16);
-    RGB["g2"] = parseInt(end.slice(2, 3), 16);
-    RGB["b2"] = parseInt(end.slice(3, 4), 16);
-  } else if (Array.isArray(end) && end.length === 3) {
-    RGB["r2"] = end[0];
-    RGB["g2"] = end[1];
-    RGB["b2"] = end[2];
+  if (validHex.test(end)) {
+    let result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(end);
+    RGB["r2"] = parseInt(result[1], 16);
+    RGB["g2"] = parseInt(result[2], 16);
+    RGB["b2"] = parseInt(result[3], 16);
   } else {
     console.error("Invalid Value");
     RGB["r2"] = 4;

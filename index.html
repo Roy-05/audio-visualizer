@@ -2,8 +2,9 @@
 <html>
   <head>
     <title>Audio Visualizer</title>
-    <script type="text/javascript" src="js/audio.js" defer></script>
-    <script type="text/javascript" src="js/ui.js" defer></script>
+    <script type="text/javascript" src="./libs/jscolor.js" async></script>
+    <script type="text/javascript" src="./js/audio.js" defer></script>
+    <script type="text/javascript" src="./js/ui.js" defer></script>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
     <link rel="stylesheet" type="text/css" href="./css/ui.css" />
     <link
@@ -58,7 +59,14 @@
                 id="end_gdt_data"
                 name="end_gdt"
                 value="#5bbad5"
+                data-jscolor="{width:243, height:150, position:'right',
+              borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
+              <button
+                onclick="document.getElementById('end_gdt_data').jscolor.show()"
+              >
+                Pick
+              </button>
             </p>
             <p><input type="submit" id="submit" value="Submit" /></p>
           </div>
