@@ -15,6 +15,14 @@ let drawerIsClosed = true,
   updateParams = false,
   isFullScreen = false;
 
+let settings_obj = {
+  bg_color: bg_color.value,
+  start_gdt: start_gdt.value,
+  end_gdt: end_gdt.value,
+  radius: parseInt(radius_slider.value, 10),
+  numBars: parseInt(audio_slider.value, 10),
+};
+
 hamburger.addEventListener("click", () => {
   toggleDrawer();
 });
@@ -117,18 +125,24 @@ function setGradient(start, end) {
   // Validate if input is hex color code
   if (isValidHex(start)) {
     start_rgb = HexToRGB(start);
+    start_gdt.value = start;
+    updateSettings("start_gdt", start);
   } else {
     // Initialize to the default values
     start_rgb = [38, 245, 150];
     start_gdt.value = "#26F596";
+    updateSettings("start_gdt", "#26F596");
     console.error(`Invalid Input ${start}`);
   }
 
   if (isValidHex(end)) {
     end_rgb = HexToRGB(end);
+    end_gdt.value = end;
+    updateSettings("end_gdt", end);
   } else {
     end_rgb = [4, 153, 242];
     end_gdt.value = "#0499F2";
+    updateSettings("end_gdt", "#0499F2");
     console.error(`Invalid Input ${end}`);
   }
 
@@ -163,26 +177,33 @@ function setGradient(start, end) {
 
 function setNumBars(num) {
   numBars = num;
+  audio_slider.value = num;
+  updateSettings("numBars", num);
 }
 
 function setRadius(r) {
   RADIUS = r;
+  radius_slider.value = r;
+  updateSettings("radius", r);
 }
 
 function setBgColor(color) {
   if (isValidHex(color)) {
     //Check if the hexcode starts with a #, if not, add it
-    color = color.slice(0) === "#" ? color : "#" + color;
+    color = color.substr(0, 1) === "#" ? color : "#" + color;
 
     document.getElementsByTagName("body")[0].style.background = color;
     canvas.style.background = color;
+    bg_color.value = color;
   } else {
-    document.getElementsByTagName("body")[0].style.background = "#00000f";
-    canvas.style.background = "#00000f";
-    bg_color.value("#00000f");
-
+    color = "#00000f";
+    document.getElementsByTagName("body")[0].style.background = color;
+    canvas.style.background = color;
+    bg_color.value = color;
     console.error(`Invalid Hex Code: ${color}`);
   }
+
+  updateSettings("bg_color", color);
 }
 
 function keyboardControls(e) {
@@ -193,4 +214,20 @@ function keyboardControls(e) {
   if ((e.key === "D" || e.key === "d") && !isFullScreen) {
     toggleDrawer();
   }
+}
+function populateSettings() {
+  for (let key in settings_obj) {
+    updateSettings(key, settings_obj[key]);
+  }
+}
+function updateSettings(key, val) {
+  localStorage.setItem(key, val);
+}
+
+function clearSettings() {
+  localStorage.clear();
+}
+
+function getSetting(key) {
+  return localStorage.getItem(key);
 }

@@ -38,7 +38,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     source.connect(analyser);
   });
-
+  if (localStorage.length === 0) {
+    populateSettings();
+  }
   init();
 });
 
@@ -53,6 +55,25 @@ document.addEventListener("click", () => {
 });
 
 function init() {
+  // Set Background color
+  setBgColor(getSetting("bg_color"));
+  // Set radius
+  setRadius(getSetting("radius"));
+  // Set number of Bars
+  setNumBars(getSetting("numBars"));
+  // Set gradient
+  setGradient(getSetting("start_gdt"), getSetting("end_gdt"));
+  // Set the height and width of the canvas
+  setCanvasSize();
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
+  // Draw the default canvas image
+  drawDefaultCanvas();
+  // Start visualization
+  visualize();
+}
+
+function update() {
   // Set Background color
   setBgColor(bg_color.value);
   // Set radius
@@ -118,13 +139,13 @@ function visualize() {
   const draw = () => {
     if (updateParams === true) {
       updateParams = false;
-      init();
+      update();
       return;
     }
 
     if (isResizing === true) {
       isResizing = false;
-      init();
+      update();
       return;
     }
 
