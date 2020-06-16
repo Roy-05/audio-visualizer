@@ -64,8 +64,10 @@ canvas.addEventListener("fullscreenchange", () => {
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     canvas.requestFullscreen();
+    canvas.style.cursor = "none";
   } else if (document.exitFullscreen) {
     document.exitFullscreen();
+    canvas.style.removeProperty("cursor");
   }
 }
 
