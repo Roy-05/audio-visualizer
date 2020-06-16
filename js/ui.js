@@ -21,12 +21,6 @@ closebtn.addEventListener("click", () => {
 
 settings.forEach((elem) => {
   elem.addEventListener("change", () => {
-    if (elem.classList.contains("hexcode")) {
-      setGradient(start_gdt.value, end_gdt.value);
-    } else if (elem.classList.contains("num_bars")) {
-      setNumBars(parseInt(audio_slider.value));
-    }
-
     updateParams = true;
   });
 });
@@ -71,6 +65,8 @@ function toggleDrawer() {
 // Doing it on DOMContentLoad provides improved visualization as
 // the code does not need to dynamically calculate each gradient every frame
 function setGradient(start, end) {
+  GDT = new Array(numBars);
+
   let validHex = /^#?[\dA-F]{6}$/i,
     start_rgb = { r: 0, g: 0, b: 0 },
     end_rgb = { r: 0, g: 0, b: 0 };

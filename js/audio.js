@@ -11,19 +11,11 @@ const canvas = document.getElementById("canvas"),
 
 let source;
 
-let points = [],
+let points,
   WIDTH,
   HEIGHT,
   RADIUS = 130,
-  RGB = {
-    r1: 0,
-    g1: 0,
-    b1: 0,
-    r2: 0,
-    g2: 0,
-    b2: 0,
-  },
-  GDT = [];
+  GDT;
 
 //Initialize values to paint default canvas
 let numBars,
@@ -44,10 +36,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     source.connect(analyser);
   });
-  //Set initial number of Bars
-  setNumBars(150);
-  //Set initial gradient
-  setGradient("#26f596", "#0499F2");
 
   init();
 });
@@ -61,12 +49,17 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  //Set the height and width of the canvas
+  // Set initial number of Bars
+  setNumBars(parseInt(audio_slider.value, 10));
+  // Set initial gradient
+  setGradient(start_gdt.value, end_gdt.value);
+  // Set the height and width of the canvas
   setCanvasSize();
-  //Set the bar width based on the size of the canvas;
+  // Set the bar width based on the size of the canvas;
   setBarWidth();
-  //Draw the default canvas image
+  // Draw the default canvas image
   drawDefaultCanvas();
+  // Start visualization
   visualize();
 }
 
@@ -77,7 +70,7 @@ function setCanvasSize() {
   canvas.style.width = WIDTH + "px";
   canvas.style.height = HEIGHT + "px";
 
-  //Scale for dpi for retina display
+  // Scale for dpi for retina display
   canvas.width = Math.floor(WIDTH * DPI);
   canvas.height = Math.floor(HEIGHT * DPI);
 
@@ -87,7 +80,7 @@ function setCanvasSize() {
 function drawDefaultCanvas() {
   // Get starting points for each audio bar and store it in a global array
   let degree = 180;
-  points = [];
+  points = new Array(numBars);
   for (let i = 0; i < numBars; i++) {
     points[i] = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
