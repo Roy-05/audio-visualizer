@@ -44,13 +44,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("resize", () => {
   isResizing = true;
-
-  //Change resizing to false once resize is done firing
-  clearTimeout(resizeEnd);
-
-  resizeEnd = setTimeout(() => {
-    isResizing = false;
-  }, 200);
 });
 
 document.addEventListener("click", () => {

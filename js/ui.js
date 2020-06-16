@@ -10,7 +10,8 @@ const hamburger = document.getElementById("hamburger"),
   radius_slider = document.getElementById("radius_slider");
 
 let drawerIsClosed = true,
-  updateParams = false;
+  updateParams = false,
+  isFullScreen = false;
 
 hamburger.addEventListener("click", () => {
   toggleDrawer();
@@ -26,26 +27,33 @@ settings.forEach((elem) => {
   });
 });
 
+canvas.addEventListener("fullscreenchange", () => {
+  isFullScreen = !isFullScreen;
+
+  console.log(
+    `isFullScreen: ${isFullScreen}, drawerIsClosed: ${drawerIsClosed}`
+  );
+});
+
 document.addEventListener("keydown", (e) => {
-  if (
-    (e.key === "Escape" || e.key === "f" || e.key === "F") &&
-    drawerIsClosed
-  ) {
+  if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
     toggleFullScreen();
   }
 
-  if (e.key === "Enter" && !drawerIsClosed) {
-    //no-op
+  if ((e.key === "D" || e.key === "d") && !isFullScreen) {
+    toggleDrawer();
   }
+
+  console.log(
+    `isFullScreen: ${isFullScreen}, drawerIsClosed: ${drawerIsClosed}`
+  );
 });
 
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     canvas.requestFullscreen();
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
   }
 }
 
@@ -54,12 +62,12 @@ function toggleDrawer() {
   if (drawerIsClosed) {
     drawer.style.width = "300px";
     canvasCtr.style.marginLeft = "300px";
-    drawerIsClosed = !drawerIsClosed;
   } else {
     drawer.style.width = "0";
     canvasCtr.style.marginLeft = "0";
-    drawerIsClosed = !drawerIsClosed;
   }
+
+  drawerIsClosed = !drawerIsClosed;
 }
 
 // Create an array of gradient values for each audio bar
