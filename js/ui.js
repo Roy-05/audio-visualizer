@@ -6,6 +6,7 @@ const hamburger = document.getElementById("hamburger"),
   settings = [...document.getElementsByClassName("settings")],
   start_gdt = document.getElementById("start_gdt"),
   end_gdt = document.getElementById("end_gdt"),
+  bg_color = document.getElementById("bg_color"),
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider");
 
@@ -70,42 +71,62 @@ function toggleDrawer() {
   drawerIsClosed = !drawerIsClosed;
 }
 
-// Create an array of gradient values for each audio bar
-// Doing it on DOMContentLoad provides improved visualization as
-// the code does not need to dynamically calculate each gradient every frame
+/**
+ *
+ * @param {*} color
+ */
+function isValidHex(color) {
+  let validHex = /^#?[\dA-F]{6}$/i;
+
+  return validHex.test(color) ? true : false;
+}
+
+/**
+ *
+ * @param {*} hexColor
+ */
+function HexToRGB(hexColor) {
+  /* 
+  Executing the regex returns an array of 4 elements where the first elem is the 
+  input itself so we splice it and take the next 3. We then convert each element 
+  to the corresponding integer and return the result array.
+  */
+  return /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i
+    .exec(hexColor)
+    .splice(1, 4)
+    .map((hex) => parseInt(hex, 16));
+}
+
+/**
+ *
+ * Create an array to store gradient values for each audio bar.
+ * Doing this leads to faster render as the code does not need
+ * to dynamically calculate each gradient every frame.
+ * @param {Number} start
+ * @param {Number} end
+ */
 function setGradient(start, end) {
   GDT = new Array(numBars);
 
-  let validHex = /^#?[\dA-F]{6}$/i,
-    start_rgb = { r: 0, g: 0, b: 0 },
-    end_rgb = { r: 0, g: 0, b: 0 };
+  let start_rgb = [],
+    end_rgb = [];
 
   // Validate if input is hex color code
-  if (validHex.test(start)) {
-    let result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(start);
-    start_rgb["r"] = parseInt(result[1], 16);
-    start_rgb["g"] = parseInt(result[2], 16);
-    start_rgb["b"] = parseInt(result[3], 16);
+  if (isValidHex(start)) {
+    start_rgb = HexToRGB(start);
   } else {
     // Initialize to the default values
-    start_rgb["r"] = 38;
-    start_rgb["g"] = 245;
-    start_rgb["b"] = 150;
+    start_rgb = [38, 245, 150];
     start_gdt.value = "26F596";
-    console.error("Invalid Value");
+    console.error(`Invalid Input ${start}`);
   }
 
-  if (validHex.test(end)) {
-    let result = /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.exec(end);
-    end_rgb["r"] = parseInt(result[1], 16);
-    end_rgb["g"] = parseInt(result[2], 16);
-    end_rgb["b"] = parseInt(result[3], 16);
+  if (isValidHex(end)) {
+    end_rgb = HexToRGB(end);
   } else {
-    end_rgb["r"] = 4;
-    end_rgb["g"] = 153;
-    end_rgb["b"] = 242;
+    end_rgb = [4, 153, 242];
     end_gdt.value = "0499F2";
-    console.error("Invalid Value");
+    console.error(`Invalid Input ${end}`);
   }
 
   let halfNumBars = Math.floor(numBars / 2);
@@ -114,25 +135,19 @@ function setGradient(start, end) {
     let gdt = [0, 0, 0];
     if (i < halfNumBars) {
       gdt = [
-        start_rgb["r"] +
-          (end_rgb["r"] - start_rgb["r"]) * (i / (halfNumBars - 1)),
-        start_rgb["g"] +
-          (end_rgb["g"] - start_rgb["g"]) * (i / (halfNumBars - 1)),
-        start_rgb["b"] +
-          (end_rgb["b"] - start_rgb["b"]) * (i / (halfNumBars - 1)),
+        start_rgb[0] + (end_rgb[0] - start_rgb[0]) * (i / (halfNumBars - 1)),
+        start_rgb[1] + (end_rgb[1] - start_rgb[1]) * (i / (halfNumBars - 1)),
+        start_rgb[2] + (end_rgb[2] - start_rgb[2]) * (i / (halfNumBars - 1)),
       ];
       console;
     } else {
       gdt = [
-        end_rgb["r"] +
-          (start_rgb["r"] - end_rgb["r"]) *
-            ((i % halfNumBars) / (halfNumBars - 1)),
-        end_rgb["g"] +
-          (start_rgb["g"] - end_rgb["g"]) *
-            ((i % halfNumBars) / (halfNumBars - 1)),
-        end_rgb["b"] +
-          (start_rgb["b"] - end_rgb["b"]) *
-            ((i % halfNumBars) / (halfNumBars - 1)),
+        end_rgb[0] +
+          (start_rgb[0] - end_rgb[0]) * ((i % halfNumBars) / (halfNumBars - 1)),
+        end_rgb[1] +
+          (start_rgb[1] - end_rgb[1]) * ((i % halfNumBars) / (halfNumBars - 1)),
+        end_rgb[2] +
+          (start_rgb[2] - end_rgb[2]) * ((i % halfNumBars) / (halfNumBars - 1)),
       ];
     }
     //Convert rgb values to integers
@@ -149,4 +164,18 @@ function setNumBars(num) {
 
 function setRadius(r) {
   RADIUS = r;
+}
+
+function setBgColor(color) {
+  if (isValidHex(color)) {
+    //Check if the hexcode starts with a #, if not, add it
+    color = color.slice(0) === "#" ? color : "#" + color;
+
+    document.getElementsByTagName("body")[0].style.background = color;
+  } else {
+    document.getElementsByTagName("body")[0].style.background = "#00000f";
+    bg_color.value("#00000f");
+
+    console.error(`Invalid Hex Code: ${color}`);
+  }
 }

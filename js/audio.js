@@ -53,6 +53,8 @@ document.addEventListener("click", () => {
 });
 
 function init() {
+  // Set Background color
+  setBgColor(bg_color.value);
   // Set radius
   setRadius(parseInt(radius_slider.value, 10));
   // Set number of Bars
