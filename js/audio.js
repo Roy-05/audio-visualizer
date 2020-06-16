@@ -11,16 +11,18 @@ const canvas = document.getElementById("canvas"),
 
 let source;
 
-let points,
+let points = [],
   WIDTH,
   HEIGHT,
   RADIUS = 130,
-  GDT;
+  GDT = [];
 
 //Initialize values to paint default canvas
 let numBars,
   barHeight = 10,
   barWidth;
+
+let isResizing = false;
 
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
@@ -32,7 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
-    analyser.smoothingTimeConstant = 0.92;
+    analyser.smoothingTimeConstant = 0.9;
 
     source.connect(analyser);
   });
@@ -40,7 +42,16 @@ window.addEventListener("DOMContentLoaded", () => {
   init();
 });
 
-window.addEventListener("resize", init);
+window.addEventListener("resize", () => {
+  isResizing = true;
+
+  //Change resizing to false once resize is done firing
+  clearTimeout(resizeEnd);
+
+  resizeEnd = setTimeout(() => {
+    isResizing = false;
+  }, 200);
+});
 
 document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
@@ -109,8 +120,13 @@ function visualize() {
 
   const draw = () => {
     if (updateParams === true) {
-      console.log("fired");
       updateParams = false;
+      init();
+      return;
+    }
+
+    if (isResizing === true) {
+      isResizing = false;
       init();
       return;
     }
