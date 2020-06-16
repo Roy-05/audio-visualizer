@@ -25,7 +25,7 @@ let points = [],
   };
 
 //Initialize values to paint default canvas
-let numBars = 120,
+let numBars = 180,
   barHeight = 10,
   barWidth;
 
@@ -85,8 +85,8 @@ function drawDefaultCanvas() {
   let degree = 180;
   for (let i = 0; i < numBars; i++) {
     points[i] = [
-      Math.floor(WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS),
-      Math.floor(HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS),
+      WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
+      HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
     ];
     degree += 360 / numBars;
   }
@@ -102,7 +102,7 @@ function drawDefaultCanvas() {
 
 function visualize() {
   //Create Analyser Node to extract data from Audio Source
-  analyser.fftSize = 1024;
+  analyser.fftSize = 2048;
 
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
@@ -187,11 +187,24 @@ function roundRect(ctx, x, y, width, height, radius, color) {
  * @param {Number} i The index of the current audio bar
  */
 function getGdt(i) {
-  let gdt = [
-    RGB["r1"] - (RGB["r1"] - RGB["r2"]) * (i / (numBars - 1)),
-    RGB["g1"] - (RGB["g1"] - RGB["g2"]) * (i / (numBars - 1)),
-    RGB["b1"] - (RGB["b1"] - RGB["b2"]) * (i / (numBars - 1)),
-  ];
+  let halfNumBars = Math.floor(numBars / 2);
+  let gdt = [];
+  if (i < halfNumBars) {
+    gdt = [
+      RGB["r1"] + (RGB["r2"] - RGB["r1"]) * (i / (halfNumBars - 1)),
+      RGB["g1"] + (RGB["g2"] - RGB["g1"]) * (i / (halfNumBars - 1)),
+      RGB["b1"] + (RGB["b2"] - RGB["b1"]) * (i / (halfNumBars - 1)),
+    ];
+  } else {
+    gdt = [
+      RGB["r2"] +
+        (RGB["r1"] - RGB["r2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
+      RGB["g2"] +
+        (RGB["g1"] - RGB["g2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
+      RGB["b2"] +
+        (RGB["b1"] - RGB["b2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
+    ];
+  }
 
   return `rgb(${gdt[0]},${gdt[1]},${gdt[2]})`;
 }
