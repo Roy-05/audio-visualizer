@@ -26,7 +26,7 @@ let points = [],
   GDT = [];
 
 //Initialize values to paint default canvas
-let numBars = 50,
+let numBars,
   barHeight = 10,
   barWidth;
 
@@ -44,8 +44,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     source.connect(analyser);
   });
+  //Set initial number of Bars
+  setNumBars(150);
   //Set initial gradient
-  setGradient("#26f596", "# ");
+  setGradient("#26f596", "#0499F2");
+
   init();
 });
 
@@ -84,6 +87,7 @@ function setCanvasSize() {
 function drawDefaultCanvas() {
   // Get starting points for each audio bar and store it in a global array
   let degree = 180;
+  points = [];
   for (let i = 0; i < numBars; i++) {
     points[i] = [
       WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
@@ -111,6 +115,13 @@ function visualize() {
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   const draw = () => {
+    if (updateParams === true) {
+      console.log("fired");
+      updateParams = false;
+      init();
+      return;
+    }
+
     requestAnimationFrame(draw);
 
     //Returns frequency data on a scale of 0-255

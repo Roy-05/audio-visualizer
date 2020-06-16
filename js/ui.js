@@ -3,9 +3,10 @@ const hamburger = document.getElementById("hamburger"),
   submit = document.getElementById("submit"),
   drawer = document.getElementById("drawer"),
   canvasCtr = document.getElementById("canvas-container"),
-  inputs = [...document.getElementsByClassName("settings_ipt")],
-  start_gdt = document.getElementById("start_gdt_data"),
-  end_gdt = document.getElementById("end_gdt_data");
+  settings = [...document.getElementsByClassName("settings")],
+  start_gdt = document.getElementById("start_gdt"),
+  end_gdt = document.getElementById("end_gdt"),
+  audio_slider = document.getElementById("audio_slider");
 
 let drawerIsClosed = true,
   updateParams = false;
@@ -18,9 +19,15 @@ closebtn.addEventListener("click", () => {
   toggleDrawer();
 });
 
-inputs.forEach((elem) => {
+settings.forEach((elem) => {
   elem.addEventListener("change", () => {
-    setGradient(start_gdt.value, end_gdt.value);
+    if (elem.classList.contains("hexcode")) {
+      setGradient(start_gdt.value, end_gdt.value);
+    } else if (elem.classList.contains("num_bars")) {
+      setNumBars(parseInt(audio_slider.value));
+    }
+
+    updateParams = true;
   });
 });
 
@@ -123,6 +130,14 @@ function setGradient(start, end) {
             ((i % halfNumBars) / (halfNumBars - 1)),
       ];
     }
+    //Convert rgb values to integers
+    gdt = gdt.map((i) => Math.round(i));
+
+    //Assign it to the global gradient array
     GDT[i] = `rgb(${gdt[0]},${gdt[1]},${gdt[2]})`;
   }
+}
+
+function setNumBars(num) {
+  numBars = num;
 }

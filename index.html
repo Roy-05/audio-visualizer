@@ -47,15 +47,15 @@
             <p>
               <input
                 type="text"
-                id="start_gdt_data"
-                class="settings_ipt"
+                id="start_gdt"
+                class="settings hexcode"
                 name="start_gdt"
                 value="#26f596"
                 data-jscolor="{width:243, height:150, position:'right',
               borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
               <button
-                onclick="document.getElementById('start_gdt_data').jscolor.show()"
+                onclick="document.getElementById('start_gdt').jscolor.show()"
               >
                 Pick
               </button>
@@ -64,18 +64,33 @@
             <p>
               <input
                 type="text"
-                id="end_gdt_data"
-                class="settings_ipt"
+                id="end_gdt"
+                class="settings hexcode"
                 name="end_gdt"
                 value="#0499f2"
                 data-jscolor="{width:243, height:150, position:'right',
               borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
               <button
-                onclick="document.getElementById('end_gdt_data').jscolor.show()"
+                onclick="document.getElementById('end_gdt').jscolor.show()"
               >
                 Pick
               </button>
+            </p>
+            <p>
+              <label for="audio_slider">Number of Audio Bars</label>
+            </p>
+            <p>
+              <input
+                type="range"
+                name="audio_slider"
+                id="audio_slider"
+                class="settings num_bars"
+                min="50"
+                max="250"
+                step="10"
+                value="150"
+              />
             </p>
           </div>
         </div>
