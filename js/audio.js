@@ -112,7 +112,6 @@ function visualize() {
   const draw = () => {
     if (updateParams === true) {
       updateParams = false;
-
       init();
       return;
     }
