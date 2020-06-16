@@ -22,10 +22,11 @@ let points = [],
     r2: 0,
     g2: 0,
     b2: 0,
-  };
+  },
+  GDT = [];
 
 //Initialize values to paint default canvas
-let numBars = 180,
+let numBars = 50,
   barHeight = 10,
   barWidth;
 
@@ -44,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
     source.connect(analyser);
   });
   //Set initial gradient
-  setGradient("#26f596", "#0499f2");
+  setGradient("#26f596", "# ");
   init();
 });
 
@@ -110,11 +111,6 @@ function visualize() {
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   const draw = () => {
-    if (updateParams === true) {
-      updateParams = false;
-      init();
-      return;
-    }
     requestAnimationFrame(draw);
 
     //Returns frequency data on a scale of 0-255
@@ -127,7 +123,7 @@ function visualize() {
       barHeight = Math.floor((dataArray[i] / 255) * 175);
       barHeight = barHeight > 5 ? barHeight : 5;
 
-      let fillColor = getGdt(i); //The color of the audio bar
+      let fillColor = GDT[i]; //The color of the audio bar
 
       drawAudioBar(canvasCtx, points[i], degree, fillColor);
       degree += 360 / numBars;
@@ -180,31 +176,4 @@ function roundRect(ctx, x, y, width, height, radius, color) {
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
-}
-
-/**
- * Return the color of the i-th audio bar based on the chosen color gradient
- * @param {Number} i The index of the current audio bar
- */
-function getGdt(i) {
-  let halfNumBars = Math.floor(numBars / 2);
-  let gdt = [];
-  if (i < halfNumBars) {
-    gdt = [
-      RGB["r1"] + (RGB["r2"] - RGB["r1"]) * (i / (halfNumBars - 1)),
-      RGB["g1"] + (RGB["g2"] - RGB["g1"]) * (i / (halfNumBars - 1)),
-      RGB["b1"] + (RGB["b2"] - RGB["b1"]) * (i / (halfNumBars - 1)),
-    ];
-  } else {
-    gdt = [
-      RGB["r2"] +
-        (RGB["r1"] - RGB["r2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
-      RGB["g2"] +
-        (RGB["g1"] - RGB["g2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
-      RGB["b2"] +
-        (RGB["b1"] - RGB["b2"]) * ((i % halfNumBars) / (halfNumBars - 1)),
-    ];
-  }
-
-  return `rgb(${gdt[0]},${gdt[1]},${gdt[2]})`;
 }
