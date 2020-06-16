@@ -6,7 +6,8 @@ const hamburger = document.getElementById("hamburger"),
   settings = [...document.getElementsByClassName("settings")],
   start_gdt = document.getElementById("start_gdt"),
   end_gdt = document.getElementById("end_gdt"),
-  audio_slider = document.getElementById("audio_slider");
+  audio_slider = document.getElementById("audio_slider"),
+  radius_slider = document.getElementById("radius_slider");
 
 let drawerIsClosed = true,
   updateParams = false;
@@ -136,4 +137,8 @@ function setGradient(start, end) {
 
 function setNumBars(num) {
   numBars = num;
+}
+
+function setRadius(r) {
+  RADIUS = r;
 }

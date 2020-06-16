@@ -14,7 +14,7 @@ let source;
 let points = [],
   WIDTH,
   HEIGHT,
-  RADIUS = 130,
+  RADIUS = 80,
   GDT = [];
 
 //Initialize values to paint default canvas
@@ -60,9 +60,11 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  // Set initial number of Bars
+  // Set radius
+  setRadius(parseInt(radius_slider.value, 10));
+  // Set number of Bars
   setNumBars(parseInt(audio_slider.value, 10));
-  // Set initial gradient
+  // Set gradient
   setGradient(start_gdt.value, end_gdt.value);
   // Set the height and width of the canvas
   setCanvasSize();
@@ -140,7 +142,7 @@ function visualize() {
     let degree = 90;
     for (let i = 0; i < numBars; i++) {
       //scale bar heights to max height of 175
-      barHeight = Math.floor((dataArray[i] / 255) * 175);
+      barHeight = Math.floor((dataArray[i] / 255) * 150);
       barHeight = barHeight > 5 ? barHeight : 5;
 
       let fillColor = GDT[i]; //The color of the audio bar
