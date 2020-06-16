@@ -4,6 +4,7 @@ const hamburger = document.getElementById("hamburger"),
   drawer = document.getElementById("drawer"),
   canvasCtr = document.getElementById("canvas-container"),
   settings = [...document.getElementsByClassName("settings")],
+  text_input = [...document.getElementsByTagName("input")],
   start_gdt = document.getElementById("start_gdt"),
   end_gdt = document.getElementById("end_gdt"),
   bg_color = document.getElementById("bg_color"),
@@ -18,6 +19,26 @@ hamburger.addEventListener("click", () => {
   toggleDrawer();
 });
 
+text_input.forEach((elem) => {
+  if (elem.type === "text") {
+    elem.addEventListener("focus", () => {
+      document.removeEventListener("keydown", (e) => {
+        keyboardControls(e);
+      });
+    });
+
+    elem.addEventListener("blur", () => {
+      document.addEventListener("keydown", (e) => {
+        keyboardControls(e);
+      });
+    });
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  keyboardControls(e);
+});
+
 closebtn.addEventListener("click", () => {
   toggleDrawer();
 });
@@ -30,24 +51,6 @@ settings.forEach((elem) => {
 
 canvas.addEventListener("fullscreenchange", () => {
   isFullScreen = !isFullScreen;
-
-  console.log(
-    `isFullScreen: ${isFullScreen}, drawerIsClosed: ${drawerIsClosed}`
-  );
-});
-
-document.addEventListener("keydown", (e) => {
-  if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
-    toggleFullScreen();
-  }
-
-  if ((e.key === "D" || e.key === "d") && !isFullScreen) {
-    toggleDrawer();
-  }
-
-  console.log(
-    `isFullScreen: ${isFullScreen}, drawerIsClosed: ${drawerIsClosed}`
-  );
 });
 
 function toggleFullScreen() {
@@ -117,7 +120,7 @@ function setGradient(start, end) {
   } else {
     // Initialize to the default values
     start_rgb = [38, 245, 150];
-    start_gdt.value = "26F596";
+    start_gdt.value = "#26F596";
     console.error(`Invalid Input ${start}`);
   }
 
@@ -125,7 +128,7 @@ function setGradient(start, end) {
     end_rgb = HexToRGB(end);
   } else {
     end_rgb = [4, 153, 242];
-    end_gdt.value = "0499F2";
+    end_gdt.value = "#0499F2";
     console.error(`Invalid Input ${end}`);
   }
 
@@ -179,5 +182,15 @@ function setBgColor(color) {
     bg_color.value("#00000f");
 
     console.error(`Invalid Hex Code: ${color}`);
+  }
+}
+
+function keyboardControls(e) {
+  if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
+    toggleFullScreen();
+  }
+
+  if ((e.key === "D" || e.key === "d") && !isFullScreen) {
+    toggleDrawer();
   }
 }
