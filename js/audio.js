@@ -1,7 +1,7 @@
 //Created by Saket Roy on 12/25/19
 
 //Global Variables:
-const canvas = document.getElementById("canvas"),
+const canvas = document.getElementById("audio-canvas"),
   audioElem = document.querySelector("audio"),
   playButton = document.getElementById("button"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),

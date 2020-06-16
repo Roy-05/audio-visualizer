@@ -20,6 +20,7 @@ body {
   position: relative;
 }
 
-canvas {
+#audio-canvas {
+  background: #00000f;
   position: absolute;
 }

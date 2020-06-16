@@ -172,8 +172,10 @@ function setBgColor(color) {
     color = color.slice(0) === "#" ? color : "#" + color;
 
     document.getElementsByTagName("body")[0].style.background = color;
+    canvas.style.background = color;
   } else {
     document.getElementsByTagName("body")[0].style.background = "#00000f";
+    canvas.style.background = "#00000f";
     bg_color.value("#00000f");
 
     console.error(`Invalid Hex Code: ${color}`);
