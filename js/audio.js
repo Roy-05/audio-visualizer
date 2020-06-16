@@ -11,8 +11,7 @@ const canvas = document.getElementById("canvas"),
 
 let source;
 
-let drawVisual,
-  points = [],
+let points = [],
   WIDTH,
   HEIGHT,
   RADIUS = 130,
@@ -84,11 +83,10 @@ function setCanvasSize() {
 function drawDefaultCanvas() {
   // Get starting points for each audio bar and store it in a global array
   let degree = 180;
-  points = [];
   for (let i = 0; i < numBars; i++) {
     points[i] = [
-      WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
-      HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
+      Math.floor(WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS),
+      Math.floor(HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS),
     ];
     degree += 360 / numBars;
   }
@@ -112,7 +110,13 @@ function visualize() {
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   const draw = () => {
-    drawVisual = requestAnimationFrame(draw);
+    if (updateParams === true) {
+      updateParams = false;
+
+      init();
+      return;
+    }
+    requestAnimationFrame(draw);
 
     //Returns frequency data on a scale of 0-255
     analyser.getByteFrequencyData(dataArray);

@@ -6,7 +6,8 @@ const hamburger = document.getElementById("hamburger"),
   start_gdt = document.getElementById("start_gdt_data"),
   end_gdt = document.getElementById("end_gdt_data");
 
-let drawerIsClosed = true;
+let drawerIsClosed = true,
+  updateParams = false;
 
 hamburger.addEventListener("click", () => {
   toggleDrawer();
@@ -17,8 +18,8 @@ closebtn.addEventListener("click", () => {
 });
 
 submit.addEventListener("click", () => {
+  updateParams = true;
   setGradient(start_gdt.value, end_gdt.value);
-  init();
 });
 document.addEventListener("keydown", (e) => {
   if (
