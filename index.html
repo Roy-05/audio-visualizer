@@ -42,91 +42,115 @@
             </button>
           </div>
           <div id="settings-container">
-            <p><label for="start_gdt">Starting Hex Code:</label></p>
-            <p>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="start_gdt"
+                  >Starting Hex Code:</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
               <input
                 type="text"
                 id="start_gdt"
-                class="settings hexcode ipt-field"
+                class="settings hexcode text-field"
                 name="start_gdt"
                 value="#26f596"
-                data-jscolor="{hash:true, width:243, height:150, position:'right',
-              borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
+                data-jscolor="{'hash':true, width:243, height:150, position:'right',
+                  borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
               <button
                 onclick="document.getElementById('start_gdt').jscolor.show()"
-              >
-                Pick
-              </button>
-            </p>
-            <p><label for="end_gdt">Ending Hex Code:</label></p>
-            <p>
+              ></button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="end_gdt"
+                  >Ending Hex Code:</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
               <input
                 type="text"
                 id="end_gdt"
-                class="settings hexcode ipt-field"
+                class="settings hexcode text-field"
                 name="end_gdt"
                 value="#0499f2"
                 data-jscolor="{hash:true, width:243, height:150, position:'right',
-              borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
+                borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
               <button
                 onclick="document.getElementById('end_gdt').jscolor.show()"
-              >
-                Pick
-              </button>
-            </p>
-            <p><label for="bg_color">Background Color:</label></p>
-            <p>
+              ></button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="bg_color"
+                  >Background Color:</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
               <input
                 type="text"
                 id="bg_color"
-                class="settings ipt-field"
+                class="settings text-field"
                 name="bg_color"
                 value="#00000f"
                 data-jscolor="{hash:true, width:243, height:150, position:'right',
-              borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
+                borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
               <button
                 onclick="document.getElementById('bg_color').jscolor.show()"
-              >
-                Pick
-              </button>
-            </p>
-            <p>
-              <label for="audio_slider">Number of Audio Bars</label>
-            </p>
-            <p class="range_slider">
-              <label for="audio_slider">50</label>
-              <input
-                type="range"
-                name="audio_slider"
-                id="audio_slider"
-                class="settings ipt-field"
-                min="50"
-                max="250"
-                step="10"
-                value="150"
-              />
-              <label for="audio_slider">250</label>
-            </p>
-            <p>
-              <label for="radius_slider">Circle Radius</label>
-            </p>
-            <p class="range_slider">
-              <label for="radius_slider">80</label>
-              <input
-                type="range"
-                name="radius_slider"
-                id="radius_slider"
-                class="settings ipt-field"
-                min="80"
-                max="200"
-                step="10"
-                value="140"
-              />
-              <label for="radius_slider">200</label>
-            </p>
+              ></button>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="audio_slider"
+                  >Number of Audio Bars</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="range_slider">
+                <label for="audio_slider">50</label>
+                <input
+                  type="range"
+                  name="audio_slider"
+                  id="audio_slider"
+                  class="settings"
+                  min="50"
+                  max="250"
+                  step="10"
+                  value="150"
+                />
+                <label for="audio_slider">250</label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="radius_slider"
+                  >Circle Radius</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="range_slider">
+                <label for="radius_slider">80</label>
+                <input
+                  type="range"
+                  name="radius_slider"
+                  id="radius_slider"
+                  class="settings"
+                  min="80"
+                  max="200"
+                  step="10"
+                  value="140"
+                />
+                <label for="radius_slider">200</label>
+              </div>
+            </div>
           </div>
         </div>
         <div id="hamburger">

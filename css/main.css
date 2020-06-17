@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "Ubuntu-Bold";
+  font-family: Ubuntu-Bold;
   src: url("../fonts/Ubuntu-Bold.ttf");
 }
 
@@ -92,17 +92,35 @@ body {
   align-items: center;
 }
 
-.ipt-field {
+.text-field {
+  font-family: Ubuntu-Bold, sans-serif;
   position: relative;
-  display: block;
   background: #fff;
-  border-radius: 31px;
-  font-size: 10px;
-  color: #8f8fa1;
+  border-radius: 30px;
+  font-size: 15px;
   line-height: 1.2;
 }
 
-p > input,
-p > label {
+#settings-container {
+  display: grid;
+  row-gap: 5px;
+  grid-template-rows: repeat(auto-fit, 50px);
+}
+
+.settings-row {
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  background: url("../fill-icon.png") no-repeat;
+  background-size: contain;
+  width: 30px;
+  height: 30px;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
