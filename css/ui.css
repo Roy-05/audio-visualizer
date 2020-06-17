@@ -55,7 +55,26 @@
   transition: margin-left 0.3s;
 }
 
+#settings-container {
+}
+
 .range_slider {
   display: flex;
   align-items: center;
+}
+
+@font-face {
+  font-family: "Ubuntu-Bold";
+  src: url("../fonts/Ubuntu-Bold.ttf");
+}
+.ipt-field {
+  position: relative;
+  display: block;
+  width: 50%;
+  background: #fff;
+  border-radius: 31px;
+  font-family: Ubuntu-Bold;
+  font-size: 10px;
+  color: #8f8fa1;
+  line-height: 1.2;
 }
