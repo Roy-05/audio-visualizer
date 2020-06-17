@@ -13,8 +13,8 @@
 #drawer {
   background: rgba(255, 255, 255, 0.05);
   height: 100%;
-  width: 0;
   position: fixed;
+  width: 300px;
   top: 0;
   left: 0;
   overflow-x: hidden;
@@ -31,6 +31,10 @@
   display: flex;
   justify-content: left;
   align-items: center;
+}
+
+.closed {
+  transform: translateX(-300px);
 }
 
 #closebtn {

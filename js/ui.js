@@ -70,11 +70,11 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
-    drawer.style.width = "300px";
-    canvasCtr.style.marginLeft = "300px";
+    drawer.classList.remove("closed"); // Removes a -300px translate from the div
+    canvasCtr.style.marginLeft = "300px"; // Shift the rest of the page 300px
     hamburger.style.display = "none"; // Hide the hamburger icon
   } else {
-    drawer.style.width = "0";
+    drawer.classList.add("closed");
     canvasCtr.style.marginLeft = "0";
     // Show the hamburger icon again after 0.3s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
@@ -198,19 +198,15 @@ function setBgColor(color) {
   if (isValidHex(color)) {
     //Check if the hexcode starts with a #, if not, add it
     color = color.substr(0, 1) === "#" ? color : "#" + color;
-
-    document.getElementsByTagName("body")[0].style.background = color;
-    canvas.style.background = color;
-    bg_color.value = color;
   } else {
     color = "#00000f";
-    document.getElementsByTagName("body")[0].style.background = color;
-    canvas.style.background = color;
-    bg_color.value = color;
-
     console.error(`Invalid Hex Code: ${color}`);
   }
 
+  document.getElementsByTagName("body")[0].style.background = color;
+  canvas.style.background = color;
+
+  bg_color.value = color;
   bg_color.jscolor.fromString(bg_color.value);
   updateSettings("bg_color", color);
 }
