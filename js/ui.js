@@ -209,6 +209,8 @@ function setBgColor(color) {
   bg_color.value = color;
   bg_color.jscolor.fromString(bg_color.value);
   updateSettings("bg_color", color);
+
+  setFontContrastColor();
 }
 
 function keyboardControls(e) {
@@ -237,4 +239,14 @@ function clearSettings() {
 
 function getSetting(key) {
   return localStorage.getItem(key);
+}
+
+function setFontContrastColor() {
+  let bg = getSetting("bg_color"),
+    bg_rgb = HexToRGB(bg),
+    font_color;
+  let luma = 0.299 * bg_rgb[0] + 0.587 * bg_rgb[1] + 0.114 * bg_rgb[2];
+  font_color = luma > 255 / 2 ? "#000000" : "#ffffff";
+  console.log(font_color);
+  document.getElementById("sidenav").style.color = font_color;
 }

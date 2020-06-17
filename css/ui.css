@@ -11,6 +11,7 @@
   z-index: -1;
 }
 #drawer {
+  text-decoration: inherit;
   background: rgba(255, 255, 255, 0.05);
   height: 100%;
   position: fixed;
@@ -27,10 +28,10 @@
   margin-left: 10px;
   font-size: 40px;
   cursor: pointer;
-  color: aliceblue;
   display: flex;
   justify-content: left;
   align-items: center;
+  color: inherit;
 }
 
 .closed {
@@ -43,6 +44,11 @@
   top: 0;
   right: 25px;
   font-size: 36px;
+  color: inherit;
+  background: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 
 #canvas-container {
