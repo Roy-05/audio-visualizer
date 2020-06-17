@@ -4,22 +4,24 @@ const hamburger = document.getElementById("hamburger"),
   drawer = document.getElementById("drawer"),
   canvasCtr = document.getElementById("canvas-container"),
   settings = [...document.getElementsByClassName("settings")],
-  text_input = [...document.getElementsByTagName("input")],
+  input_fields = [...document.getElementsByTagName("input")],
   start_gdt = document.getElementById("start_gdt"),
   end_gdt = document.getElementById("end_gdt"),
   bg_color = document.getElementById("bg_color"),
   audio_slider = document.getElementById("audio_slider"),
-  radius_slider = document.getElementById("radius_slider");
+  radius_slider = document.getElementById("radius_slider"),
+  color_picker_btns = [...document.getElementsByClassName("color-picker")];
 
 let drawerIsClosed = true,
   updateParams = false,
   isFullScreen = false,
-  isShortcutsEnabled = true;
+  isShortcutsEnabled = true,
+  showColorPicker = true;
 
 let settings_obj = {
-  bg_color: "#00000f",
-  start_gdt: "#26f596",
-  end_gdt: "#0499f2",
+  bg_color: bg_color.value,
+  start_gdt: start_gdt.value,
+  end_gdt: end_gdt.value,
   radius: parseInt(radius_slider.value, 10),
   numBars: parseInt(audio_slider.value, 10),
 };
@@ -28,7 +30,7 @@ hamburger.addEventListener("click", () => {
   toggleDrawer();
 });
 
-text_input.forEach((elem) => {
+input_fields.forEach((elem) => {
   elem.addEventListener("focus", () => {
     isShortcutsEnabled = false;
   });
@@ -225,7 +227,6 @@ function populateSettings() {
   }
 }
 function updateSettings(key, val) {
-  console.log(localStorage);
   localStorage.setItem(key, val);
 }
 
