@@ -72,9 +72,15 @@ function toggleDrawer() {
   if (drawerIsClosed) {
     drawer.style.width = "300px";
     canvasCtr.style.marginLeft = "300px";
+    hamburger.style.display = "none"; // Hide the hamburger icon
   } else {
     drawer.style.width = "0";
     canvasCtr.style.marginLeft = "0";
+    // Show the hamburger icon again after 0.3 s
+    // i.e once the drawer is hidden (check ui.ccs ln 21)
+    setTimeout(() => {
+      hamburger.style.display = "flex";
+    }, 300);
   }
 
   drawerIsClosed = !drawerIsClosed;
@@ -221,6 +227,7 @@ function populateSettings() {
   }
 }
 function updateSettings(key, val) {
+  console.log(localStorage);
   localStorage.setItem(key, val);
 }
 

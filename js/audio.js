@@ -26,7 +26,7 @@ let isResizing = false;
 
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
-  let constraints = { audio: true };
+  let constraints = { audio: { noiseSuppression: true } };
 
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     source = audioCtx.createMediaStreamSource(stream);
