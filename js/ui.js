@@ -244,9 +244,16 @@ function getSetting(key) {
 function setFontContrastColor() {
   let bg = getSetting("bg_color"),
     bg_rgb = HexToRGB(bg),
-    font_color;
+    color,
+    fillIconURL;
   let luma = 0.299 * bg_rgb[0] + 0.587 * bg_rgb[1] + 0.114 * bg_rgb[2];
-  font_color = luma > 255 / 2 ? "#000000" : "#ffffff";
-  console.log(font_color);
-  document.getElementById("sidenav").style.color = font_color;
+  color = luma > 255 / 2 ? "#000000" : "#ffffff";
+
+  document.getElementById("sidenav").style.color = color;
+
+  fillIconURL =
+    color === "#ffffff" ? "../fill-icon-white.png" : "../fill-icon-black.png";
+  [...document.getElementsByTagName("button")].forEach((btn) => {
+    btn.style.backgroundImage = `url(${fillIconURL})`;
+  });
 }

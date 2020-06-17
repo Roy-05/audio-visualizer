@@ -116,7 +116,7 @@ body {
 }
 
 button {
-  background: url("../fill-icon.png") no-repeat;
+  background: url("../fill-icon-black.png") no-repeat;
   background-size: contain;
   width: 30px;
   height: 30px;
