@@ -55,14 +55,16 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  // Set Background color
-  setBgColor(getSetting("bg_color"));
   // Set radius
   setRadius(getSetting("radius"));
   // Set number of Bars
   setNumBars(getSetting("numBars"));
+
+  // Set Background color
+  setBgColor(getSetting("bg_color"));
   // Set gradient
   setGradient(getSetting("start_gdt"), getSetting("end_gdt"));
+
   // Set the height and width of the canvas
   setCanvasSize();
   // Set the bar width based on the size of the canvas;

@@ -76,11 +76,11 @@ function toggleDrawer() {
   } else {
     drawer.style.width = "0";
     canvasCtr.style.marginLeft = "0";
-    // Show the hamburger icon again after 0.3 s
-    // i.e once the drawer is hidden (check ui.ccs ln 21)
+    // Show the hamburger icon again after 0.3s + 0.05s delay
+    // i.e once the drawer is hidden (check ui.css ln 21)
     setTimeout(() => {
       hamburger.style.display = "flex";
-    }, 300);
+    }, 350);
   }
 
   drawerIsClosed = !drawerIsClosed;
@@ -115,8 +115,8 @@ function HexToRGB(hexColor) {
 /**
  *
  * Create an array to store gradient values for each audio bar.
- * Doing this leads to faster render as the code does not need
- * to dynamically calculate each gradient every frame.
+ * Doing this leads to better render as the code does not need
+ * to dynamically calculate bar's gradient every frame.
  * @param {Number} start
  * @param {Number} end
  */
@@ -149,6 +149,9 @@ function setGradient(start, end) {
     updateSettings("end_gdt", "#0499F2");
     console.error(`Invalid Input ${end}`);
   }
+
+  start_gdt.jscolor.fromString(start_gdt.value);
+  end_gdt.jscolor.fromString(end_gdt.value);
 
   let halfNumBars = Math.floor(numBars / 2);
   for (let i = 0; i < numBars; i++) {
@@ -204,9 +207,11 @@ function setBgColor(color) {
     document.getElementsByTagName("body")[0].style.background = color;
     canvas.style.background = color;
     bg_color.value = color;
+
     console.error(`Invalid Hex Code: ${color}`);
   }
 
+  bg_color.jscolor.fromString(bg_color.value);
   updateSettings("bg_color", color);
 }
 
