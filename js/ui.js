@@ -29,14 +29,12 @@ hamburger.addEventListener("click", () => {
 });
 
 text_input.forEach((elem) => {
-  if (elem.type === "text") {
-    elem.addEventListener("focus", () => {
-      isShortcutsEnabled = false;
-    });
-    elem.addEventListener("blur", () => {
-      isShortcutsEnabled = true;
-    });
-  }
+  elem.addEventListener("focus", () => {
+    isShortcutsEnabled = false;
+  });
+  elem.addEventListener("blur", () => {
+    isShortcutsEnabled = true;
+  });
 });
 
 document.addEventListener("keydown", (e) => {
