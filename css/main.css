@@ -51,13 +51,14 @@ body {
   background: rgba(255, 255, 255, 0.05);
   height: 100%;
   position: fixed;
-  width: 300px;
+  width: 400px;
   top: 0;
   left: 0;
   overflow-x: hidden;
   transition: 0.3s;
   display: grid;
   grid-template-rows: 10% 90%;
+  border-radius: 0 30px 30px 0;
 }
 
 #hamburger {
@@ -71,7 +72,7 @@ body {
 }
 
 .closed {
-  transform: translateX(-300px);
+  transform: translateX(-400px);
 }
 
 #closebtn {

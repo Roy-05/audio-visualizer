@@ -71,7 +71,7 @@ function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
     drawer.classList.remove("closed"); // Removes a -300px translate from the div
-    canvasCtr.style.marginLeft = "300px"; // Shift the rest of the page 300px
+    canvasCtr.style.marginLeft = "400px"; // Shift the rest of the page 300px
     hamburger.style.display = "none"; // Hide the hamburger icon
   } else {
     drawer.classList.add("closed");
@@ -251,6 +251,7 @@ function setFontContrastColor() {
 
   document.getElementById("sidenav").style.color = color;
 
+  // NEED TO CHANGE THIS WITH REFERENCE TO ONLY THE CORRECT BUTTONS
   fillIconURL =
     color === "#ffffff" ? "../fill-icon-white.png" : "../fill-icon-black.png";
   [...document.getElementsByTagName("button")].forEach((btn) => {
