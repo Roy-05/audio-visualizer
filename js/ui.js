@@ -13,12 +13,13 @@ const hamburger = document.getElementById("hamburger"),
 
 let drawerIsClosed = true,
   updateParams = false,
-  isFullScreen = false;
+  isFullScreen = false,
+  isShortcutsEnabled = true;
 
 let settings_obj = {
-  bg_color: bg_color.value,
-  start_gdt: start_gdt.value,
-  end_gdt: end_gdt.value,
+  bg_color: "#00000f",
+  start_gdt: "#26f596",
+  end_gdt: "#0499f2",
   radius: parseInt(radius_slider.value, 10),
   numBars: parseInt(audio_slider.value, 10),
 };
@@ -30,15 +31,10 @@ hamburger.addEventListener("click", () => {
 text_input.forEach((elem) => {
   if (elem.type === "text") {
     elem.addEventListener("focus", () => {
-      document.removeEventListener("keydown", (e) => {
-        keyboardControls(e);
-      });
+      isShortcutsEnabled = false;
     });
-
     elem.addEventListener("blur", () => {
-      document.addEventListener("keydown", (e) => {
-        keyboardControls(e);
-      });
+      isShortcutsEnabled = true;
     });
   }
 });
@@ -209,12 +205,14 @@ function setBgColor(color) {
 }
 
 function keyboardControls(e) {
-  if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
-    toggleFullScreen();
-  }
+  if (isShortcutsEnabled) {
+    if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
+      toggleFullScreen();
+    }
 
-  if ((e.key === "D" || e.key === "d") && !isFullScreen) {
-    toggleDrawer();
+    if ((e.key === "D" || e.key === "d") && !isFullScreen) {
+      toggleDrawer();
+    }
   }
 }
 function populateSettings() {
