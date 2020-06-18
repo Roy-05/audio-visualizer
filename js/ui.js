@@ -262,11 +262,9 @@ function setContrastColor() {
 
   // toggle color-picker-buttons white/black
   fillIconURL =
-    color === "#ffffff"
-      ? "/img/fill-icon-white.png"
-      : "/img/fill-icon-black.png";
+    color === "#ffffff" ? "img/fill-icon-white.png" : "img/fill-icon-black.png";
   color_picker_btns.forEach((btn) => {
-    btn.style.backgroundImage = `url(${fillIconURL})`;
+    btn.style.backgroundImage = `url(${window.location}${fillIconURL})`;
   });
 
   audio_slider.style.backgroundColor = color;
@@ -299,7 +297,7 @@ function toggleColorPicker(elem) {
     let cpCloseBtn = document.getElementsByClassName("jscolor-btn-close")[0];
 
     cpCloseBtn.id = "cp-close-btn";
-
+    cpCloseBtn.style.backgroundImage = `url(${window.location}img/cross.png)`;
     if (cpCloseBtn.hasChildNodes()) {
       cpCloseBtn.removeChild(cpCloseBtn.firstChild);
     }
