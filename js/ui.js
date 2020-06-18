@@ -18,7 +18,8 @@ let drawerIsClosed = true,
   isFullScreen = false,
   isShortcutsEnabled = true,
   showColorPicker = true,
-  color_btn_ipt_map = {};
+  color_btn_ipt_map = {},
+  picker_map = [];
 
 let settings_obj = {
   bg_color: bg_color.value,
@@ -97,70 +98,26 @@ function toggleDrawer() {
 
 /**
  *
- * @param {*} color
- */
-function isValidHex(color) {
-  let validHex = /^#?[\dA-F]{6}$/i;
-
-  return validHex.test(color) ? true : false;
-}
-
-/**
- *
- * @param {*} hexColor
- */
-function HexToRGB(hexColor) {
-  /* 
-  Executing the regex returns an array of 4 elements where the first elem is the 
-  input itself so we splice it and take the next 3. We then convert each element 
-  to the corresponding integer and return the result array.
-  */
-  return /^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i
-    .exec(hexColor)
-    .splice(1, 4)
-    .map((hex) => parseInt(hex, 16));
-}
-
-/**
- *
  * Create an array to store gradient values for each audio bar.
  * Doing this leads to better render as the code does not need
  * to dynamically calculate bar's gradient every frame.
  * @param {Number} start
  * @param {Number} end
  */
-function setGradient(start, end) {
+function setGradient(star, en) {
   GDT = new Array(numBars);
+  let start = picker_map[0].toHEXString(),
+    end = picker_map[1].toHEXString();
 
-  let start_rgb = [],
-    end_rgb = [];
+  console.log(start, end);
+  start_gdt.value = start;
+  end_gdt.value = end;
 
-  // Validate if input is hex color code
-  if (isValidHex(start)) {
-    start_rgb = HexToRGB(start);
-    start_gdt.value = start;
-    updateSettings("start_gdt", start);
-  } else {
-    // Initialize to the default values
-    start_rgb = [38, 245, 150];
-    start_gdt.value = "#26F596";
-    updateSettings("start_gdt", "#26F596");
-    console.error(`Invalid Input ${start}`);
-  }
+  updateSettings("start_gdt", start);
+  updateSettings("end_gdt", end);
 
-  if (isValidHex(end)) {
-    end_rgb = HexToRGB(end);
-    end_gdt.value = end;
-    updateSettings("end_gdt", end);
-  } else {
-    end_rgb = [4, 153, 242];
-    end_gdt.value = "#0499F2";
-    updateSettings("end_gdt", "#0499F2");
-    console.error(`Invalid Input ${end}`);
-  }
-
-  color_btn_ipt_map[start_gdt.id].jscolor.fromString(start_gdt.value);
-  color_btn_ipt_map[end_gdt.id].jscolor.fromString(end_gdt.value);
+  let start_rgb = picker_map[0].rgb,
+    end_rgb = picker_map[1].rgb;
 
   let halfNumBars = Math.floor(numBars / 2);
   for (let i = 0; i < numBars; i++) {
@@ -204,19 +161,11 @@ function setRadius(r) {
 }
 
 function setBgColor(color) {
-  if (isValidHex(color)) {
-    //Check if the hexcode starts with a #, if not, add it
-    color = color.substr(0, 1) === "#" ? color : "#" + color;
-  } else {
-    color = "#00000f";
-    console.error(`Invalid Hex Code: ${color}`);
-  }
-
+  color = picker_map[2].toHEXString();
   document.getElementsByTagName("body")[0].style.background = color;
   canvas.style.background = color;
 
   bg_color.value = color;
-  color_btn_ipt_map[bg_color.id].jscolor.fromString(bg_color.value);
   updateSettings("bg_color", color);
 
   setContrastColor();
@@ -252,7 +201,7 @@ function getSetting(key) {
 
 function setContrastColor() {
   let bg = getSetting("bg_color"),
-    bg_rgb = HexToRGB(bg),
+    bg_rgb = picker_map[2].rgb,
     color,
     fillIconURL;
   let luma = 0.299 * bg_rgb[0] + 0.587 * bg_rgb[1] + 0.114 * bg_rgb[2];
@@ -284,11 +233,10 @@ function setUpColorPicker(input_field, btn) {
     insetColor: "#FFF",
     backgroundColor: "#333",
   };
-  params = JSON.stringify(params);
 
-  btn.setAttribute("data-jscolor", params);
-  jscolor.init();
-  color_btn_ipt_map[input_field] = btn;
+  let picker = new jscolor(btn, params);
+  picker_map.push(picker);
+  console.log(picker_map);
 }
 
 function toggleColorPicker(elem) {
