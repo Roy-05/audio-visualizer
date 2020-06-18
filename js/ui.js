@@ -43,6 +43,7 @@ input_fields.forEach((elem) => {
 
 color_picker_btns.forEach((btn) => {
   btn.addEventListener("click", () => {
+    console.log("fire");
     toggleColorPicker(btn);
   });
 });
@@ -294,16 +295,13 @@ function setUpColorPicker(input_field, btn) {
 
 function toggleColorPicker(elem) {
   if (showColorPicker) {
-    elem.jscolor.show();
+    // Edit the default close button with a custom close button
+    let cpCloseBtn = document.getElementsByClassName("jscolor-btn-close")[0];
 
-    // // Edit the default close button with a custom close button
-    // let cpCloseBtn = document.getElementsByClassName("jscolor-btn-close")[0];
+    cpCloseBtn.id = "cp-close-btn";
 
-    // if (cpCloseBtn.hasChildNodes) {
-    //   cpCloseBtn.removeChild(elem.firstChild);
-    // }
-
-    // // Edit the styling on the parent div
-    // cpCloseBtn.style.border = "none";
+    if (cpCloseBtn.hasChildNodes()) {
+      cpCloseBtn.removeChild(cpCloseBtn.firstChild);
+    }
   }
 }

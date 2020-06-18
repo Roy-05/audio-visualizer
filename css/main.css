@@ -125,11 +125,10 @@ body {
   outline: none;
   cursor: pointer;
 }
-/* 
-.jscolor-btn-close {
-  border: none;
+
+#cp-close-btn {
+  border: none !important;
   outline: none;
-  top: 10px;
   background: url("../img/cross.png") no-repeat;
   background-size: contain;
-} */
+}
