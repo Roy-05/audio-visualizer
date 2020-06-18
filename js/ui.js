@@ -10,13 +10,15 @@ const hamburger = document.getElementById("hamburger"),
   bg_color = document.getElementById("bg_color"),
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider"),
-  color_picker_btns = [...document.getElementsByClassName("color-picker")];
+  color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
+  text_fields = [start_gdt, end_gdt, bg_color];
 
 let drawerIsClosed = true,
   updateParams = false,
   isFullScreen = false,
   isShortcutsEnabled = true,
-  showColorPicker = true;
+  showColorPicker = true,
+  color_btn_ipt_map = {};
 
 let settings_obj = {
   bg_color: bg_color.value,
@@ -36,6 +38,12 @@ input_fields.forEach((elem) => {
   });
   elem.addEventListener("blur", () => {
     isShortcutsEnabled = true;
+  });
+});
+
+color_picker_btns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    toggleColorPicker(btn);
   });
 });
 
@@ -76,11 +84,11 @@ function toggleDrawer() {
   } else {
     drawer.classList.add("closed");
     canvasCtr.style.marginLeft = "0";
-    // Show the hamburger icon again after 0.3s + 0.05s delay
+    // Show the hamburger icon again after 0.5s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
-    setTimeout(() => {
+    window.setTimeout(() => {
       hamburger.style.display = "flex";
-    }, 350);
+    }, 550);
   }
 
   drawerIsClosed = !drawerIsClosed;
@@ -150,8 +158,8 @@ function setGradient(start, end) {
     console.error(`Invalid Input ${end}`);
   }
 
-  start_gdt.jscolor.fromString(start_gdt.value);
-  end_gdt.jscolor.fromString(end_gdt.value);
+  color_btn_ipt_map[start_gdt.id].jscolor.fromString(start_gdt.value);
+  color_btn_ipt_map[end_gdt.id].jscolor.fromString(end_gdt.value);
 
   let halfNumBars = Math.floor(numBars / 2);
   for (let i = 0; i < numBars; i++) {
@@ -207,10 +215,10 @@ function setBgColor(color) {
   canvas.style.background = color;
 
   bg_color.value = color;
-  bg_color.jscolor.fromString(bg_color.value);
+  color_btn_ipt_map[bg_color.id].jscolor.fromString(bg_color.value);
   updateSettings("bg_color", color);
 
-  setFontContrastColor();
+  setContrastColor();
 }
 
 function keyboardControls(e) {
@@ -241,7 +249,7 @@ function getSetting(key) {
   return localStorage.getItem(key);
 }
 
-function setFontContrastColor() {
+function setContrastColor() {
   let bg = getSetting("bg_color"),
     bg_rgb = HexToRGB(bg),
     color,
@@ -251,10 +259,51 @@ function setFontContrastColor() {
 
   document.getElementById("sidenav").style.color = color;
 
-  // NEED TO CHANGE THIS WITH REFERENCE TO ONLY THE CORRECT BUTTONS
+  // toggle color-picker-buttons white/black
   fillIconURL =
-    color === "#ffffff" ? "../fill-icon-white.png" : "../fill-icon-black.png";
-  [...document.getElementsByTagName("button")].forEach((btn) => {
+    color === "#ffffff"
+      ? "../img/fill-icon-white.png"
+      : "../img/fill-icon-black.png";
+  color_picker_btns.forEach((btn) => {
     btn.style.backgroundImage = `url(${fillIconURL})`;
   });
+
+  audio_slider.style.backgroundColor = color;
+  radius_slider.style.backgroundColor = color;
+}
+
+function setUpColorPicker(input_field, btn) {
+  let params = {
+    valueElement: input_field,
+    styleElement: input_field,
+    closable: true,
+    hash: true,
+    width: 243,
+    height: 150,
+    position: "right",
+    borderColor: "#FFF",
+    insetColor: "#FFF",
+    backgroundColor: "#333",
+  };
+  params = JSON.stringify(params);
+
+  btn.setAttribute("data-jscolor", params);
+  jscolor.init();
+  color_btn_ipt_map[input_field] = btn;
+}
+
+function toggleColorPicker(elem) {
+  if (showColorPicker) {
+    elem.jscolor.show();
+
+    // // Edit the default close button with a custom close button
+    // let cpCloseBtn = document.getElementsByClassName("jscolor-btn-close")[0];
+
+    // if (cpCloseBtn.hasChildNodes) {
+    //   cpCloseBtn.removeChild(elem.firstChild);
+    // }
+
+    // // Edit the styling on the parent div
+    // cpCloseBtn.style.border = "none";
+  }
 }

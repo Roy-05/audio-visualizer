@@ -24,7 +24,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  transition: margin-left 0.3s; /* transition effect for when the drawer is opened */
+  transition: margin-left 0.5s; /* transition effect for when the drawer is opened */
 }
 
 #audio-canvas {
@@ -55,7 +55,7 @@ body {
   top: 0;
   left: 0;
   overflow-x: hidden;
-  transition: 0.3s;
+  transition: 0.5s;
   display: grid;
   grid-template-rows: 10% 90%;
   border-radius: 0 30px 30px 0;
@@ -116,8 +116,8 @@ body {
   justify-content: center;
 }
 
-button {
-  background: url("../fill-icon-black.png") no-repeat;
+.color-picker-btn {
+  background: url("../img/fill-icon-black.png") no-repeat;
   background-size: contain;
   width: 30px;
   height: 30px;
@@ -125,3 +125,11 @@ button {
   outline: none;
   cursor: pointer;
 }
+/* 
+.jscolor-btn-close {
+  border: none;
+  outline: none;
+  top: 10px;
+  background: url("../img/cross.png") no-repeat;
+  background-size: contain;
+} */

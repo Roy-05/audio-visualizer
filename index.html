@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Audio Visualizer</title>
     <script type="text/javascript" src="./libs/jscolor.js" async></script>
     <script type="text/javascript" src="./js/audio.js" defer></script>
@@ -56,12 +58,8 @@
                 class="settings hexcode text-field"
                 name="start_gdt"
                 value="#26f596"
-                data-jscolor="{'hash':true, width:243, height:150, position:'right',
-                  borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
-              <button
-                onclick="document.getElementById('start_gdt').jscolor.show()"
-              ></button>
+              <button class="color-picker-btn" id="start-color-btn"></button>
             </div>
             <div class="settings-row">
               <div>
@@ -77,12 +75,8 @@
                 class="settings hexcode text-field"
                 name="end_gdt"
                 value="#0499f2"
-                data-jscolor="{hash:true, width:243, height:150, position:'right',
-                borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
-              <button
-                onclick="document.getElementById('end_gdt').jscolor.show()"
-              ></button>
+              <button class="color-picker-btn" id="end-color-btn"></button>
             </div>
             <div class="settings-row">
               <div>
@@ -98,12 +92,8 @@
                 class="settings text-field"
                 name="bg_color"
                 value="#00000f"
-                data-jscolor="{hash:true, width:243, height:150, position:'right',
-                borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#333'}"
               />
-              <button
-                onclick="document.getElementById('bg_color').jscolor.show()"
-              ></button>
+              <button class="color-picker-btn" id="bg-color-btn"></button>
             </div>
             <div class="settings-row">
               <div>
