@@ -18,7 +18,6 @@ let drawerIsClosed = true,
   isFullScreen = false,
   isShortcutsEnabled = true,
   showColorPicker = true,
-  color_btn_ipt_map = {},
   picker_map = [];
 
 let settings_obj = {
@@ -104,12 +103,17 @@ function toggleDrawer() {
  * @param {Number} start
  * @param {Number} end
  */
-function setGradient(star, en) {
+function setGradient() {
   GDT = new Array(numBars);
+
+  start_gdt.value = getSetting("start_gdt");
+  end_gdt.value = getSetting("end_gdt");
+
   let start = picker_map[0].toHEXString(),
     end = picker_map[1].toHEXString();
 
   console.log(start, end);
+
   start_gdt.value = start;
   end_gdt.value = end;
 
@@ -160,8 +164,10 @@ function setRadius(r) {
   updateSettings("radius", r);
 }
 
-function setBgColor(color) {
-  color = picker_map[2].toHEXString();
+function setBgColor() {
+  bg_color.value = getSetting("bg_color");
+
+  let color = picker_map[2].toHEXString();
   document.getElementsByTagName("body")[0].style.background = color;
   canvas.style.background = color;
 

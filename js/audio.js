@@ -65,9 +65,9 @@ function init() {
   setNumBars(getSetting("numBars"));
 
   // Set Background color
-  setBgColor(getSetting("bg_color"));
+  setBgColor();
   // Set gradient
-  setGradient(getSetting("start_gdt"), getSetting("end_gdt"));
+  setGradient();
 
   // Set the height and width of the canvas
   setCanvasSize();
@@ -81,13 +81,13 @@ function init() {
 
 function update() {
   // Set Background color
-  setBgColor(bg_color.value);
+  setBgColor();
   // Set radius
   setRadius(parseInt(radius_slider.value, 10));
   // Set number of Bars
   setNumBars(parseInt(audio_slider.value, 10));
   // Set gradient
-  setGradient(start_gdt.value, end_gdt.value);
+  setGradient();
   // Set the height and width of the canvas
   setCanvasSize();
   // Set the bar width based on the size of the canvas;
