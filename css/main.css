@@ -117,7 +117,7 @@ body {
 }
 
 .color-picker-btn {
-  background: url("../img/fill-icon-black.png") no-repeat;
+  background: url("/img/fill-icon-black.png") no-repeat;
   background-size: contain;
   width: 30px;
   height: 30px;
@@ -129,6 +129,6 @@ body {
 #cp-close-btn {
   border: none !important;
   outline: none;
-  background: url("../img/cross.png") no-repeat;
+  background: url("/img/cross.png") no-repeat;
   background-size: contain;
 }

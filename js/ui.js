@@ -263,8 +263,8 @@ function setContrastColor() {
   // toggle color-picker-buttons white/black
   fillIconURL =
     color === "#ffffff"
-      ? "../img/fill-icon-white.png"
-      : "../img/fill-icon-black.png";
+      ? "/img/fill-icon-white.png"
+      : "/img/fill-icon-black.png";
   color_picker_btns.forEach((btn) => {
     btn.style.backgroundImage = `url(${fillIconURL})`;
   });
