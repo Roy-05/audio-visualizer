@@ -9,6 +9,8 @@ body {
   padding: 0;
   background: #00000f;
   font-family: Ubuntu-Bold;
+  letter-spacing: 2px;
+  font-size: 18px;
 }
 
 #main-container {
@@ -99,19 +101,19 @@ body {
   background: #fff;
   border-radius: 30px;
   font-size: 15px;
-  line-height: 1.2;
+  width: 60%;
+  height: 30px;
 }
 
 #settings-container {
   display: grid;
-  row-gap: 5px;
+  row-gap: 2px;
   grid-template-rows: repeat(auto-fit, 50px);
 }
 
 .settings-row {
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
