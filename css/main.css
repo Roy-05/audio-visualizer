@@ -130,7 +130,7 @@ body {
   cursor: pointer;
 }
 
-#cp-close-btn {
+.jscolor-btn-close {
   border: none !important;
   outline: none;
   background: no-repeat;

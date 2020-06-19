@@ -6,6 +6,7 @@ const canvas = document.getElementById("audio-canvas"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
   analyser = audioCtx.createAnalyser(),
   page_container = document.getElementById("main-container"),
+  canvas_container = document.getElementById("canvas-container"),
   DPI = window.devicePixelRatio;
 
 let source;
@@ -22,7 +23,8 @@ let PAGE_WIDTH = page_container.clientWidth,
 
 let numBars,
   barHeight = 10,
-  barWidth;
+  barWidth,
+  MAX_BAR_HEIGHT = 150;
 
 let isResizing = false,
   resizeEnd;
@@ -179,8 +181,8 @@ function visualize() {
 
     let degree = 90;
     for (let i = 0; i < numBars; i++) {
-      //scale bar heights to max height of 175
-      barHeight = Math.floor((dataArray[i] / 255) * 150);
+      //scale bar heights to max bar height
+      barHeight = Math.floor((dataArray[i] / 255) * MAX_BAR_HEIGHT);
       barHeight = barHeight > 5 ? barHeight : 5;
 
       let fillColor = GDT[i]; //The color of the audio bar

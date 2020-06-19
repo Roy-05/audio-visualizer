@@ -41,11 +41,11 @@ input_fields.forEach((elem) => {
   });
 });
 
-// color_picker_btns.forEach((btn) => {
-//   btn.addEventListener("click", () => {
-//     toggleColorPicker(btn);
-//   });
-// });
+color_picker_btns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    toggleColorPicker(picker_map[btn.id]);
+  });
+});
 
 document.addEventListener("keydown", (e) => {
   keyboardControls(e);
@@ -78,7 +78,6 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
-    console.log("fire");
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
     canvasCtr.style.marginLeft = DRAWER_WIDTH;
@@ -107,8 +106,8 @@ function setGradient() {
   GDT = new Array(numBars);
 
   // Convert the value from the input box to a valid HexString
-  let start = picker_map["start_gdt"].toHEXString(),
-    end = picker_map["end_gdt"].toHEXString();
+  let start = picker_map["start_gdt_btn"].toHEXString(),
+    end = picker_map["end_gdt_btn"].toHEXString();
 
   // Change the value in the input box with the updated value
   // This is useful to handle invalid inputs
@@ -120,8 +119,8 @@ function setGradient() {
   updateSettings("end_gdt", end);
 
   //Convert the hex data to rgb to create a gradient
-  let start_rgb = picker_map["start_gdt"].rgb,
-    end_rgb = picker_map["end_gdt"].rgb;
+  let start_rgb = picker_map["start_gdt_btn"].rgb,
+    end_rgb = picker_map["end_gdt_btn"].rgb;
 
   let halfNumBars = Math.floor(numBars / 2);
   for (let i = 0; i < numBars; i++) {
@@ -165,7 +164,7 @@ function setRadius(r) {
 }
 
 function setBgColor() {
-  let color = picker_map["bg_color"].toHEXString();
+  let color = picker_map["bg_color_btn"].toHEXString();
   page_container.style.background = color;
   canvas.style.background = color;
 
@@ -205,7 +204,7 @@ function getSetting(key) {
 
 function setContrastColor() {
   // isLight() returns true if the grayscale of the selected color is closer to white than black
-  let color = picker_map["bg_color"].isLight() ? "#000000" : "#ffffff";
+  let color = picker_map["bg_color_btn"].isLight() ? "#000000" : "#ffffff";
   document.getElementById("sidenav").style.color = color;
 
   // toggle color-picker-buttons white/black
@@ -221,7 +220,7 @@ function setUpColorPicker() {
     let params = {
       valueElement: elem,
       styleElement: elem,
-      closable: true,
+      buttonHeight: 12,
       hash: true,
       width: 250,
       height: 150,
@@ -229,22 +228,39 @@ function setUpColorPicker() {
       borderColor: "#FFF",
       insetColor: "#FFF",
       backgroundColor: "#333",
+      // showOnClick: false,
+      padding: 24,
     };
 
     let picker = new jscolor(color_picker_btns[i], params);
-    picker_map[elem.id] = picker;
+    picker_map[color_picker_btns[i].id] = picker;
   });
 }
 
-function toggleColorPicker(elem) {
+function toggleColorPicker(btn) {
   if (showColorPicker) {
     // Edit the default close button with a custom close button
-    let cpCloseBtn = document.getElementsByClassName("jscolor-btn-close")[0];
+    let jscolor_picker = document.getElementsByClassName("jscolor-picker")[0],
+      close_btn = document.createElement("button");
 
-    cpCloseBtn.id = "cp-close-btn";
-    cpCloseBtn.style.backgroundImage = `url(${window.location}img/cross.png)`;
-    if (cpCloseBtn.hasChildNodes()) {
-      cpCloseBtn.removeChild(cpCloseBtn.firstChild);
-    }
+    jscolor_picker.appendChild(close_btn);
+
+    // Set styles for close button
+    let styles = {
+      width: "12px",
+      height: "12px",
+      cursor: "pointer",
+      border: "none",
+      outline: "none",
+      background: "no-repeat",
+      "background-size": "contain",
+      "background-image": `url(${window.location}img/cross.png)`,
+      left: "6px",
+      top: "6px",
+      "z-index": 1000,
+      position: "absolute",
+    };
+
+    Object.assign(close_btn.style, styles);
   }
 }
