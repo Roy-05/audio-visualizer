@@ -112,8 +112,6 @@ function setGradient() {
   let start = picker_map[0].toHEXString(),
     end = picker_map[1].toHEXString();
 
-  console.log(start, end);
-
   start_gdt.value = start;
   end_gdt.value = end;
 
@@ -242,7 +240,6 @@ function setUpColorPicker(input_field, btn) {
 
   let picker = new jscolor(btn, params);
   picker_map.push(picker);
-  console.log(picker_map);
 }
 
 function toggleColorPicker(elem) {

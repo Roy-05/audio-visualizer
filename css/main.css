@@ -119,10 +119,11 @@ body {
 }
 
 .color-picker-btn {
+  margin-left: 3px;
   background: no-repeat;
   background-size: contain;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: none;
   outline: none;
   cursor: pointer;
