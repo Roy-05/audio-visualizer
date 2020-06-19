@@ -235,8 +235,7 @@ function setUpColorPicker() {
       borderColor: "#FFF",
       insetColor: "#FFF",
       backgroundColor: "#333",
-      // showOnClick: false,
-      padding: 24,
+      padding: 32,
     };
 
     let picker = new jscolor(color_picker_btns[i], params);
@@ -254,16 +253,16 @@ function toggleColorPicker() {
 
     // Set styles for close button
     let styles = {
-      width: "12px",
-      height: "12px",
+      width: "14px",
+      height: "14px",
       cursor: "pointer",
       border: "none",
       outline: "none",
       background: "no-repeat",
       "background-size": "contain",
       "background-image": `url(${window.location}img/cross.png)`,
-      left: "6px",
-      top: "6px",
+      right: "8px",
+      top: "8px",
       "z-index": 1000,
       position: "absolute",
     };
