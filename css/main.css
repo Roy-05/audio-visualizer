@@ -34,6 +34,12 @@ body {
   position: absolute;
 }
 
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
 /* --------------- UI CSS BELOW: ---------------  */
 
 #drawer:before {
@@ -60,7 +66,7 @@ body {
   overflow-x: hidden;
   transition: 0.5s;
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 5% 95%;
   border-radius: 0 30px 30px 0;
 }
 
@@ -86,9 +92,6 @@ body {
   font-size: 36px;
   color: inherit;
   background: inherit;
-  border: none;
-  outline: none;
-  cursor: pointer;
 }
 
 .range_slider {
@@ -125,14 +128,4 @@ body {
   background-size: contain;
   width: 32px;
   height: 32px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
-.jscolor-btn-close {
-  border: none !important;
-  outline: none;
-  background: no-repeat;
-  background-size: contain;
 }
