@@ -14,7 +14,7 @@ let source;
 let points = [],
   WIDTH,
   HEIGHT,
-  RADIUS = 80,
+  RADIUS,
   GDT = [];
 
 //Initialize values to paint default canvas
@@ -59,40 +59,36 @@ function init() {
   end_gdt.value = getSetting("end_gdt");
   bg_color.value = getSetting("bg_color");
 
-  //Instantiate color picker on each text field
-  for (let i = 0; i < text_fields.length; i++) {
-    setUpColorPicker(text_fields[i].id, color_picker_btns[i]);
-  }
+  setUpColorPicker();
+  // Set Background color
+  setBgColor();
 
   // Set radius
   setRadius(getSetting("radius"));
   // Set number of Bars
   setNumBars(getSetting("numBars"));
-
-  // Set Background color
-  setBgColor();
   // Set gradient
   setGradient();
 
-  // Set the height and width of the canvas
-  setCanvasSize();
-  // Set the bar width based on the size of the canvas;
-  setBarWidth();
-  // Draw the default canvas image
-  drawDefaultCanvas();
-  // Start visualization
-  visualize();
+  // Paint canvas
+  setUpVisual();
 }
 
 function update() {
-  // Set Background color
+  // Update Background color
   setBgColor();
-  // Set radius
-  setRadius(parseInt(radius_slider.value, 10));
-  // Set number of Bars
-  setNumBars(parseInt(audio_slider.value, 10));
-  // Set gradient
+  // Update radius
+  setRadius(radius_slider.value);
+  // Update number of Bars
+  setNumBars(audio_slider.value);
+  // Update gradient
   setGradient();
+
+  //Re-paint canvas
+  setUpVisual();
+}
+
+function setUpVisual() {
   // Set the height and width of the canvas
   setCanvasSize();
   // Set the bar width based on the size of the canvas;

@@ -11,14 +11,14 @@ const hamburger = document.getElementById("hamburger"),
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider"),
   color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
-  text_fields = [start_gdt, end_gdt, bg_color];
+  input_color_fields = [start_gdt, end_gdt, bg_color];
 
 let drawerIsClosed = true,
   updateParams = false,
   isFullScreen = false,
   isShortcutsEnabled = true,
   showColorPicker = true,
-  picker_map = [];
+  picker_map = {};
 
 let settings_obj = {
   bg_color: bg_color.value,
@@ -78,12 +78,15 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
-    drawer.classList.remove("closed"); // Removes a -400px translate from the div
-    canvasCtr.style.marginLeft = "400px"; // Shift the rest of the page 300px
-    hamburger.style.display = "none"; // Hide the hamburger icon
+    // Remove a -400px translate from the div and shift the rest of the page 400px
+    drawer.classList.remove("closed");
+    canvasCtr.style.marginLeft = "400px";
+
+    hamburger.style.display = "none";
   } else {
     drawer.classList.add("closed");
     canvasCtr.style.marginLeft = "0";
+
     // Show the hamburger icon again after 0.5s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
     window.setTimeout(() => {
@@ -95,27 +98,29 @@ function toggleDrawer() {
 }
 
 /**
- *
  * Create an array to store gradient values for each audio bar.
  * Doing this leads to better render as the code does not need
- * to dynamically calculate bar's gradient every frame.
- * @param {Number} start
- * @param {Number} end
+ * to dynamically calculate every bar's gradient every frame.
  */
 function setGradient() {
   GDT = new Array(numBars);
 
-  let start = picker_map[0].toHEXString(),
-    end = picker_map[1].toHEXString();
+  // Convert the value from the input box to a valid HexString
+  let start = picker_map["start_gdt"].toHEXString(),
+    end = picker_map["end_gdt"].toHEXString();
 
+  // Change the value in the input box with the updated value
+  // This is useful to handle invalid inputs
   start_gdt.value = start;
   end_gdt.value = end;
 
+  // Push updated data to local storage
   updateSettings("start_gdt", start);
   updateSettings("end_gdt", end);
 
-  let start_rgb = picker_map[0].rgb,
-    end_rgb = picker_map[1].rgb;
+  //Convert the hex data to rgb to create a gradient
+  let start_rgb = picker_map["start_gdt"].rgb,
+    end_rgb = picker_map["end_gdt"].rgb;
 
   let halfNumBars = Math.floor(numBars / 2);
   for (let i = 0; i < numBars; i++) {
@@ -153,13 +158,13 @@ function setNumBars(num) {
 }
 
 function setRadius(r) {
-  RADIUS = r;
+  RADIUS = parseInt(r, 10);
   radius_slider.value = r;
   updateSettings("radius", r);
 }
 
 function setBgColor() {
-  let color = picker_map[2].toHEXString();
+  let color = picker_map["bg_color"].toHEXString();
   document.getElementsByTagName("body")[0].style.background = color;
   canvas.style.background = color;
 
@@ -198,42 +203,36 @@ function getSetting(key) {
 }
 
 function setContrastColor() {
-  let bg = getSetting("bg_color"),
-    bg_rgb = picker_map[2].rgb,
-    color,
-    fillIconURL;
-  let luma = 0.299 * bg_rgb[0] + 0.587 * bg_rgb[1] + 0.114 * bg_rgb[2];
-  color = luma > 255 / 2 ? "#000000" : "#ffffff";
-
+  // isLight() returns true if the grayscale of the selected color is closer to white than black
+  let color = picker_map["bg_color"].isLight() ? "#000000" : "#ffffff";
   document.getElementById("sidenav").style.color = color;
 
   // toggle color-picker-buttons white/black
-  fillIconURL =
+  let fillIconURL =
     color === "#ffffff" ? "img/fill-icon-white.png" : "img/fill-icon-black.png";
   color_picker_btns.forEach((btn) => {
     btn.style.backgroundImage = `url(${window.location}${fillIconURL})`;
   });
-
-  audio_slider.style.backgroundColor = color;
-  radius_slider.style.backgroundColor = color;
 }
 
-function setUpColorPicker(input_field, btn) {
-  let params = {
-    valueElement: input_field,
-    styleElement: input_field,
-    closable: true,
-    hash: true,
-    width: 243,
-    height: 150,
-    position: "right",
-    borderColor: "#FFF",
-    insetColor: "#FFF",
-    backgroundColor: "#333",
-  };
+function setUpColorPicker() {
+  input_color_fields.forEach((elem, i) => {
+    let params = {
+      valueElement: elem,
+      styleElement: elem,
+      closable: true,
+      hash: true,
+      width: 250,
+      height: 150,
+      position: "right",
+      borderColor: "#FFF",
+      insetColor: "#FFF",
+      backgroundColor: "#333",
+    };
 
-  let picker = new jscolor(btn, params);
-  picker_map.push(picker);
+    let picker = new jscolor(color_picker_btns[i], params);
+    picker_map[elem.id] = picker;
+  });
 }
 
 function toggleColorPicker(elem) {
