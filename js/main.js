@@ -94,6 +94,8 @@ function init() {
   setRadius(getSetting("radius"));
   // Set number of Bars
   setNumBars(getSetting("numBars"));
+  // Set Max Bar Height
+  setBarHeight(getSetting("barHeight"));
   // Set gradient
   setGradient();
 
@@ -108,6 +110,8 @@ function update() {
   setRadius(radius_slider.value);
   // Update number of Bars
   setNumBars(audio_slider.value);
+  // Set Max Bar Height
+  setBarHeight(bar_height_slider.value);
   // Update gradient
   setGradient();
 

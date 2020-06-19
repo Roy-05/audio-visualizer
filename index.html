@@ -100,7 +100,7 @@
             <div class="settings-row">
               <div>
                 <label class="settings-label" for="audio_slider"
-                  >Number of Audio Bars</label
+                  >Number of Audio Bars:</label
                 >
               </div>
             </div>
@@ -123,7 +123,7 @@
             <div class="settings-row">
               <div>
                 <label class="settings-label" for="radius_slider"
-                  >Circle Radius</label
+                  >Circle Radius:</label
                 >
               </div>
             </div>
@@ -142,6 +142,34 @@
                 />
                 <label for="radius_slider">200</label>
               </div>
+            </div>
+            <div class="settings-row">
+              <div>
+                <label class="settings-label" for="bar_height_slider"
+                  >Max Bar Height:</label
+                >
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="range_slider">
+                <label for="bar_height_slider">50</label>
+                <input
+                  type="range"
+                  name="bar_height_slider"
+                  id="bar_height_slider"
+                  class="settings"
+                  min="50"
+                  max="150"
+                  step="5"
+                  value="100"
+                />
+                <label for="bar_height_slider">150</label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <button id="restore-defaults">
+                RESET
+              </button>
             </div>
           </div>
         </div>

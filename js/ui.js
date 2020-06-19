@@ -10,6 +10,7 @@ const hamburger = document.getElementById("hamburger"),
   bg_color = document.getElementById("bg_color"),
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider"),
+  bar_height_slider = document.getElementById("bar_height_slider"),
   color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
   input_color_fields = [start_gdt, end_gdt, bg_color];
 
@@ -26,6 +27,7 @@ let settings_obj = {
   end_gdt: end_gdt.value,
   radius: parseInt(radius_slider.value, 10),
   numBars: parseInt(audio_slider.value, 10),
+  barHeight: parseInt(bar_height_slider.value, 10),
 };
 
 hamburger.addEventListener("click", () => {
@@ -163,6 +165,11 @@ function setRadius(r) {
   updateSettings("radius", r);
 }
 
+function setBarHeight(num) {
+  MAX_BAR_HEIGHT = parseInt(num, 10);
+  bar_height_slider.value = num;
+  updateSettings("barHeight", num);
+}
 function setBgColor() {
   let color = picker_map["bg_color_btn"].toHEXString();
   page_container.style.background = color;
