@@ -49,6 +49,7 @@ body {
   z-index: -1;
 }
 #drawer {
+  transform: translateX(-400px);
   text-decoration: inherit;
   background: rgba(255, 255, 255, 0.05);
   height: 100%;
@@ -73,9 +74,9 @@ body {
   color: inherit;
 }
 
-.closed {
+/* .closed {
   transform: translateX(-400px);
-}
+} */
 
 #closebtn {
   grid-row: 1;

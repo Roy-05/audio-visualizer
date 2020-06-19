@@ -78,13 +78,14 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
+    console.log("fire");
     // Remove a -400px translate from the div and shift the rest of the page 400px
-    drawer.classList.remove("closed");
-    canvasCtr.style.marginLeft = "400px";
+    drawer.style.transform = `translateX(0)`;
+    canvasCtr.style.marginLeft = DRAWER_WIDTH;
 
     hamburger.style.display = "none";
   } else {
-    drawer.classList.add("closed");
+    drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
     canvasCtr.style.marginLeft = "0";
 
     // Show the hamburger icon again after 0.5s + 0.05s delay
@@ -165,7 +166,7 @@ function setRadius(r) {
 
 function setBgColor() {
   let color = picker_map["bg_color"].toHEXString();
-  document.getElementsByTagName("body")[0].style.background = color;
+  page_container.style.background = color;
   canvas.style.background = color;
 
   bg_color.value = color;

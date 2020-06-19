@@ -2,28 +2,32 @@
 
 //Global Variables:
 const canvas = document.getElementById("audio-canvas"),
-  audioElem = document.querySelector("audio"),
-  playButton = document.getElementById("button"),
+  canvasCtx = canvas.getContext("2d"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
   analyser = audioCtx.createAnalyser(),
-  canvasCtx = canvas.getContext("2d"),
+  page_container = document.getElementById("main-container"),
   DPI = window.devicePixelRatio;
 
 let source;
 
+// global data varaibles for audio viz canvas
 let points = [],
-  WIDTH,
-  HEIGHT,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
   RADIUS,
   GDT = [];
 
-//Initialize values to paint default canvas
+let PAGE_WIDTH = page_container.clientWidth,
+  PAGE_HEIGHT = page_container.clientHeight;
+
 let numBars,
   barHeight = 10,
   barWidth;
 
-let isResizing = false;
+let isResizing = false,
+  resizeEnd;
 
+let DRAWER_WIDTH = "400px";
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
   let constraints = { audio: { noiseSuppression: true } };
@@ -46,8 +50,21 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("resize", () => {
   isResizing = true;
+
+  //Change resizing to false once resize is done firing
+  clearTimeout(resizeEnd);
+  resizeEnd = setTimeout(() => {
+    isResizing = false;
+
+    PAGE_WIDTH = page_container.clientWidth;
+    PAGE_HEIGHT = page_container.clientHeight;
+
+    console.log(`Width: ${PAGE_WIDTH}, Height: ${PAGE_HEIGHT}`);
+    update();
+  }, 300);
 });
 
+function setParams() {}
 document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
@@ -100,15 +117,15 @@ function setUpVisual() {
 }
 
 function setCanvasSize() {
-  WIDTH = window.innerWidth < 600 ? window.innerWidth : 600;
-  HEIGHT = window.innerHeight < 600 ? window.innerHeight : 600;
+  CANVAS_WIDTH = window.innerWidth < 600 ? window.innerWidth : 600;
+  CANVAS_HEIGHT = window.innerHeight < 600 ? window.innerHeight : 600;
 
-  canvas.style.width = WIDTH + "px";
-  canvas.style.height = HEIGHT + "px";
+  canvas.style.width = CANVAS_WIDTH + "px";
+  canvas.style.height = CANVAS_HEIGHT + "px";
 
   // Scale for dpi for retina display
-  canvas.width = Math.floor(WIDTH * DPI);
-  canvas.height = Math.floor(HEIGHT * DPI);
+  canvas.width = Math.floor(CANVAS_WIDTH * DPI);
+  canvas.height = Math.floor(CANVAS_HEIGHT * DPI);
 
   canvasCtx.scale(DPI, DPI);
 }
@@ -119,13 +136,13 @@ function drawDefaultCanvas() {
   points = new Array(numBars);
   for (let i = 0; i < numBars; i++) {
     points[i] = [
-      WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
-      HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
+      CANVAS_WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
+      CANVAS_HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
     ];
     degree += 360 / numBars;
   }
 
-  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+  canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   degree = 90;
   for (let i = 0; i < numBars; i++) {
@@ -141,7 +158,7 @@ function visualize() {
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
 
-  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+  canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   const draw = () => {
     if (updateParams === true) {
@@ -151,8 +168,6 @@ function visualize() {
     }
 
     if (isResizing === true) {
-      isResizing = false;
-      update();
       return;
     }
 
@@ -160,7 +175,7 @@ function visualize() {
 
     //Returns frequency data on a scale of 0-255
     analyser.getByteFrequencyData(dataArray);
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     let degree = 90;
     for (let i = 0; i < numBars; i++) {
