@@ -32,6 +32,7 @@ let isResizing = false,
 let DRAWER_WIDTH = "400px";
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
+  drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
   let constraints = { audio: { noiseSuppression: true } };
 
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
@@ -47,6 +48,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (localStorage.length === 0) {
     populateSettings();
   }
+
   init();
 });
 
@@ -58,15 +60,21 @@ window.addEventListener("resize", () => {
   resizeEnd = setTimeout(() => {
     isResizing = false;
 
-    PAGE_WIDTH = page_container.clientWidth;
-    PAGE_HEIGHT = page_container.clientHeight;
+    PAGE_WIDTH = canvas_container.clientWidth;
+    PAGE_HEIGHT = canvas_container.clientHeight;
 
     console.log(`Width: ${PAGE_WIDTH}, Height: ${PAGE_HEIGHT}`);
+    setParams();
     update();
   }, 300);
 });
 
-function setParams() {}
+function setParams() {
+  let minDimension = Math.min(PAGE_WIDTH, PAGE_HEIGHT);
+
+  MAX_BAR_HEIGHT = Math.floor((minDimension - RADIUS * 2 - 20) / 2);
+}
+
 document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
@@ -119,8 +127,8 @@ function setUpVisual() {
 }
 
 function setCanvasSize() {
-  CANVAS_WIDTH = window.innerWidth < 600 ? window.innerWidth : 600;
-  CANVAS_HEIGHT = window.innerHeight < 600 ? window.innerHeight : 600;
+  CANVAS_WIDTH = (RADIUS + MAX_BAR_HEIGHT) * 2 + 5;
+  CANVAS_HEIGHT = (RADIUS + MAX_BAR_HEIGHT) * 2 + 5;
 
   canvas.style.width = CANVAS_WIDTH + "px";
   canvas.style.height = CANVAS_HEIGHT + "px";

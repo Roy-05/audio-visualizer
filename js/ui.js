@@ -237,9 +237,9 @@ function setUpColorPicker() {
   });
 }
 
-function toggleColorPicker(btn) {
+function toggleColorPicker() {
   if (showColorPicker) {
-    // Edit the default close button with a custom close button
+    // Append a custom close button to the color_picker on the fly
     let jscolor_picker = document.getElementsByClassName("jscolor-picker")[0],
       close_btn = document.createElement("button");
 
