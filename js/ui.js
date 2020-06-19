@@ -30,6 +30,8 @@ let settings_obj = {
   barHeight: parseInt(bar_height_slider.value, 10),
 };
 
+let toggleHamburgerIcon;
+
 hamburger.addEventListener("click", () => {
   toggleDrawer();
 });
@@ -80,6 +82,7 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
+    clearTimeout(toggleHamburgerIcon);
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
     canvasCtr.style.marginLeft = DRAWER_WIDTH;
@@ -91,7 +94,7 @@ function toggleDrawer() {
 
     // Show the hamburger icon again after 0.5s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
-    window.setTimeout(() => {
+    toggleHamburgerIcon = setTimeout(() => {
       hamburger.style.display = "flex";
     }, 550);
   }
