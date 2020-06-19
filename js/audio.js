@@ -55,10 +55,15 @@ document.addEventListener("click", () => {
 });
 
 function init() {
+  start_gdt.value = getSetting("start_gdt");
+  end_gdt.value = getSetting("end_gdt");
+  bg_color.value = getSetting("bg_color");
+
   //Instantiate color picker on each text field
   for (let i = 0; i < text_fields.length; i++) {
     setUpColorPicker(text_fields[i].id, color_picker_btns[i]);
   }
+
   // Set radius
   setRadius(getSetting("radius"));
   // Set number of Bars

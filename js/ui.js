@@ -41,12 +41,11 @@ input_fields.forEach((elem) => {
   });
 });
 
-color_picker_btns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    console.log("fire");
-    toggleColorPicker(btn);
-  });
-});
+// color_picker_btns.forEach((btn) => {
+//   btn.addEventListener("click", () => {
+//     toggleColorPicker(btn);
+//   });
+// });
 
 document.addEventListener("keydown", (e) => {
   keyboardControls(e);
@@ -79,7 +78,7 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
-    drawer.classList.remove("closed"); // Removes a -300px translate from the div
+    drawer.classList.remove("closed"); // Removes a -400px translate from the div
     canvasCtr.style.marginLeft = "400px"; // Shift the rest of the page 300px
     hamburger.style.display = "none"; // Hide the hamburger icon
   } else {
@@ -105,9 +104,6 @@ function toggleDrawer() {
  */
 function setGradient() {
   GDT = new Array(numBars);
-
-  start_gdt.value = getSetting("start_gdt");
-  end_gdt.value = getSetting("end_gdt");
 
   let start = picker_map[0].toHEXString(),
     end = picker_map[1].toHEXString();
@@ -151,7 +147,7 @@ function setGradient() {
 }
 
 function setNumBars(num) {
-  numBars = num;
+  numBars = parseInt(num, 10);
   audio_slider.value = num;
   updateSettings("numBars", num);
 }
@@ -163,8 +159,6 @@ function setRadius(r) {
 }
 
 function setBgColor() {
-  bg_color.value = getSetting("bg_color");
-
   let color = picker_map[2].toHEXString();
   document.getElementsByTagName("body")[0].style.background = color;
   canvas.style.background = color;
