@@ -47,9 +47,8 @@ window.addEventListener("DOMContentLoaded", () => {
   if (localStorage.length === 0) {
     populateSettings();
   }
-  setParams();
+
   init();
-  setDrawerWidth();
 });
 
 window.addEventListener("resize", () => {
@@ -83,6 +82,14 @@ function setDrawerWidth() {
     width = 400;
   } else if (width < 250) {
     width = 250;
+    let cWidth = window.innerWidth - width;
+    while (CANVAS_WIDTH >= cWidth) {
+      MAX_BAR_HEIGHT -= 10;
+      RADIUS -= 10;
+      CANVAS_WIDTH = (MAX_BAR_HEIGHT + RADIUS + 10) * 2;
+    }
+    updateRadiusSlider();
+    updateBarHeightSlider();
   } else {
     width = width - (width % 10);
   }
@@ -102,6 +109,8 @@ document.addEventListener("click", () => {
 });
 
 function init() {
+  setParams();
+
   start_gdt.value = getSetting("start_gdt");
   end_gdt.value = getSetting("end_gdt");
   bg_color.value = getSetting("bg_color");
@@ -116,11 +125,19 @@ function init() {
   setNumBars(getSetting("numBars"));
   // Set Max Bar Height
   setBarHeight(getSetting("barHeight"));
+
   // Set gradient
   setGradient();
 
   // Paint canvas
   setUpVisual();
+
+  setDrawerWidth();
+
+  if (DRAWER_WIDTH < 250) {
+    updateBarHeightSlider();
+    updateRadiusSlider();
+  }
 }
 
 function update() {

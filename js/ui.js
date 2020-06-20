@@ -309,3 +309,47 @@ function toggleColorPicker() {
 
   Object.assign(close_btn.style, styles);
 }
+
+function updateBarHeightSlider() {
+  let min = Math.floor(MAX_BAR_HEIGHT / 2);
+  min = min - (min % 5);
+  bar_height_slider.max = MAX_BAR_HEIGHT;
+  bar_height_slider.min = min;
+  bar_height_slider.value = Math.floor(MAX_BAR_HEIGHT + min) / 2;
+
+  let min_val_label = document.getElementById("min_bar_height"),
+    max_val_label = document.getElementById("max_bar_height");
+
+  min_val_label.removeChild(min_val_label.firstChild);
+  max_val_label.removeChild(max_val_label.firstChild);
+
+  let minTextNode = document.createTextNode(min);
+  let maxTextNode = document.createTextNode(MAX_BAR_HEIGHT);
+
+  min_val_label.appendChild(minTextNode);
+  max_val_label.appendChild(maxTextNode);
+
+  updateParams = true;
+}
+
+function updateRadiusSlider() {
+  let min = Math.floor(RADIUS / 2);
+  min = min - (min % 5);
+  radius_slider.max = RADIUS;
+  radius_slider.min = min;
+  radius_slider.value = Math.floor(RADIUS + min) / 2;
+
+  let min_val_label = document.getElementById("min_radius"),
+    max_val_label = document.getElementById("max_radius");
+
+  min_val_label.removeChild(min_val_label.firstChild);
+  max_val_label.removeChild(max_val_label.firstChild);
+
+  let minTextNode = document.createTextNode(min);
+  let maxTextNode = document.createTextNode(RADIUS);
+
+  min_val_label.appendChild(minTextNode);
+  max_val_label.appendChild(maxTextNode);
+
+  updateParams = true;
+}
