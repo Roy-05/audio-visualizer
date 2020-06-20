@@ -310,12 +310,20 @@ function toggleColorPicker() {
   Object.assign(close_btn.style, styles);
 }
 
-function updateBarHeightSlider() {
-  let min = Math.floor(MAX_BAR_HEIGHT / 2);
-  min = min - (min % 5);
-  bar_height_slider.max = MAX_BAR_HEIGHT;
+function updateBarHeightSlider(max_height) {
+  let min = Math.floor(max_height / 2);
+  min = min - (min % 10);
+  bar_height_slider.max = max_height;
   bar_height_slider.min = min;
-  bar_height_slider.value = Math.floor(MAX_BAR_HEIGHT + min) / 2;
+
+  // Clamp bar height to both extremes
+  if (MAX_BAR_HEIGHT > max_height) {
+    MAX_BAR_HEIGHT = max_height;
+  } else if (MAX_BAR_HEIGHT < min) {
+    MAX_BAR_HEIGHT = min;
+  }
+
+  bar_height_slider.value = MAX_BAR_HEIGHT;
 
   let min_val_label = document.getElementById("min_bar_height"),
     max_val_label = document.getElementById("max_bar_height");
@@ -324,20 +332,24 @@ function updateBarHeightSlider() {
   max_val_label.removeChild(max_val_label.firstChild);
 
   let minTextNode = document.createTextNode(min);
-  let maxTextNode = document.createTextNode(MAX_BAR_HEIGHT);
+  let maxTextNode = document.createTextNode(max_height);
 
   min_val_label.appendChild(minTextNode);
   max_val_label.appendChild(maxTextNode);
-
-  updateParams = true;
 }
 
-function updateRadiusSlider() {
-  let min = Math.floor(RADIUS / 2);
-  min = min - (min % 5);
-  radius_slider.max = RADIUS;
+function updateRadiusSlider(max_radius) {
+  let min = Math.floor(max_radius * 0.667);
+  min = min - (min % 10);
+  radius_slider.max = max_radius;
   radius_slider.min = min;
-  radius_slider.value = Math.floor(RADIUS + min) / 2;
+  if (RADIUS > max_radius) {
+    RADIUS = max_radius;
+  } else if (RADIUS < max_radius) {
+    RADIUS = min;
+  }
+
+  radius_slider.value = RADIUS;
 
   let min_val_label = document.getElementById("min_radius"),
     max_val_label = document.getElementById("max_radius");
@@ -346,10 +358,8 @@ function updateRadiusSlider() {
   max_val_label.removeChild(max_val_label.firstChild);
 
   let minTextNode = document.createTextNode(min);
-  let maxTextNode = document.createTextNode(RADIUS);
+  let maxTextNode = document.createTextNode(max_radius);
 
   min_val_label.appendChild(minTextNode);
   max_val_label.appendChild(maxTextNode);
-
-  updateParams = true;
 }

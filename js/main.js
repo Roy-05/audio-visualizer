@@ -29,7 +29,7 @@ let numBars,
 let isResizing = false,
   resizeEnd;
 
-let DRAWER_WIDTH = 250;
+let DRAWER_WIDTH = 320;
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
   let constraints = { audio: { noiseSuppression: true } };
@@ -44,9 +44,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
     source.connect(analyser);
   });
+
   if (localStorage.length === 0) {
     populateSettings();
   }
+
+  start_gdt.value = getSetting("start_gdt");
+  end_gdt.value = getSetting("end_gdt");
+  bg_color.value = getSetting("bg_color");
+
+  setUpColorPicker();
 
   init();
 });
@@ -54,13 +61,27 @@ window.addEventListener("DOMContentLoaded", () => {
 function setCanvasSize() {
   let minD = Math.min(PAGE_HEIGHT, PAGE_WIDTH);
 
-  if (PAGE_WIDTH - DRAWER_WIDTH < minD) {
-    minD = PAGE_WIDTH - DRAWER_WIDTH;
+  if (window.innerWidth - DRAWER_WIDTH < minD) {
+    minD = window.innerWidth - DRAWER_WIDTH;
   }
 
   console.log(minD, PAGE_WIDTH, PAGE_HEIGHT);
   CANVAS_WIDTH = minD;
   CANVAS_HEIGHT = minD;
+}
+
+function setDimensions() {
+  let radius = RADIUS,
+    bar_height = MAX_BAR_HEIGHT,
+    cWidth = (radius + bar_height + 20) * 2;
+
+  while (cWidth < CANVAS_WIDTH) {
+    bar_height += 10;
+    radius += 10;
+    cWidth = (radius + bar_height + 10) * 2;
+  }
+  updateRadiusSlider(radius);
+  updateBarHeightSlider(bar_height);
 }
 
 window.addEventListener("resize", () => {
@@ -70,7 +91,7 @@ window.addEventListener("resize", () => {
   clearTimeout(resizeEnd);
   resizeEnd = setTimeout(() => {
     isResizing = false;
-    setDrawerWidth();
+
     if (isDrawerClosed === false) {
       toggleDrawer();
     }
@@ -78,39 +99,11 @@ window.addEventListener("resize", () => {
     PAGE_WIDTH = canvas_container.clientWidth;
     PAGE_HEIGHT = canvas_container.clientHeight;
 
-    setParams();
     if (isPaused === false) {
-      update();
+      init();
     }
   }, 300);
 });
-
-function setDrawerWidth() {
-  let width = window.innerWidth - CANVAS_WIDTH;
-  // Clamp width at two extremes
-  if (width > 400) {
-    width = 400;
-  } else if (width < 250) {
-    width = 250;
-    // let cWidth = window.innerWidth - width;
-    // while (CANVAS_WIDTH >= cWidth) {
-    //   MAX_BAR_HEIGHT -= 10;
-    //   RADIUS -= 10;
-    //   CANVAS_WIDTH = (MAX_BAR_HEIGHT + RADIUS + 10) * 2;
-    // }
-    // updateRadiusSlider();
-    // updateBarHeightSlider();
-  } else {
-    width = width - (width % 10);
-  }
-
-  DRAWER_WIDTH = width;
-}
-
-function setParams() {
-  let minDimension = Math.min(PAGE_WIDTH - DRAWER_WIDTH, PAGE_HEIGHT);
-  MAX_BAR_HEIGHT = Math.floor((minDimension - RADIUS * 2 - 20) / 2);
-}
 
 document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
@@ -119,13 +112,8 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  setParams();
-
-  start_gdt.value = getSetting("start_gdt");
-  end_gdt.value = getSetting("end_gdt");
-  bg_color.value = getSetting("bg_color");
-
-  setUpColorPicker();
+  // Set the height and width of the canvas
+  setCanvasSize();
   // Set Background color
   setBgColor();
 
@@ -135,22 +123,17 @@ function init() {
   setNumBars(getSetting("numBars"));
   // Set Max Bar Height
   setBarHeight(getSetting("barHeight"));
-
+  setDimensions();
   // Set gradient
   setGradient();
 
   // Paint canvas
   setUpVisual();
-
-  setDrawerWidth();
-
-  // if (DRAWER_WIDTH < 250) {
-  //   updateBarHeightSlider();
-  //   updateRadiusSlider();
-  // }
 }
 
 function update() {
+  // Set the height and width of the canvas
+  setCanvasSize();
   // Update Background color
   setBgColor();
   // Update radius
@@ -167,8 +150,6 @@ function update() {
 }
 
 function setUpVisual() {
-  // Set the height and width of the canvas
-  setCanvasSize();
   // Scale canvase for high dpi display
   scaleCanvas();
   // Set the bar width based on the size of the canvas;
