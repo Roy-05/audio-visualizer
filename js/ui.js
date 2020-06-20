@@ -62,7 +62,7 @@ input_fields.forEach((elem) => {
 
 color_picker_btns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    toggleColorPicker(picker_map[btn.id]);
+    toggleColorPicker();
   });
 });
 
@@ -106,6 +106,11 @@ function toggleDrawer() {
       btn.style.display = "none";
     });
   } else {
+    // Hide any open pickers on drawer close
+    for (let picker in picker_map) {
+      picker_map[picker].hide();
+    }
+
     drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
     canvasCtr.style.marginLeft = "0";
 
@@ -266,29 +271,27 @@ function setUpColorPicker() {
 }
 
 function toggleColorPicker() {
-  if (showColorPicker) {
-    // Append a custom close button to the color_picker on the fly
-    let jscolor_picker = document.getElementsByClassName("jscolor-picker")[0],
-      close_btn = document.createElement("button");
+  // Append a custom close button to the color_picker on the fly
+  let jscolor_picker = document.getElementsByClassName("jscolor-picker")[0],
+    close_btn = document.createElement("button");
 
-    jscolor_picker.appendChild(close_btn);
+  jscolor_picker.appendChild(close_btn);
 
-    // Set styles for close button
-    let styles = {
-      width: "14px",
-      height: "14px",
-      cursor: "pointer",
-      border: "none",
-      outline: "none",
-      background: "no-repeat",
-      "background-size": "contain",
-      "background-image": `url(${window.location}img/cross.png)`,
-      right: "8px",
-      top: "8px",
-      "z-index": 1000,
-      position: "absolute",
-    };
+  // Set styles for close button
+  let styles = {
+    width: "14px",
+    height: "14px",
+    cursor: "pointer",
+    border: "none",
+    outline: "none",
+    background: "no-repeat",
+    "background-size": "contain",
+    "background-image": `url(${window.location}img/cross.png)`,
+    right: "8px",
+    top: "8px",
+    "z-index": 1000,
+    position: "absolute",
+  };
 
-    Object.assign(close_btn.style, styles);
-  }
+  Object.assign(close_btn.style, styles);
 }
