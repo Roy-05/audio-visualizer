@@ -231,7 +231,8 @@ function setBarWidth() {
  * @param {String} color  The fill color of the rectangle
  */
 function roundRect(ctx, x, y, width, height, radius, color) {
-  radius = width <= 2 ? 0 : width - 1;
+  radius = width > 2 ? radius : width - 1;
+
   radius = { tl: radius, tr: radius, br: radius, bl: radius };
   ctx.beginPath();
   ctx.moveTo(x + radius.tl, y);
