@@ -99,6 +99,7 @@ function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
     clearTimeout(toggleSidenavOptions);
+    drawer.style.width = DRAWER_WIDTH;
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
     canvasCtr.style.marginLeft = DRAWER_WIDTH;

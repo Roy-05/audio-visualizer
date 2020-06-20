@@ -32,6 +32,7 @@ let isResizing = false,
 let DRAWER_WIDTH = "400px";
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
+  drawer.style.width = DRAWER_WIDTH;
   drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
   let constraints = { audio: { noiseSuppression: true } };
 
@@ -60,17 +61,36 @@ window.addEventListener("resize", () => {
   resizeEnd = setTimeout(() => {
     isResizing = false;
 
+    if (drawerIsClosed === false) {
+      toggleDrawer();
+    }
+
+    setDrawerWidth();
+    console.log(DRAWER_WIDTH);
     PAGE_WIDTH = canvas_container.clientWidth;
     PAGE_HEIGHT = canvas_container.clientHeight;
 
     console.log(`Width: ${PAGE_WIDTH}, Height: ${PAGE_HEIGHT}`);
     setParams();
     if (isPaused === false) {
-      console.log("fire");
       update();
     }
   }, 300);
 });
+
+function setDrawerWidth() {
+  let width = window.innerWidth - CANVAS_WIDTH;
+  // Clamp width at two extremes
+  if (width > 400) {
+    width = 400;
+  } else if (width < 250) {
+    width = 250;
+  } else {
+    width = width - (width % 10);
+  }
+
+  DRAWER_WIDTH = `${width}px`;
+}
 
 function setParams() {
   let minDimension = Math.min(PAGE_WIDTH, PAGE_HEIGHT);
@@ -134,8 +154,8 @@ function setUpVisual() {
 }
 
 function setCanvasSize() {
-  CANVAS_WIDTH = (RADIUS + MAX_BAR_HEIGHT) * 2 + 5;
-  CANVAS_HEIGHT = (RADIUS + MAX_BAR_HEIGHT) * 2 + 5;
+  CANVAS_WIDTH = (RADIUS + MAX_BAR_HEIGHT + 10) * 2;
+  CANVAS_HEIGHT = (RADIUS + MAX_BAR_HEIGHT + 10) * 2;
 
   canvas.style.width = CANVAS_WIDTH + "px";
   canvas.style.height = CANVAS_HEIGHT + "px";
