@@ -65,7 +65,10 @@ window.addEventListener("resize", () => {
 
     console.log(`Width: ${PAGE_WIDTH}, Height: ${PAGE_HEIGHT}`);
     setParams();
-    update();
+    if (isPaused === false) {
+      console.log("fire");
+      update();
+    }
   }, 300);
 });
 
@@ -175,6 +178,10 @@ function visualize() {
   canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   const draw = () => {
+    if (isPaused) {
+      return;
+    }
+
     if (updateParams === true) {
       updateParams = false;
       update();

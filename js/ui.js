@@ -19,6 +19,7 @@ let drawerIsClosed = true,
   isFullScreen = false,
   isShortcutsEnabled = true,
   showColorPicker = true,
+  isPaused = false,
   picker_map = {};
 
 let settings_obj = {
@@ -210,6 +211,9 @@ function setBgColor() {
 
 function keyboardControls(e) {
   if (isShortcutsEnabled) {
+    if (e.key === "p" || e.key === "P") {
+      pauseVisual();
+    }
     if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
       toggleFullScreen();
     }
@@ -217,6 +221,14 @@ function keyboardControls(e) {
     if ((e.key === "D" || e.key === "d") && !isFullScreen) {
       toggleDrawer();
     }
+  }
+}
+
+function pauseVisual() {
+  isPaused = !isPaused;
+
+  if (!isPaused) {
+    update();
   }
 }
 function populateSettings() {
