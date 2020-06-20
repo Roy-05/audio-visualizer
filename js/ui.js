@@ -1,4 +1,4 @@
-const hamburger = document.getElementById("hamburger"),
+const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   closebtn = document.getElementById("closebtn"),
   submit = document.getElementById("submit"),
   drawer = document.getElementById("drawer"),
@@ -30,10 +30,25 @@ let settings_obj = {
   barHeight: parseInt(bar_height_slider.value, 10),
 };
 
-let toggleHamburgerIcon;
+let toggleSidenavOptions;
 
-hamburger.addEventListener("click", () => {
-  toggleDrawer();
+sidenav_options.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (btn.id === "hamburger") {
+      toggleDrawer();
+    }
+  });
+
+  btn.addEventListener("mouseenter", () => {
+    let color = picker_map["bg_color_btn"].rgb;
+    color = color.map((rgb) => 255 - rgb);
+    color = `rgb(${color[0]},${color[1]},${color[2]})`;
+    btn.style.color = color;
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    btn.style.color = "inherit";
+  });
 });
 
 input_fields.forEach((elem) => {
@@ -82,20 +97,24 @@ function toggleFullScreen() {
 function toggleDrawer() {
   // Open drawer if closed else close it
   if (drawerIsClosed) {
-    clearTimeout(toggleHamburgerIcon);
+    clearTimeout(toggleSidenavOptions);
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
     canvasCtr.style.marginLeft = DRAWER_WIDTH;
 
-    hamburger.style.display = "none";
+    sidenav_options.forEach((btn) => {
+      btn.style.display = "none";
+    });
   } else {
     drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
     canvasCtr.style.marginLeft = "0";
 
     // Show the hamburger icon again after 0.5s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
-    toggleHamburgerIcon = setTimeout(() => {
-      hamburger.style.display = "flex";
+    toggleSidenavOptions = setTimeout(() => {
+      sidenav_options.forEach((btn) => {
+        btn.style.display = "flex";
+      });
     }, 550);
   }
 
