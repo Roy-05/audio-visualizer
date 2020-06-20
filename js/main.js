@@ -11,6 +11,9 @@ const canvas = document.getElementById("audio-canvas"),
 
 let source;
 
+let PAGE_WIDTH = page_container.clientWidth,
+  PAGE_HEIGHT = page_container.clientHeight;
+
 // global data varaibles for audio viz canvas
 let points = [],
   CANVAS_WIDTH,
@@ -18,22 +21,17 @@ let points = [],
   RADIUS,
   GDT = [];
 
-let PAGE_WIDTH = page_container.clientWidth,
-  PAGE_HEIGHT = page_container.clientHeight;
-
 let numBars,
   barHeight = 10,
   barWidth,
-  MAX_BAR_HEIGHT = 150;
+  MAX_BAR_HEIGHT = 100;
 
 let isResizing = false,
   resizeEnd;
 
-let DRAWER_WIDTH = "400px";
+let DRAWER_WIDTH = 250;
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
-  drawer.style.width = DRAWER_WIDTH;
-  drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
   let constraints = { audio: { noiseSuppression: true } };
 
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
@@ -49,8 +47,9 @@ window.addEventListener("DOMContentLoaded", () => {
   if (localStorage.length === 0) {
     populateSettings();
   }
-
+  setParams();
   init();
+  setDrawerWidth();
 });
 
 window.addEventListener("resize", () => {
@@ -60,12 +59,11 @@ window.addEventListener("resize", () => {
   clearTimeout(resizeEnd);
   resizeEnd = setTimeout(() => {
     isResizing = false;
-
-    if (drawerIsClosed === false) {
+    setDrawerWidth();
+    if (isDrawerClosed === false) {
       toggleDrawer();
     }
 
-    setDrawerWidth();
     console.log(DRAWER_WIDTH);
     PAGE_WIDTH = canvas_container.clientWidth;
     PAGE_HEIGHT = canvas_container.clientHeight;
@@ -89,12 +87,11 @@ function setDrawerWidth() {
     width = width - (width % 10);
   }
 
-  DRAWER_WIDTH = `${width}px`;
+  DRAWER_WIDTH = width;
 }
 
 function setParams() {
-  let minDimension = Math.min(PAGE_WIDTH, PAGE_HEIGHT);
-
+  let minDimension = Math.min(PAGE_WIDTH - DRAWER_WIDTH, PAGE_HEIGHT);
   MAX_BAR_HEIGHT = Math.floor((minDimension - RADIUS * 2 - 20) / 2);
 }
 

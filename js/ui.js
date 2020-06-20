@@ -14,7 +14,7 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
   input_color_fields = [start_gdt, end_gdt, bg_color];
 
-let drawerIsClosed = true,
+let isDrawerClosed = true,
   updateParams = false,
   isFullScreen = false,
   isShortcutsEnabled = true,
@@ -96,13 +96,14 @@ function toggleFullScreen() {
 }
 
 function toggleDrawer() {
+  drawer.style.width = `${DRAWER_WIDTH}px`;
   // Open drawer if closed else close it
-  if (drawerIsClosed) {
+
+  if (isDrawerClosed) {
     clearTimeout(toggleSidenavOptions);
-    drawer.style.width = DRAWER_WIDTH;
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
-    canvasCtr.style.marginLeft = DRAWER_WIDTH;
+    canvasCtr.style.marginLeft = `${DRAWER_WIDTH}px`;
 
     sidenav_options.forEach((btn) => {
       btn.style.display = "none";
@@ -113,7 +114,7 @@ function toggleDrawer() {
       picker_map[picker].hide();
     }
 
-    drawer.style.transform = `translateX(-${DRAWER_WIDTH})`;
+    drawer.style.transform = `translateX(-${DRAWER_WIDTH}px)`;
     canvasCtr.style.marginLeft = "0";
 
     // Show the hamburger icon again after 0.5s + 0.05s delay
@@ -125,7 +126,7 @@ function toggleDrawer() {
     }, 550);
   }
 
-  drawerIsClosed = !drawerIsClosed;
+  isDrawerClosed = !isDrawerClosed;
 }
 
 /**
@@ -215,7 +216,7 @@ function keyboardControls(e) {
     if (e.key === "p" || e.key === "P") {
       pauseVisual();
     }
-    if ((e.key === "f" || e.key === "F") && drawerIsClosed) {
+    if ((e.key === "f" || e.key === "F") && isDrawerClosed) {
       toggleFullScreen();
     }
 
