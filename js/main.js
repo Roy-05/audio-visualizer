@@ -11,8 +11,8 @@ const canvas = document.getElementById("audio-canvas"),
 
 let source;
 
-let PAGE_WIDTH = page_container.clientWidth,
-  PAGE_HEIGHT = page_container.clientHeight;
+let PAGE_WIDTH = canvas_container.clientWidth,
+  PAGE_HEIGHT = canvas_container.clientHeight;
 
 // global data varaibles for audio viz canvas
 let points = [],
@@ -51,6 +51,18 @@ window.addEventListener("DOMContentLoaded", () => {
   init();
 });
 
+function setCanvasSize() {
+  let minD = Math.min(PAGE_HEIGHT, PAGE_WIDTH);
+
+  if (PAGE_WIDTH - DRAWER_WIDTH < minD) {
+    minD = PAGE_WIDTH - DRAWER_WIDTH;
+  }
+
+  console.log(minD, PAGE_WIDTH, PAGE_HEIGHT);
+  CANVAS_WIDTH = minD;
+  CANVAS_HEIGHT = minD;
+}
+
 window.addEventListener("resize", () => {
   isResizing = true;
 
@@ -63,11 +75,9 @@ window.addEventListener("resize", () => {
       toggleDrawer();
     }
 
-    console.log(DRAWER_WIDTH);
     PAGE_WIDTH = canvas_container.clientWidth;
     PAGE_HEIGHT = canvas_container.clientHeight;
 
-    console.log(`Width: ${PAGE_WIDTH}, Height: ${PAGE_HEIGHT}`);
     setParams();
     if (isPaused === false) {
       update();
@@ -82,14 +92,14 @@ function setDrawerWidth() {
     width = 400;
   } else if (width < 250) {
     width = 250;
-    let cWidth = window.innerWidth - width;
-    while (CANVAS_WIDTH >= cWidth) {
-      MAX_BAR_HEIGHT -= 10;
-      RADIUS -= 10;
-      CANVAS_WIDTH = (MAX_BAR_HEIGHT + RADIUS + 10) * 2;
-    }
-    updateRadiusSlider();
-    updateBarHeightSlider();
+    // let cWidth = window.innerWidth - width;
+    // while (CANVAS_WIDTH >= cWidth) {
+    //   MAX_BAR_HEIGHT -= 10;
+    //   RADIUS -= 10;
+    //   CANVAS_WIDTH = (MAX_BAR_HEIGHT + RADIUS + 10) * 2;
+    // }
+    // updateRadiusSlider();
+    // updateBarHeightSlider();
   } else {
     width = width - (width % 10);
   }
@@ -134,10 +144,10 @@ function init() {
 
   setDrawerWidth();
 
-  if (DRAWER_WIDTH < 250) {
-    updateBarHeightSlider();
-    updateRadiusSlider();
-  }
+  // if (DRAWER_WIDTH < 250) {
+  //   updateBarHeightSlider();
+  //   updateRadiusSlider();
+  // }
 }
 
 function update() {
@@ -159,6 +169,8 @@ function update() {
 function setUpVisual() {
   // Set the height and width of the canvas
   setCanvasSize();
+  // Scale canvase for high dpi display
+  scaleCanvas();
   // Set the bar width based on the size of the canvas;
   setBarWidth();
   // Draw the default canvas image
@@ -167,10 +179,7 @@ function setUpVisual() {
   visualize();
 }
 
-function setCanvasSize() {
-  CANVAS_WIDTH = (RADIUS + MAX_BAR_HEIGHT + 10) * 2;
-  CANVAS_HEIGHT = (RADIUS + MAX_BAR_HEIGHT + 10) * 2;
-
+function scaleCanvas() {
   canvas.style.width = CANVAS_WIDTH + "px";
   canvas.style.height = CANVAS_HEIGHT + "px";
 
