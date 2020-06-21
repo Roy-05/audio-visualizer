@@ -28,13 +28,19 @@ let isDrawerClosed = true,
   isPaused = false,
   picker_map = {};
 
-let settings_obj = {
+let initial_settings_obj = {
   bg_color: bg_color.value,
   start_gdt: start_gdt.value,
   end_gdt: end_gdt.value,
   radius: parseInt(radius_slider.value, 10),
   numBars: parseInt(audio_slider.value, 10),
   barHeight: parseInt(bar_height_slider.value, 10),
+};
+
+let tabData = {
+  tab_1: initial_settings_obj,
+  tab_2: initial_settings_obj,
+  tab_3: initial_settings_obj,
 };
 
 let toggleSidenavOptions;
@@ -152,8 +158,8 @@ function setGradient() {
   end_gdt.value = end;
 
   // Push updated data to local storage
-  updateSettings("start_gdt", start);
-  updateSettings("end_gdt", end);
+  settings_obj["start_gdt"] = start;
+  settings_obj["end_gdt"] = end;
 
   //Convert the hex data to rgb to create a gradient
   let start_rgb = picker_map["start_gdt_btn"].rgb,
@@ -191,19 +197,19 @@ function setGradient() {
 function setNumBars(num) {
   numBars = parseInt(num, 10);
   audio_slider.value = num;
-  updateSettings("numBars", num);
+  settings_obj["numBars"] = num;
 }
 
 function setRadius(r) {
   RADIUS = parseInt(r, 10);
   radius_slider.value = r;
-  updateSettings("radius", r);
+  settings_obj["radius"] = r;
 }
 
 function setBarHeight(num) {
   MAX_BAR_HEIGHT = parseInt(num, 10);
   bar_height_slider.value = num;
-  updateSettings("barHeight", num);
+  settings_obj["barHeight"] = num;
 }
 function setBgColor() {
   let color = picker_map["bg_color_btn"].toHEXString();
@@ -211,7 +217,7 @@ function setBgColor() {
   canvas.style.background = color;
 
   bg_color.value = color;
-  updateSettings("bg_color", color);
+  settings_obj["bg_color"] = color;
 
   setContrastColor();
 }
@@ -247,8 +253,8 @@ function pauseVisual() {
  */
 
 function populateSettings() {
-  for (let key in settings_obj) {
-    updateSettings(key, settings_obj[key]);
+  for (let key in tabData) {
+    updateSettings(key, JSON.stringify(tabData[key]));
   }
 }
 
@@ -260,8 +266,8 @@ function clearSettings() {
   localStorage.clear();
 }
 
-function getSetting(key) {
-  return localStorage.getItem(key);
+function getSettings(activeTab) {
+  return localStorage.getItem(activeTab);
 }
 
 /**

@@ -31,6 +31,8 @@ let numBars,
 let isResizing = false,
   resizeEnd;
 
+let settings_obj = {};
+
 let DRAWER_WIDTH = 320;
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
@@ -51,9 +53,11 @@ window.addEventListener("DOMContentLoaded", () => {
     populateSettings();
   }
 
-  start_gdt.value = getSetting("start_gdt");
-  end_gdt.value = getSetting("end_gdt");
-  bg_color.value = getSetting("bg_color");
+  settings_obj = JSON.parse(getSettings("tab_1"));
+
+  start_gdt.value = settings_obj["start_gdt"];
+  end_gdt.value = settings_obj["end_gdt"];
+  bg_color.value = settings_obj["bg_color"];
 
   setUpColorPicker();
 
@@ -95,18 +99,20 @@ function init() {
   setBgColor();
 
   // Set radius
-  setRadius(getSetting("radius"));
+  setRadius(settings_obj["radius"]);
   // Set number of Bars
-  setNumBars(getSetting("numBars"));
+  setNumBars(settings_obj["numBars"]);
   // Set Max Bar Height
-  setBarHeight(getSetting("barHeight"));
+  setBarHeight(settings_obj["barHeight"]);
   // Set the bar width based on the size of the canvas;
-  setBarWidth();
-
-  setDimensions();
-  // Set gradient
   setGradient();
   // Get the x,y coordinates of each audio bar and store it in a global array
+
+  updateSettings("tab_1", JSON.stringify(settings_obj));
+
+  setBarWidth();
+  setDimensions();
+  // Set gradient
   getAudioBarCoordinates();
 
   if (isPaused) {
@@ -127,10 +133,12 @@ function update() {
   setNumBars(audio_slider.value);
   // Set Max Bar Height
   setBarHeight(bar_height_slider.value);
-  // Set the bar width based on the size of the canvas;
-  setBarWidth();
   // Update gradient
   setGradient();
+
+  updateSettings("tab_1", JSON.stringify(settings_obj));
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
   // Get the x,y coordinates of each audio bar and store it in a global array
   getAudioBarCoordinates();
 
