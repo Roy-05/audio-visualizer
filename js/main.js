@@ -26,7 +26,7 @@ let numBars,
   barWidth,
   MAX_BAR_HEIGHT = 100,
   MAX_BAR_WIDTH = 20,
-  MIN_BAR_WIDTH = 1;
+  MIN_BAR_WIDTH = 2;
 
 let isResizing = false,
   resizeEnd;
@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
-    analyser.smoothingTimeConstant = 0.9;
+    analyser.smoothingTimeConstant = 0.88;
 
     source.connect(analyser);
   });
@@ -155,13 +155,16 @@ function setDimensions() {
   let max_radius = parseInt(max_radius_label.innerText, 10),
     bar_height = parseInt(max_barH_label.innerText, 10),
     cWidth = (max_radius + bar_height + 5) * 2;
-  if (cWidth <= CANVAS_WIDTH) {
+
+  // The 20 is to verify that cWidth can satify first iteration of while loop
+  // need to better handle this
+  if (cWidth + 20 <= CANVAS_WIDTH) {
     while (cWidth <= CANVAS_WIDTH) {
       bar_height += 5;
       max_radius += 5;
       cWidth = (max_radius + bar_height + 5) * 2;
     }
-  } else if (cWidth >= CANVAS_WIDTH) {
+  } else if (cWidth - 20 >= CANVAS_WIDTH) {
     while (cWidth >= CANVAS_WIDTH) {
       bar_height = bar_height - 5 > 10 ? bar_height - 5 : bar_height;
       max_radius -= 5;
@@ -170,7 +173,7 @@ function setDimensions() {
   }
   updateRadiusSlider(max_radius);
   updateBarHeightSlider(bar_height);
-  // updateNumBarSlider(max_radius);
+  updateNumBarSlider(max_radius);
 }
 
 function scaleCanvas() {
@@ -207,7 +210,7 @@ function drawDefaultCanvas() {
 
 function visualize() {
   //Create Analyser Node to extract data from Audio Source
-  analyser.fftSize = 2048;
+  analyser.fftSize = numBars > 512 ? 4096 : 2048;
 
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
@@ -259,8 +262,8 @@ function drawAudioBar(ctx, point, degree, color) {
 }
 
 function setBarWidth() {
-  barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 1.5));
-  barWidth = barWidth < 1 ? 1 : barWidth;
+  barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 2));
+  barWidth = barWidth <= MIN_BAR_WIDTH ? MIN_BAR_WIDTH : barWidth;
 }
 
 /**

@@ -317,6 +317,7 @@ function updateBarHeightSlider(max_height) {
   let min = Math.floor(max_height / 3);
   max_height = max_height - (max_height % 10);
   min = min - (min % 10);
+  min = min < 10 ? 10 : min;
   bar_height_slider.max = max_height;
   bar_height_slider.min = min;
 
@@ -363,32 +364,33 @@ function updateRadiusSlider(max_radius) {
   max_radius_label.appendChild(maxTextNode);
 }
 
-// function updateNumBarSlider(max_radius) {
-//   let circumference = 2 * Math.PI * max_radius,
-//     circumference2 = 2 * Math.PI * radius_slider.min;
-//   let max_bars = Math.floor(circumference / (MIN_BAR_WIDTH * 1.5)),
-//     min_bars = Math.floor(circumference2 / (MAX_BAR_WIDTH * 1.5));
+function updateNumBarSlider(max_radius) {
+  let max_circumference = 2 * Math.PI * max_radius,
+    min_circumference = 2 * Math.PI * radius_slider.min;
+  let max_bars = Math.floor(max_circumference / (MIN_BAR_WIDTH * 2)),
+    min_bars = Math.floor(min_circumference / (MAX_BAR_WIDTH * 2));
 
-//   max_bars = max_bars - (max_bars % 10);
-//   min_bars = min_bars - (min_bars % 10);
+  max_bars = max_bars - (max_bars % 10);
+  min_bars = min_bars - (min_bars % 10);
+  min_bars = min_bars < 10 ? 10 : min_bars;
 
-//   audio_slider.max = max_bars;
-//   audio_slider.min = min_bars;
+  audio_slider.max = max_bars;
+  audio_slider.min = min_bars;
 
-//   if (numBars > max_bars) {
-//     numBars = max_bars;
-//   } else if (numBars < min_bars) {
-//     numBars = min_bars;
-//   }
+  if (numBars > max_bars) {
+    numBars = max_bars;
+  } else if (numBars < min_bars) {
+    numBars = min_bars;
+  }
 
-//   audio_slider.value = numBars;
+  audio_slider.value = numBars;
 
-//   max_num_bars_label.removeChild(max_num_bars_label.firstChild);
-//   min_num_bars_label.removeChild(min_num_bars_label.firstChild);
+  max_num_bars_label.removeChild(max_num_bars_label.firstChild);
+  min_num_bars_label.removeChild(min_num_bars_label.firstChild);
 
-//   let maxTextNode = document.createTextNode(max_bars);
-//   let minTextNode = document.createTextNode(min_bars);
+  let maxTextNode = document.createTextNode(max_bars);
+  let minTextNode = document.createTextNode(min_bars);
 
-//   max_num_bars_label.appendChild(maxTextNode);
-//   min_num_bars_label.appendChild(minTextNode);
-// }
+  max_num_bars_label.appendChild(maxTextNode);
+  min_num_bars_label.appendChild(minTextNode);
+}
