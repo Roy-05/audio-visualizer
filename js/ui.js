@@ -43,6 +43,8 @@ sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.id === "hamburger") {
       toggleDrawer();
+    } else if (btn.id === "source") {
+      window.location.href = "https://github.com/Roy-05/audio-visualizer";
     }
   });
 
@@ -393,7 +395,7 @@ function updateSliderLabels(
   max_label_data
 ) {
   max_label.removeChild(max_label.firstChild);
-  min_label.removeChild(max_label.firstChild);
+  min_label.removeChild(min_label.firstChild);
 
   let maxTextNode = document.createTextNode(max_label_data);
   let minTextNode = document.createTextNode(min_label_data);
