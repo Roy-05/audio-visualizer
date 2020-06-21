@@ -58,32 +58,6 @@ window.addEventListener("DOMContentLoaded", () => {
   init();
 });
 
-function setCanvasSize() {
-  let minD = Math.min(PAGE_HEIGHT, PAGE_WIDTH);
-
-  if (window.innerWidth - DRAWER_WIDTH < minD) {
-    minD = window.innerWidth - DRAWER_WIDTH;
-  }
-
-  console.log(minD, PAGE_WIDTH, PAGE_HEIGHT);
-  CANVAS_WIDTH = minD;
-  CANVAS_HEIGHT = minD;
-}
-
-function setDimensions() {
-  let radius = RADIUS,
-    bar_height = MAX_BAR_HEIGHT,
-    cWidth = (radius + bar_height + 20) * 2;
-
-  while (cWidth < CANVAS_WIDTH) {
-    bar_height += 10;
-    radius += 10;
-    cWidth = (radius + bar_height + 10) * 2;
-  }
-  updateRadiusSlider(radius);
-  updateBarHeightSlider(bar_height);
-}
-
 window.addEventListener("resize", () => {
   isResizing = true;
 
@@ -158,6 +132,41 @@ function setUpVisual() {
   drawDefaultCanvas();
   // Start visualization
   visualize();
+}
+
+function setCanvasSize() {
+  let minD = Math.min(PAGE_HEIGHT, PAGE_WIDTH);
+
+  if (window.innerWidth - DRAWER_WIDTH < minD) {
+    minD = window.innerWidth - DRAWER_WIDTH;
+  }
+
+  console.log(minD, PAGE_WIDTH, PAGE_HEIGHT);
+  CANVAS_WIDTH = minD;
+  CANVAS_HEIGHT = minD;
+}
+
+function setDimensions() {
+  let max_radius = parseInt(max_radius_label.innerText, 10),
+    bar_height = parseInt(max_barH_label.innerText, 10),
+    cWidth = (max_radius + bar_height + 20) * 2;
+  if (cWidth < CANVAS_WIDTH) {
+    while (cWidth < CANVAS_WIDTH) {
+      bar_height += 10;
+      max_radius += 10;
+      cWidth = (max_radius + bar_height + 20) * 2;
+    }
+    updateRadiusSlider(max_radius);
+    updateBarHeightSlider(bar_height);
+  } else if (cWidth > CANVAS_WIDTH) {
+    while (cWidth > CANVAS_WIDTH) {
+      bar_height = bar_height > 20 ? bar_height - 10 : bar_height;
+      max_radius -= 10;
+      cWidth = (max_radius + bar_height + 20) * 2;
+    }
+    updateRadiusSlider(max_radius);
+    updateBarHeightSlider(bar_height);
+  }
 }
 
 function scaleCanvas() {

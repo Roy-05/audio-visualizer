@@ -71,7 +71,7 @@ a {
   z-index: -1;
 }
 #drawer {
-  transform: translateX(-400px);
+  transform: translateX(-320px);
   text-decoration: inherit;
   background: rgba(255, 255, 255, 0.05);
   height: 100%;

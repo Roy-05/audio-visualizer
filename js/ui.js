@@ -12,7 +12,11 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   radius_slider = document.getElementById("radius_slider"),
   bar_height_slider = document.getElementById("bar_height_slider"),
   color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
-  input_color_fields = [start_gdt, end_gdt, bg_color];
+  input_color_fields = [start_gdt, end_gdt, bg_color],
+  min_barH_label = document.getElementById("min_bar_height"),
+  max_barH_label = document.getElementById("max_bar_height"),
+  min_radius_label = document.getElementById("min_radius"),
+  max_radius_label = document.getElementById("max_radius");
 
 let isDrawerClosed = true,
   updateParams = false,
@@ -88,10 +92,10 @@ canvas.addEventListener("fullscreenchange", () => {
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     canvas.requestFullscreen();
-    canvas.style.cursor = "none";
+    // canvas.style.cursor = "none";
   } else if (document.exitFullscreen) {
     document.exitFullscreen();
-    canvas.style.removeProperty("cursor");
+    // canvas.style.removeProperty("cursor");
   }
 }
 
@@ -325,17 +329,14 @@ function updateBarHeightSlider(max_height) {
 
   bar_height_slider.value = MAX_BAR_HEIGHT;
 
-  let min_val_label = document.getElementById("min_bar_height"),
-    max_val_label = document.getElementById("max_bar_height");
-
-  min_val_label.removeChild(min_val_label.firstChild);
-  max_val_label.removeChild(max_val_label.firstChild);
+  min_barH_label.removeChild(min_barH_label.firstChild);
+  max_barH_label.removeChild(max_barH_label.firstChild);
 
   let minTextNode = document.createTextNode(min);
   let maxTextNode = document.createTextNode(max_height);
 
-  min_val_label.appendChild(minTextNode);
-  max_val_label.appendChild(maxTextNode);
+  min_barH_label.appendChild(minTextNode);
+  max_barH_label.appendChild(maxTextNode);
 }
 
 function updateRadiusSlider(max_radius) {
@@ -345,21 +346,18 @@ function updateRadiusSlider(max_radius) {
   radius_slider.min = min;
   if (RADIUS > max_radius) {
     RADIUS = max_radius;
-  } else if (RADIUS < max_radius) {
+  } else if (RADIUS < min) {
     RADIUS = min;
   }
 
   radius_slider.value = RADIUS;
 
-  let min_val_label = document.getElementById("min_radius"),
-    max_val_label = document.getElementById("max_radius");
-
-  min_val_label.removeChild(min_val_label.firstChild);
-  max_val_label.removeChild(max_val_label.firstChild);
+  min_radius_label.removeChild(min_radius_label.firstChild);
+  max_radius_label.removeChild(max_radius_label.firstChild);
 
   let minTextNode = document.createTextNode(min);
   let maxTextNode = document.createTextNode(max_radius);
 
-  min_val_label.appendChild(minTextNode);
-  max_val_label.appendChild(maxTextNode);
+  min_radius_label.appendChild(minTextNode);
+  max_radius_label.appendChild(maxTextNode);
 }
