@@ -1,4 +1,5 @@
 const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
+  settings_tabs = [...document.getElementsByClassName("tabs")],
   closebtn = document.getElementById("closebtn"),
   submit = document.getElementById("submit"),
   drawer = document.getElementById("drawer"),
@@ -43,7 +44,23 @@ let tabData = {
   tab_3: initial_settings_obj,
 };
 
-let toggleSidenavOptions;
+let toggleSidenavOptions,
+  activeTab = "tab_1",
+  switchTabs = false;
+
+settings_tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    if (tab.classList.contains("active") === false) {
+      let elem = document.getElementsByClassName("active")[0];
+      elem.classList.remove("active");
+      tab.classList.add("active");
+      activeTab = tab.id;
+      settings_obj = JSON.parse(getSettings(activeTab));
+      console.log(settings_obj);
+      switchTabs = true;
+    }
+  });
+});
 
 sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {

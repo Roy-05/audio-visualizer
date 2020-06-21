@@ -138,3 +138,8 @@ a {
   width: 32px;
   height: 32px;
 }
+
+.active {
+  color: red;
+  text-decoration: underline;
+}
