@@ -17,8 +17,8 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   max_barH_label = document.getElementById("max_bar_height"),
   min_radius_label = document.getElementById("min_radius"),
   max_radius_label = document.getElementById("max_radius"),
-  min_num_bars_label = document.getElementById("min_num_bars"),
-  max_num_bars_label = document.getElementById("max_num_bars");
+  min_numB_label = document.getElementById("min_num_bars"),
+  max_numB_label = document.getElementById("max_num_bars");
 
 let isDrawerClosed = true,
   updateParams = false,
@@ -316,52 +316,43 @@ function toggleColorPicker() {
 function updateBarHeightSlider(max_height) {
   let min = Math.floor(max_height / 3);
   max_height = max_height - (max_height % 10);
-  min = min - (min % 10);
-  min = min < 10 ? 10 : min;
+  min_height = min - (min % 10);
+  min_height = min < 10 ? 10 : min_height;
   bar_height_slider.max = max_height;
-  bar_height_slider.min = min;
+  bar_height_slider.min = min_height;
 
   // Clamp bar height to both extremes
   if (MAX_BAR_HEIGHT > max_height) {
     MAX_BAR_HEIGHT = max_height;
-  } else if (MAX_BAR_HEIGHT < min) {
-    MAX_BAR_HEIGHT = min;
+  } else if (MAX_BAR_HEIGHT < min_height) {
+    MAX_BAR_HEIGHT = min_height;
   }
 
   bar_height_slider.value = MAX_BAR_HEIGHT;
 
-  min_barH_label.removeChild(min_barH_label.firstChild);
-  max_barH_label.removeChild(max_barH_label.firstChild);
-
-  let minTextNode = document.createTextNode(min);
-  let maxTextNode = document.createTextNode(max_height);
-
-  min_barH_label.appendChild(minTextNode);
-  max_barH_label.appendChild(maxTextNode);
+  updateSliderLabels(min_barH_label, max_barH_label, min_height, max_height);
 }
 
 function updateRadiusSlider(max_radius) {
-  let min = Math.floor(max_radius * 0.667);
+  let min_radius = Math.floor(max_radius * 0.667);
   max_radius = max_radius - (max_radius % 10);
-  min = min - (min % 10);
+  min_radius = min_radius - (min_radius % 10);
   radius_slider.max = max_radius;
-  radius_slider.min = min;
+  radius_slider.min = min_radius;
   if (RADIUS > max_radius) {
     RADIUS = max_radius;
-  } else if (RADIUS < min) {
-    RADIUS = min;
+  } else if (RADIUS < min_radius) {
+    RADIUS = min_radius;
   }
 
   radius_slider.value = RADIUS;
 
-  min_radius_label.removeChild(min_radius_label.firstChild);
-  max_radius_label.removeChild(max_radius_label.firstChild);
-
-  let minTextNode = document.createTextNode(min);
-  let maxTextNode = document.createTextNode(max_radius);
-
-  min_radius_label.appendChild(minTextNode);
-  max_radius_label.appendChild(maxTextNode);
+  updateSliderLabels(
+    min_radius_label,
+    max_radius_label,
+    min_radius,
+    max_radius
+  );
 }
 
 function updateNumBarSlider(max_radius) {
@@ -385,12 +376,28 @@ function updateNumBarSlider(max_radius) {
 
   audio_slider.value = numBars;
 
-  max_num_bars_label.removeChild(max_num_bars_label.firstChild);
-  min_num_bars_label.removeChild(min_num_bars_label.firstChild);
+  updateSliderLabels(min_numB_label, max_numB_label, min_bars, max_bars);
+}
 
-  let maxTextNode = document.createTextNode(max_bars);
-  let minTextNode = document.createTextNode(min_bars);
+/**
+ *
+ * @param {HTMLElement} min_label DOM Node containing slider's mininum value label
+ * @param {HTMLElement} max_label DOM Node containing slider's maximum value label
+ * @param {Number} min_label_data New data value that will replace old minimum label value
+ * @param {Number} max_label_data New data value that will replace old maximum label value
+ */
+function updateSliderLabels(
+  min_label,
+  max_label,
+  min_label_data,
+  max_label_data
+) {
+  max_label.removeChild(max_label.firstChild);
+  min_label.removeChild(max_label.firstChild);
 
-  max_num_bars_label.appendChild(maxTextNode);
-  min_num_bars_label.appendChild(minTextNode);
+  let maxTextNode = document.createTextNode(max_label_data);
+  let minTextNode = document.createTextNode(min_label_data);
+
+  max_label.appendChild(maxTextNode);
+  min_label.appendChild(minTextNode);
 }
