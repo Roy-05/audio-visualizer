@@ -154,18 +154,18 @@ function setCanvasSize() {
 function setDimensions() {
   let max_radius = parseInt(max_radius_label.innerText, 10),
     bar_height = parseInt(max_barH_label.innerText, 10),
-    cWidth = (max_radius + bar_height + 20) * 2;
+    cWidth = (max_radius + bar_height + 5) * 2;
   if (cWidth <= CANVAS_WIDTH) {
     while (cWidth <= CANVAS_WIDTH) {
-      bar_height += 10;
-      max_radius += 10;
-      cWidth = (max_radius + bar_height + 20) * 2;
+      bar_height += 5;
+      max_radius += 5;
+      cWidth = (max_radius + bar_height + 5) * 2;
     }
   } else if (cWidth >= CANVAS_WIDTH) {
     while (cWidth >= CANVAS_WIDTH) {
-      bar_height = bar_height > 20 ? bar_height - 10 : bar_height;
-      max_radius -= 10;
-      cWidth = (max_radius + bar_height + 20) * 2;
+      bar_height = bar_height - 5 > 10 ? bar_height - 5 : bar_height;
+      max_radius -= 5;
+      cWidth = (max_radius + bar_height + 5) * 2;
     }
   }
   updateRadiusSlider(max_radius);

@@ -47,10 +47,6 @@ sidenav_options.forEach((btn) => {
   });
 
   btn.addEventListener("mouseenter", () => {
-    // let color = picker_map["bg_color_btn"].rgb;
-    // color = color.map((rgb) => 255 - rgb);
-    // color = `rgb(${color[0]},${color[1]},${color[2]})`;
-    // btn.style.color = color;
     btn.classList.add("hover");
   });
 
@@ -318,7 +314,8 @@ function toggleColorPicker() {
 }
 
 function updateBarHeightSlider(max_height) {
-  let min = Math.floor(max_height / 2);
+  let min = Math.floor(max_height / 3);
+  max_height = max_height - (max_height % 10);
   min = min - (min % 10);
   bar_height_slider.max = max_height;
   bar_height_slider.min = min;
@@ -344,6 +341,7 @@ function updateBarHeightSlider(max_height) {
 
 function updateRadiusSlider(max_radius) {
   let min = Math.floor(max_radius * 0.667);
+  max_radius = max_radius - (max_radius % 10);
   min = min - (min % 10);
   radius_slider.max = max_radius;
   radius_slider.min = min;
