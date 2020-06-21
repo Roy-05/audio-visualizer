@@ -16,7 +16,9 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   min_barH_label = document.getElementById("min_bar_height"),
   max_barH_label = document.getElementById("max_bar_height"),
   min_radius_label = document.getElementById("min_radius"),
-  max_radius_label = document.getElementById("max_radius");
+  max_radius_label = document.getElementById("max_radius"),
+  min_num_bars_label = document.getElementById("min_num_bars"),
+  max_num_bars_label = document.getElementById("max_num_bars");
 
 let isDrawerClosed = true,
   updateParams = false,
@@ -361,3 +363,33 @@ function updateRadiusSlider(max_radius) {
   min_radius_label.appendChild(minTextNode);
   max_radius_label.appendChild(maxTextNode);
 }
+
+// function updateNumBarSlider(max_radius) {
+//   let circumference = 2 * Math.PI * max_radius,
+//     circumference2 = 2 * Math.PI * radius_slider.min;
+//   let max_bars = Math.floor(circumference / (MIN_BAR_WIDTH * 1.5)),
+//     min_bars = Math.floor(circumference2 / (MAX_BAR_WIDTH * 1.5));
+
+//   max_bars = max_bars - (max_bars % 10);
+//   min_bars = min_bars - (min_bars % 10);
+
+//   audio_slider.max = max_bars;
+//   audio_slider.min = min_bars;
+
+//   if (numBars > max_bars) {
+//     numBars = max_bars;
+//   } else if (numBars < min_bars) {
+//     numBars = min_bars;
+//   }
+
+//   audio_slider.value = numBars;
+
+//   max_num_bars_label.removeChild(max_num_bars_label.firstChild);
+//   min_num_bars_label.removeChild(min_num_bars_label.firstChild);
+
+//   let maxTextNode = document.createTextNode(max_bars);
+//   let minTextNode = document.createTextNode(min_bars);
+
+//   max_num_bars_label.appendChild(maxTextNode);
+//   min_num_bars_label.appendChild(minTextNode);
+// }

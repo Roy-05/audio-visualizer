@@ -24,7 +24,9 @@ let points = [],
 let numBars,
   barHeight = 10,
   barWidth,
-  MAX_BAR_HEIGHT = 100;
+  MAX_BAR_HEIGHT = 100,
+  MAX_BAR_WIDTH = 20,
+  MIN_BAR_WIDTH = 1;
 
 let isResizing = false,
   resizeEnd;
@@ -70,11 +72,12 @@ window.addEventListener("resize", () => {
       toggleDrawer();
     }
 
-    PAGE_WIDTH = canvas_container.clientWidth;
-    PAGE_HEIGHT = canvas_container.clientHeight;
-
-    if (isPaused === false) {
+    if (isPaused === false && !isFullScreen) {
+      PAGE_WIDTH = canvas_container.clientWidth;
+      PAGE_HEIGHT = canvas_container.clientHeight;
       init();
+    } else if (isPaused === false && isFullScreen) {
+      update();
     }
   }, 300);
 });
@@ -97,6 +100,9 @@ function init() {
   setNumBars(getSetting("numBars"));
   // Set Max Bar Height
   setBarHeight(getSetting("barHeight"));
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
+
   setDimensions();
   // Set gradient
   setGradient();
@@ -116,6 +122,8 @@ function update() {
   setNumBars(audio_slider.value);
   // Set Max Bar Height
   setBarHeight(bar_height_slider.value);
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
   // Update gradient
   setGradient();
 
@@ -126,8 +134,6 @@ function update() {
 function setUpVisual() {
   // Scale canvase for high dpi display
   scaleCanvas();
-  // Set the bar width based on the size of the canvas;
-  setBarWidth();
   // Draw the default canvas image
   drawDefaultCanvas();
   // Start visualization
@@ -141,7 +147,6 @@ function setCanvasSize() {
     minD = window.innerWidth - DRAWER_WIDTH;
   }
 
-  console.log(minD, PAGE_WIDTH, PAGE_HEIGHT);
   CANVAS_WIDTH = minD;
   CANVAS_HEIGHT = minD;
 }
@@ -150,23 +155,22 @@ function setDimensions() {
   let max_radius = parseInt(max_radius_label.innerText, 10),
     bar_height = parseInt(max_barH_label.innerText, 10),
     cWidth = (max_radius + bar_height + 20) * 2;
-  if (cWidth < CANVAS_WIDTH) {
-    while (cWidth < CANVAS_WIDTH) {
+  if (cWidth <= CANVAS_WIDTH) {
+    while (cWidth <= CANVAS_WIDTH) {
       bar_height += 10;
       max_radius += 10;
       cWidth = (max_radius + bar_height + 20) * 2;
     }
-    updateRadiusSlider(max_radius);
-    updateBarHeightSlider(bar_height);
-  } else if (cWidth > CANVAS_WIDTH) {
-    while (cWidth > CANVAS_WIDTH) {
+  } else if (cWidth >= CANVAS_WIDTH) {
+    while (cWidth >= CANVAS_WIDTH) {
       bar_height = bar_height > 20 ? bar_height - 10 : bar_height;
       max_radius -= 10;
       cWidth = (max_radius + bar_height + 20) * 2;
     }
-    updateRadiusSlider(max_radius);
-    updateBarHeightSlider(bar_height);
   }
+  updateRadiusSlider(max_radius);
+  updateBarHeightSlider(bar_height);
+  // updateNumBarSlider(max_radius);
 }
 
 function scaleCanvas() {
@@ -256,6 +260,7 @@ function drawAudioBar(ctx, point, degree, color) {
 
 function setBarWidth() {
   barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 1.5));
+  barWidth = barWidth < 1 ? 1 : barWidth;
 }
 
 /**
