@@ -238,11 +238,20 @@ function pauseVisual() {
     update();
   }
 }
+
+/**
+ * --------------------------------------------------------------------------------
+ * HANDLE LOCAL STORAGE
+ * These functions take setting inputs from the user and updates the local storage.
+ * --------------------------------------------------------------------------------
+ */
+
 function populateSettings() {
   for (let key in settings_obj) {
     updateSettings(key, settings_obj[key]);
   }
 }
+
 function updateSettings(key, val) {
   localStorage.setItem(key, val);
 }
@@ -254,6 +263,12 @@ function clearSettings() {
 function getSetting(key) {
   return localStorage.getItem(key);
 }
+
+/**
+ * --------------------------------------------------------------------------------
+ * END LOCAL STORAGE FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
 
 function setContrastColor() {
   // isLight() returns true if the grayscale of the selected color is closer to white than black

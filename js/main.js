@@ -106,9 +106,14 @@ function init() {
   setDimensions();
   // Set gradient
   setGradient();
+  // Get the x,y coordinates of each audio bar and store it in a global array
+  getAudioBarCoordinates();
 
-  // Paint canvas
-  setUpVisual();
+  if (isPaused) {
+    drawDefaultCanvas();
+  } else {
+    visualize();
+  }
 }
 
 function update() {
@@ -126,29 +131,43 @@ function update() {
   setBarWidth();
   // Update gradient
   setGradient();
+  // Get the x,y coordinates of each audio bar and store it in a global array
+  getAudioBarCoordinates();
 
-  //Re-paint canvas
-  setUpVisual();
-}
-
-function setUpVisual() {
-  // Scale canvase for high dpi display
-  scaleCanvas();
-  // Draw the default canvas image
-  drawDefaultCanvas();
-  // Start visualization
-  visualize();
+  if (isPaused) {
+    // Draw the default canvas image
+    drawDefaultCanvas();
+  } else {
+    // Start visualization
+    visualize();
+  }
 }
 
 function setCanvasSize() {
+  // Get the smaller dimension to use as limit to set canvas size
   let minD = Math.min(PAGE_HEIGHT, PAGE_WIDTH);
 
+  // Check if there is the extra space to fit the drawer else reduce canvas size
   if (window.innerWidth - DRAWER_WIDTH < minD) {
     minD = window.innerWidth - DRAWER_WIDTH;
   }
 
+  // Set canvas width and height to that value
   CANVAS_WIDTH = minD;
   CANVAS_HEIGHT = minD;
+
+  // Set CSS width/height
+  // This will create the box that will contain the canvas
+  canvas.style.width = CANVAS_WIDTH + "px";
+  canvas.style.height = CANVAS_HEIGHT + "px";
+
+  // Scale for dpi for retina display
+  // This will set the width and height for the canvas coordinate system
+  canvas.width = Math.floor(CANVAS_WIDTH * DPI);
+  canvas.height = Math.floor(CANVAS_HEIGHT * DPI);
+
+  // Scale the canvas accordingly
+  canvasCtx.scale(DPI, DPI);
 }
 
 function setDimensions() {
@@ -176,18 +195,7 @@ function setDimensions() {
   updateNumBarSlider(max_radius);
 }
 
-function scaleCanvas() {
-  canvas.style.width = CANVAS_WIDTH + "px";
-  canvas.style.height = CANVAS_HEIGHT + "px";
-
-  // Scale for dpi for retina display
-  canvas.width = Math.floor(CANVAS_WIDTH * DPI);
-  canvas.height = Math.floor(CANVAS_HEIGHT * DPI);
-
-  canvasCtx.scale(DPI, DPI);
-}
-
-function drawDefaultCanvas() {
+function getAudioBarCoordinates() {
   // Get starting points for each audio bar and store it in a global array
   let degree = 180;
   points = new Array(numBars);
@@ -198,9 +206,10 @@ function drawDefaultCanvas() {
     ];
     degree += 360 / numBars;
   }
+}
 
+function drawDefaultCanvas() {
   canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
   degree = 90;
   for (let i = 0; i < numBars; i++) {
     drawAudioBar(canvasCtx, points[i], degree, i);
