@@ -47,14 +47,15 @@ sidenav_options.forEach((btn) => {
   });
 
   btn.addEventListener("mouseenter", () => {
-    let color = picker_map["bg_color_btn"].rgb;
-    color = color.map((rgb) => 255 - rgb);
-    color = `rgb(${color[0]},${color[1]},${color[2]})`;
-    btn.style.color = color;
+    // let color = picker_map["bg_color_btn"].rgb;
+    // color = color.map((rgb) => 255 - rgb);
+    // color = `rgb(${color[0]},${color[1]},${color[2]})`;
+    // btn.style.color = color;
+    btn.classList.add("hover");
   });
 
   btn.addEventListener("mouseleave", () => {
-    btn.style.color = "inherit";
+    btn.classList.remove("hover");
   });
 });
 
@@ -127,7 +128,7 @@ function toggleDrawer() {
     // i.e once the drawer is hidden (check ui.css ln 21)
     toggleSidenavOptions = setTimeout(() => {
       sidenav_options.forEach((btn) => {
-        btn.style.display = "flex";
+        btn.style.display = "block";
       });
     }, 550);
   }

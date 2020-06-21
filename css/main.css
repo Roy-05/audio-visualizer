@@ -35,6 +35,7 @@ body {
 }
 
 button {
+  background: transparent;
   border: none;
   outline: none;
   cursor: pointer;
@@ -54,10 +55,14 @@ a {
 }
 
 .sidenav-options {
+  height: 100%;
   color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+
   margin: 0px 10px;
-  cursor: pointer;
 }
+
 #drawer:before {
   content: "";
   position: absolute;
@@ -70,6 +75,13 @@ a {
   background: inherit;
   z-index: -1;
 }
+
+.hover {
+  background: rgba(255, 255, 255, 0.5);
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
 #drawer {
   transform: translateX(-320px);
   text-decoration: inherit;
