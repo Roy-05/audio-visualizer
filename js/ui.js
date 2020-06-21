@@ -317,8 +317,8 @@ function toggleColorPicker() {
 
 function updateBarHeightSlider(max_height) {
   let min = Math.floor(max_height / 3);
-  max_height = max_height - (max_height % 10);
-  min_height = min - (min % 10);
+  max_height = max_height - (max_height % 20);
+  min_height = min - (min % 20);
   min_height = min < 10 ? 10 : min_height;
   bar_height_slider.max = max_height;
   bar_height_slider.min = min_height;
@@ -337,8 +337,8 @@ function updateBarHeightSlider(max_height) {
 
 function updateRadiusSlider(max_radius) {
   let min_radius = Math.floor(max_radius * 0.667);
-  max_radius = max_radius - (max_radius % 10);
-  min_radius = min_radius - (min_radius % 10);
+  max_radius = max_radius - (max_radius % 20);
+  min_radius = min_radius - (min_radius % 20);
   radius_slider.max = max_radius;
   radius_slider.min = min_radius;
   if (RADIUS > max_radius) {
@@ -363,9 +363,9 @@ function updateNumBarSlider(max_radius) {
   let max_bars = Math.floor(max_circumference / (MIN_BAR_WIDTH * 2)),
     min_bars = Math.floor(min_circumference / (MAX_BAR_WIDTH * 2));
 
-  max_bars = max_bars - (max_bars % 10);
-  min_bars = min_bars - (min_bars % 10);
-  min_bars = min_bars < 10 ? 10 : min_bars;
+  max_bars = max_bars - (max_bars % 50);
+  min_bars = min_bars - (min_bars % 50);
+  min_bars = min_bars < 50 ? 50 : min_bars;
 
   audio_slider.max = max_bars;
   audio_slider.min = min_bars;
