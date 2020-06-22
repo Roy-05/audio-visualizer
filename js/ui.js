@@ -9,12 +9,10 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   start_gdt = document.getElementById("start_gdt"),
   end_gdt = document.getElementById("end_gdt"),
   bg_color = document.getElementById("bg_color"),
+  input_color_fields = [start_gdt, end_gdt, bg_color],
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider"),
   bar_height_slider = document.getElementById("bar_height_slider"),
-  // color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
-  input_color_fields = [start_gdt, end_gdt, bg_color],
-  color_picker_btn_ids = ["start_gdt_btn", "end_gdt_btn", "bg_color_btn"],
   min_barH_label = document.getElementById("min_bar_height"),
   max_barH_label = document.getElementById("max_bar_height"),
   min_radius_label = document.getElementById("min_radius"),
@@ -41,7 +39,7 @@ let initial_settings_obj = {
 };
 
 let toggleSidenavOptions,
-  activeTab,
+  activeTab = 0,
   switchTabs = false;
 
 settings_tabs.forEach((tab) => {
@@ -57,16 +55,10 @@ settings_tabs.forEach((tab) => {
       } else {
         activeTab = 2;
       }
-
-      console.log(settings_obj);
       switchTabs = true;
     }
   });
 });
-
-function setActiveTab(num) {
-  activeTab = num;
-}
 
 sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -184,9 +176,6 @@ function setGradient() {
   settings_obj["start_gdt"][activeTab] = start;
   settings_obj["end_gdt"][activeTab] = end;
 
-  updateSettings("start_gdt", settings_obj["start_gdt"]);
-  updateSettings("end_gdt", settings_obj["end_gdt"]);
-
   //Convert the hex data to rgb to create a gradient
   let start_rgb = picker_map["start_gdt_btn"].rgb,
     end_rgb = picker_map["end_gdt_btn"].rgb;
@@ -224,7 +213,6 @@ function setNumBars(num) {
   numBars = num;
   audio_slider.value = num;
   settings_obj["numBars"][activeTab] = num;
-  updateSettings("numBars", settings_obj["numBars"]);
 }
 
 function setRadius(r) {
@@ -232,7 +220,6 @@ function setRadius(r) {
   RADIUS = r;
   radius_slider.value = r;
   settings_obj["radius"][activeTab] = r;
-  updateSettings("radius", settings_obj["radius"]);
 }
 
 function setBarHeight(num) {
@@ -240,7 +227,6 @@ function setBarHeight(num) {
   MAX_BAR_HEIGHT = num;
   bar_height_slider.value = num;
   settings_obj["barHeight"][activeTab] = num;
-  updateSettings("barHeight", settings_obj["barHeight"]);
 }
 
 function setBgColor() {
@@ -250,7 +236,6 @@ function setBgColor() {
 
   bg_color.value = color;
   settings_obj["bg_color"][activeTab] = color;
-  updateSettings("bg_color", settings_obj["bg_color"]);
 
   setContrastColor();
 }
@@ -287,20 +272,28 @@ function pauseVisual() {
 
 function populateSettings() {
   for (let key in initial_settings_obj) {
-    updateSettings(key, JSON.stringify(initial_settings_obj[key]));
+    localStorage.setItem(key, JSON.stringify(initial_settings_obj[key]));
   }
 }
 
-function updateSettings(key, val) {
-  localStorage.setItem(key, JSON.stringify(val));
+function updateSettings() {
+  for (let key in settings_obj) {
+    localStorage.setItem(key, JSON.stringify(settings_obj[key]));
+  }
 }
 
 function clearSettings() {
   localStorage.clear();
 }
 
-function getSettings(key) {
-  return JSON.parse(localStorage.getItem(key));
+function getSettings() {
+  let settings = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    settings[key] = JSON.parse(localStorage.getItem(key));
+  }
+
+  return settings;
 }
 
 /**
@@ -323,28 +316,36 @@ function setContrastColor() {
 }
 
 function setUpColorPicker() {
+  // Check if color picker instantiated buttons are present already
   let cp_btns = [...document.getElementsByClassName("color-picker-btn")];
+
+  // if there are then iteratively remove each button node from the DOM
   cp_btns.forEach((btn) => {
     btn.remove();
-    color_picker_btns = [];
+    color_picker_btns = []; // Reinitialize container to empty array
   });
 
-  let cp_btn_containers = [...document.getElementsByClassName("cp-container")];
+  // Get each DOM Element where the color picker button element will be appended to
+  let cp_btn_containers = [...document.getElementsByClassName("cp-container")],
+    cp_btn_ids = ["start_gdt_btn", "end_gdt_btn", "bg_color_btn"];
+
+  // Iteratively create a color picker button and append it to the DOM container element
   cp_btn_containers.forEach((container, i) => {
     let btn = document.createElement("button");
 
     btn.className = "color-picker-btn";
-    btn.id = color_picker_btn_ids[i];
+    btn.id = cp_btn_ids[i];
 
     container.appendChild(btn);
-    color_picker_btns.push(btn);
+    color_picker_btns.push(btn); // Add it to our global array of color picker elements
   });
 
+  // Set up jscolor parameters for each button mapping them to the corresponding input field
   input_color_fields.forEach((elem, i) => {
     let params = {
       value: "",
-      valueElement: elem,
-      styleElement: elem,
+      valueElement: elem, // these two parmas indicates the element
+      styleElement: elem, // to which the color picker will be mapped to
       buttonHeight: 12,
       hash: true,
       width: 250,
@@ -356,7 +357,10 @@ function setUpColorPicker() {
       padding: 32,
     };
 
+    // Create a new jscolor instance for each color picker button
     let picker = new jscolor(color_picker_btns[i], params);
+
+    // Create a color picker map, mapping the button id to the picker instance
     picker_map[color_picker_btns[i].id] = picker;
   });
 }

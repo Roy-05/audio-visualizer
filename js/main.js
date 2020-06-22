@@ -53,17 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
     populateSettings();
   }
 
-  settings_obj["start_gdt"] = getSettings("start_gdt");
-  settings_obj["end_gdt"] = getSettings("end_gdt");
-  settings_obj["bg_color"] = getSettings("bg_color");
-  settings_obj["numBars"] = getSettings("numBars");
-  settings_obj["radius"] = getSettings("radius");
-  settings_obj["barHeight"] = getSettings("barHeight");
-
-  // settings_obj = initial_settings_obj;
-
-  setActiveTab(0);
-
+  settings_obj = getSettings();
   init();
 });
 
@@ -142,6 +132,8 @@ function update() {
   setBarHeight(bar_height_slider.value);
   // Update gradient
   setGradient();
+
+  updateSettings();
 
   // Set the bar width based on the size of the canvas;
   setBarWidth();
