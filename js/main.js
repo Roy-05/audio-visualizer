@@ -31,6 +31,8 @@ let numBars,
 let isResizing = false,
   resizeEnd;
 
+let settings_obj = {};
+
 let DRAWER_WIDTH = 320;
 //Initialize canvas
 window.addEventListener("DOMContentLoaded", () => {
@@ -51,12 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
     populateSettings();
   }
 
-  start_gdt.value = getSetting("start_gdt");
-  end_gdt.value = getSetting("end_gdt");
-  bg_color.value = getSetting("bg_color");
-
-  setUpColorPicker();
-
+  settings_obj = getSettings();
   init();
 });
 
@@ -91,22 +88,28 @@ document.addEventListener("click", () => {
 function init() {
   // Set the height and width of the canvas
   setCanvasSize();
+
+  start_gdt.value = settings_obj["start_gdt"][activeTab];
+  end_gdt.value = settings_obj["end_gdt"][activeTab];
+  bg_color.value = settings_obj["bg_color"][activeTab];
+
+  setUpColorPicker();
   // Set Background color
   setBgColor();
 
   // Set radius
-  setRadius(getSetting("radius"));
+  setRadius(settings_obj["radius"][activeTab]);
   // Set number of Bars
-  setNumBars(getSetting("numBars"));
+  setNumBars(settings_obj["numBars"][activeTab]);
   // Set Max Bar Height
-  setBarHeight(getSetting("barHeight"));
+  setBarHeight(settings_obj["barHeight"][activeTab]);
   // Set the bar width based on the size of the canvas;
-  setBarWidth();
-
-  setDimensions();
-  // Set gradient
   setGradient();
   // Get the x,y coordinates of each audio bar and store it in a global array
+
+  setBarWidth();
+  setDimensions();
+  // Set gradient
   getAudioBarCoordinates();
 
   if (isPaused) {
@@ -127,10 +130,13 @@ function update() {
   setNumBars(audio_slider.value);
   // Set Max Bar Height
   setBarHeight(bar_height_slider.value);
-  // Set the bar width based on the size of the canvas;
-  setBarWidth();
   // Update gradient
   setGradient();
+
+  updateSettings();
+
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
   // Get the x,y coordinates of each audio bar and store it in a global array
   getAudioBarCoordinates();
 
@@ -228,6 +234,12 @@ function visualize() {
 
   const draw = () => {
     if (isPaused) {
+      return;
+    }
+
+    if (switchTabs) {
+      switchTabs = false;
+      init();
       return;
     }
 

@@ -95,12 +95,11 @@ a {
   transition: 0.5s;
   border-radius: 0 30px 30px 0;
 }
-/* 
+
 #closebtn {
-  justify-content: right;
-  color: inherit;
-  background: inherit;
-} */
+  justify-content: center;
+  font-size: 4vh;
+}
 
 .range_slider {
   display: flex;
@@ -137,4 +136,36 @@ a {
   background-size: contain;
   width: 32px;
   height: 32px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 100%;
+  padding: 0;
+  overflow: visible;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+  overflow: hidden;
+  margin: 5px;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.tab.active {
+  background: rgba(255, 255, 255, 0.5);
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.tabs-container {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 85% 15%;
 }
