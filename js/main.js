@@ -53,13 +53,16 @@ window.addEventListener("DOMContentLoaded", () => {
     populateSettings();
   }
 
-  settings_obj = JSON.parse(getSettings("tab_1"));
+  settings_obj["start_gdt"] = getSettings("start_gdt");
+  settings_obj["end_gdt"] = getSettings("end_gdt");
+  settings_obj["bg_color"] = getSettings("bg_color");
+  settings_obj["numBars"] = getSettings("numBars");
+  settings_obj["radius"] = getSettings("radius");
+  settings_obj["barHeight"] = getSettings("barHeight");
 
-  start_gdt.value = settings_obj["start_gdt"];
-  end_gdt.value = settings_obj["end_gdt"];
-  bg_color.value = settings_obj["bg_color"];
+  // settings_obj = initial_settings_obj;
 
-  setUpColorPicker();
+  setActiveTab(0);
 
   init();
 });
@@ -95,20 +98,24 @@ document.addEventListener("click", () => {
 function init() {
   // Set the height and width of the canvas
   setCanvasSize();
+
+  start_gdt.value = settings_obj["start_gdt"][activeTab];
+  end_gdt.value = settings_obj["end_gdt"][activeTab];
+  bg_color.value = settings_obj["bg_color"][activeTab];
+
+  setUpColorPicker();
   // Set Background color
   setBgColor();
 
   // Set radius
-  setRadius(settings_obj["radius"]);
+  setRadius(settings_obj["radius"][activeTab]);
   // Set number of Bars
-  setNumBars(settings_obj["numBars"]);
+  setNumBars(settings_obj["numBars"][activeTab]);
   // Set Max Bar Height
-  setBarHeight(settings_obj["barHeight"]);
+  setBarHeight(settings_obj["barHeight"][activeTab]);
   // Set the bar width based on the size of the canvas;
   setGradient();
   // Get the x,y coordinates of each audio bar and store it in a global array
-
-  updateSettings("tab_1", JSON.stringify(settings_obj));
 
   setBarWidth();
   setDimensions();
@@ -136,7 +143,6 @@ function update() {
   // Update gradient
   setGradient();
 
-  updateSettings("tab_1", JSON.stringify(settings_obj));
   // Set the bar width based on the size of the canvas;
   setBarWidth();
   // Get the x,y coordinates of each audio bar and store it in a global array
@@ -236,6 +242,12 @@ function visualize() {
 
   const draw = () => {
     if (isPaused) {
+      return;
+    }
+
+    if (switchTabs) {
+      switchTabs = false;
+      init();
       return;
     }
 

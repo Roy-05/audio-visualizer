@@ -12,8 +12,9 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   audio_slider = document.getElementById("audio_slider"),
   radius_slider = document.getElementById("radius_slider"),
   bar_height_slider = document.getElementById("bar_height_slider"),
-  color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
+  // color_picker_btns = [...document.getElementsByClassName("color-picker-btn")],
   input_color_fields = [start_gdt, end_gdt, bg_color],
+  color_picker_btn_ids = ["start_gdt_btn", "end_gdt_btn", "bg_color_btn"],
   min_barH_label = document.getElementById("min_bar_height"),
   max_barH_label = document.getElementById("max_bar_height"),
   min_radius_label = document.getElementById("min_radius"),
@@ -27,25 +28,20 @@ let isDrawerClosed = true,
   isShortcutsEnabled = true,
   showColorPicker = true,
   isPaused = false,
-  picker_map = {};
+  picker_map = {},
+  color_picker_btns = [];
 
 let initial_settings_obj = {
-  bg_color: bg_color.value,
-  start_gdt: start_gdt.value,
-  end_gdt: end_gdt.value,
-  radius: parseInt(radius_slider.value, 10),
-  numBars: parseInt(audio_slider.value, 10),
-  barHeight: parseInt(bar_height_slider.value, 10),
-};
-
-let tabData = {
-  tab_1: initial_settings_obj,
-  tab_2: initial_settings_obj,
-  tab_3: initial_settings_obj,
+  bg_color: Array(3).fill(bg_color.value),
+  start_gdt: Array(3).fill(start_gdt.value),
+  end_gdt: Array(3).fill(end_gdt.value),
+  radius: Array(3).fill(parseInt(radius_slider.value, 10)),
+  numBars: Array(3).fill(parseInt(audio_slider.value, 10)),
+  barHeight: Array(3).fill(parseInt(bar_height_slider.value, 10)),
 };
 
 let toggleSidenavOptions,
-  activeTab = "tab_1",
+  activeTab,
   switchTabs = false;
 
 settings_tabs.forEach((tab) => {
@@ -54,13 +50,23 @@ settings_tabs.forEach((tab) => {
       let elem = document.getElementsByClassName("active")[0];
       elem.classList.remove("active");
       tab.classList.add("active");
-      activeTab = tab.id;
-      settings_obj = JSON.parse(getSettings(activeTab));
+      if (tab.id === "tab_1") {
+        activeTab = 0;
+      } else if (tab.id === "tab_2") {
+        activeTab = 1;
+      } else {
+        activeTab = 2;
+      }
+
       console.log(settings_obj);
       switchTabs = true;
     }
   });
 });
+
+function setActiveTab(num) {
+  activeTab = num;
+}
 
 sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -175,8 +181,11 @@ function setGradient() {
   end_gdt.value = end;
 
   // Push updated data to local storage
-  settings_obj["start_gdt"] = start;
-  settings_obj["end_gdt"] = end;
+  settings_obj["start_gdt"][activeTab] = start;
+  settings_obj["end_gdt"][activeTab] = end;
+
+  updateSettings("start_gdt", settings_obj["start_gdt"]);
+  updateSettings("end_gdt", settings_obj["end_gdt"]);
 
   //Convert the hex data to rgb to create a gradient
   let start_rgb = picker_map["start_gdt_btn"].rgb,
@@ -192,7 +201,6 @@ function setGradient() {
         start_rgb[1] + (end_rgb[1] - start_rgb[1]) * (i / (halfNumBars - 1)),
         start_rgb[2] + (end_rgb[2] - start_rgb[2]) * (i / (halfNumBars - 1)),
       ];
-      console;
     } else {
       gdt = [
         end_rgb[0] +
@@ -212,29 +220,37 @@ function setGradient() {
 }
 
 function setNumBars(num) {
-  numBars = parseInt(num, 10);
+  num = parseInt(num, 10);
+  numBars = num;
   audio_slider.value = num;
-  settings_obj["numBars"] = num;
+  settings_obj["numBars"][activeTab] = num;
+  updateSettings("numBars", settings_obj["numBars"]);
 }
 
 function setRadius(r) {
-  RADIUS = parseInt(r, 10);
+  r = parseInt(r, 10);
+  RADIUS = r;
   radius_slider.value = r;
-  settings_obj["radius"] = r;
+  settings_obj["radius"][activeTab] = r;
+  updateSettings("radius", settings_obj["radius"]);
 }
 
 function setBarHeight(num) {
-  MAX_BAR_HEIGHT = parseInt(num, 10);
+  num = parseInt(num, 10);
+  MAX_BAR_HEIGHT = num;
   bar_height_slider.value = num;
-  settings_obj["barHeight"] = num;
+  settings_obj["barHeight"][activeTab] = num;
+  updateSettings("barHeight", settings_obj["barHeight"]);
 }
+
 function setBgColor() {
   let color = picker_map["bg_color_btn"].toHEXString();
   page_container.style.background = color;
   canvas.style.background = color;
 
   bg_color.value = color;
-  settings_obj["bg_color"] = color;
+  settings_obj["bg_color"][activeTab] = color;
+  updateSettings("bg_color", settings_obj["bg_color"]);
 
   setContrastColor();
 }
@@ -270,21 +286,21 @@ function pauseVisual() {
  */
 
 function populateSettings() {
-  for (let key in tabData) {
-    updateSettings(key, JSON.stringify(tabData[key]));
+  for (let key in initial_settings_obj) {
+    updateSettings(key, JSON.stringify(initial_settings_obj[key]));
   }
 }
 
 function updateSettings(key, val) {
-  localStorage.setItem(key, val);
+  localStorage.setItem(key, JSON.stringify(val));
 }
 
 function clearSettings() {
   localStorage.clear();
 }
 
-function getSettings(activeTab) {
-  return localStorage.getItem(activeTab);
+function getSettings(key) {
+  return JSON.parse(localStorage.getItem(key));
 }
 
 /**
@@ -307,8 +323,26 @@ function setContrastColor() {
 }
 
 function setUpColorPicker() {
+  let cp_btns = [...document.getElementsByClassName("color-picker-btn")];
+  cp_btns.forEach((btn) => {
+    btn.remove();
+    color_picker_btns = [];
+  });
+
+  let cp_btn_containers = [...document.getElementsByClassName("cp-container")];
+  cp_btn_containers.forEach((container, i) => {
+    let btn = document.createElement("button");
+
+    btn.className = "color-picker-btn";
+    btn.id = color_picker_btn_ids[i];
+
+    container.appendChild(btn);
+    color_picker_btns.push(btn);
+  });
+
   input_color_fields.forEach((elem, i) => {
     let params = {
+      value: "",
       valueElement: elem,
       styleElement: elem,
       buttonHeight: 12,
