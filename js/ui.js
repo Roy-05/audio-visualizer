@@ -1,5 +1,5 @@
 const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
-  settings_tabs = [...document.getElementsByClassName("tabs")],
+  settings_tabs = [...document.getElementsByClassName("tab")],
   closebtn = document.getElementById("closebtn"),
   submit = document.getElementById("submit"),
   drawer = document.getElementById("drawer"),
