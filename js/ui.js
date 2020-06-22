@@ -18,13 +18,16 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   min_radius_label = document.getElementById("min_radius"),
   max_radius_label = document.getElementById("max_radius"),
   min_numB_label = document.getElementById("min_num_bars"),
-  max_numB_label = document.getElementById("max_num_bars");
+  max_numB_label = document.getElementById("max_num_bars"),
+  shortcuts_container = document.getElementById("shortcuts_container"),
+  shortcuts_menu = document.getElementById("shortcuts_menu"),
+  shortcuts_close_btn = document.getElementById("shortcuts_close_btn");
 
 let isDrawerClosed = true,
   updateParams = false,
   isFullScreen = false,
   isShortcutsEnabled = true,
-  showColorPicker = true,
+  isShortcutMenuVisible = false,
   isPaused = false,
   picker_map = {},
   color_picker_btns = [];
@@ -60,21 +63,18 @@ settings_tabs.forEach((tab) => {
   });
 });
 
+shortcuts_container.addEventListener("click", hideShortcutsMenu);
+shortcuts_close_btn.addEventListener("click", hideShortcutsMenu);
+
 sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.id === "hamburger") {
       toggleDrawer();
     } else if (btn.id === "source") {
       window.location.href = "https://github.com/Roy-05/audio-visualizer";
+    } else if (btn.id === "shortcuts") {
+      showShortcutsMenu();
     }
-  });
-
-  btn.addEventListener("mouseenter", () => {
-    btn.classList.add("hover");
-  });
-
-  btn.addEventListener("mouseleave", () => {
-    btn.classList.remove("hover");
   });
 });
 
@@ -478,4 +478,20 @@ function updateSliderLabels(
 
   max_label.appendChild(maxTextNode);
   min_label.appendChild(minTextNode);
+}
+
+function showShortcutsMenu() {
+  if (!isShortcutMenuVisible) {
+    shortcuts_container.style.display = "block";
+    isShortcutMenuVisible = true;
+    isShortcutsEnabled = false;
+  }
+}
+
+function hideShortcutsMenu() {
+  if (isShortcutMenuVisible) {
+    shortcuts_container.style.display = "none";
+    isShortcutMenuVisible = false;
+    isShortcutsEnabled = true;
+  }
 }
