@@ -202,11 +202,18 @@
         <div class="modal_container" id="reset_container">
           <span class="helper"></span>
           <div id="reset_menu">
-            <div class="modal_close" id="reset_close_btn">&times;</div>
+            <div class="modal_close cancel_reset" id="reset_close_btn">
+              &times;
+            </div>
             <div id="reset_menu_inner">
-              <div class="menu-item">Restore to default settings?</div>
+              <div class="menu-item">Restore to default themes?</div>
+              <div class="warning">
+                Warning: This will erase all saved options!
+              </div>
               <div class="menu-item" id="reset_action_container">
-                <button class="reset_button_item" id="cancel">CANCEL</button>
+                <button class="reset_button_item cancel_reset" id="cancel">
+                  CANCEL
+                </button>
                 <button class="reset_button_item" id="confirm">CONFIRM</button>
               </div>
             </div>

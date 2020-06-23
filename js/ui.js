@@ -24,7 +24,11 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   shortcuts_close_btn = document.getElementById("shortcuts_close_btn"),
   reset_container = document.getElementById("reset_container"),
   reset_menu = document.getElementById("reset_menu"),
-  reset_close_btn = document.getElementById("reset_close_btn");
+  reset_cancel_btns = [
+    ...document.getElementsByClassName("cancel_reset"),
+    reset_container,
+  ],
+  reset_confirm = document.getElementById("confirm");
 
 let isDrawerClosed = true,
   updateParams = false,
@@ -71,6 +75,16 @@ settings_tabs.forEach((tab) => {
 shortcuts_container.addEventListener("click", hideShortcutsMenu);
 shortcuts_close_btn.addEventListener("click", hideShortcutsMenu);
 
+reset_cancel_btns.forEach((btn) => {
+  btn.addEventListener("click", hideResetMenu);
+});
+
+reset_confirm.addEventListener("click", () => {
+  clearSettings();
+  populateSettings();
+  reset = true;
+});
+
 sidenav_options.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.id === "hamburger") {
@@ -91,12 +105,6 @@ input_fields.forEach((elem) => {
   });
   elem.addEventListener("blur", () => {
     isShortcutsEnabled = true;
-  });
-});
-
-color_picker_btns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    toggleColorPicker();
   });
 });
 
@@ -366,6 +374,7 @@ function setUpColorPicker() {
 
     // Create a new jscolor instance for each color picker button
     let picker = new jscolor(color_picker_btns[i], params);
+    color_picker_btns[i].addEventListener("click", toggleColorPicker);
 
     // Create a color picker map, mapping the button id to the picker instance
     picker_map[color_picker_btns[i].id] = picker;
@@ -508,5 +517,13 @@ function showResetMenu() {
     reset_container.style.display = "block";
     isResetMenuVisible = true;
     isShortcutsEnabled = false;
+  }
+}
+
+function hideResetMenu() {
+  if (isResetMenuVisible) {
+    reset_container.style.display = "none";
+    isResetMenuVisible = false;
+    isShortcutsEnabled = true;
   }
 }

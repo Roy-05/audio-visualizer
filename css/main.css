@@ -233,7 +233,7 @@ a {
 }
 
 .menu-item {
-  padding: 10px 0px 10px 0px;
+  padding: 15px 0px;
 }
 /* Popup box BEGIN */
 
@@ -272,20 +272,25 @@ a {
   margin: 0 10px;
   font-size: 16px;
   letter-spacing: 3px;
-  background: rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: 1px 1px 1px 1px;
   border-radius: 5px;
+}
+
+.warning {
+  padding-bottom: 15px;
+  font-size: 12px;
+  color: red;
 }
 
 #confirm:hover {
   color: white;
   background: rgba(179, 58, 58, 0.9);
   transition: 0.5s;
-  border-radius: 5px;
 }
 
 #cancel:hover {
-  background: rgb(127, 255, 0, 0.9);
+  color: white;
+  background: rgb(0, 90, 4, 0.9);
   transition: 0.5s;
-  border-radius: 5px;
 }
