@@ -61,8 +61,8 @@ a {
   color: inherit;
   font-family: inherit;
   font-size: inherit;
-  padding: 0px 1vw;
-  margin: 0px 1vw;
+  padding: 0px 8px;
+  margin: 0px 8px;
 }
 
 #drawer:before {
@@ -79,15 +79,15 @@ a {
 }
 
 .sidenav-options:hover {
-  background: rgba(255, 255, 255, 0.5);
-  transition: 0.3s;
+  background: rgba(211, 211, 211, 0.5);
+  transition: 0.5s;
   border-radius: 5px;
 }
 
 #drawer {
   transform: translateX(-320px);
   text-decoration: inherit;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(200, 200, 200, 0.05);
   height: 100%;
   position: fixed;
   top: 0;
@@ -150,8 +150,8 @@ a {
 
 .tab:hover {
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.5);
-  transition: 0.3s;
+  background: rgba(127, 127, 127, 0.1);
+  transition: 0.5s;
   border-radius: 5px;
 }
 
@@ -162,14 +162,15 @@ a {
   width: 20%;
   height: 100%;
   overflow: hidden;
-  margin: 5px;
+  margin: 10px;
   border-radius: 5px;
+  color: rgba(127, 127, 127, 0.5);
 }
 
 .tab.active {
-  background: rgba(255, 255, 255, 0.5);
-  transition: 0.3s;
+  background: rgba(127, 127, 127, 0.5);
   border-radius: 5px;
+  color: inherit;
 }
 
 .tabs-container {
