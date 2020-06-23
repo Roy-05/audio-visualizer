@@ -35,6 +35,7 @@ body {
 }
 
 button {
+  font-family: inherit;
   background: transparent;
   border: none;
   outline: none;
@@ -60,8 +61,8 @@ a {
   color: inherit;
   font-family: inherit;
   font-size: inherit;
-
-  margin: 0px 10px;
+  padding: 0px 1vw;
+  margin: 0px 1vw;
 }
 
 #drawer:before {
@@ -178,7 +179,7 @@ a {
 }
 
 /* Popup box BEGIN */
-#shortcuts_container {
+.modal_container {
   background: rgba(0, 0, 0, 0.4);
   cursor: pointer;
   display: none;
@@ -191,11 +192,12 @@ a {
   color: black;
 }
 
-#shortcuts_container .helper {
+.modal_container .helper {
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
+
 #shortcuts_menu {
   background-color: #fff;
   box-shadow: 10px 10px 60px #555;
@@ -209,7 +211,7 @@ a {
   padding: 15px 5%;
 }
 
-#shortcuts_close_btn {
+.modal_close {
   background-color: #fff;
   border: 3px solid #999;
   border-radius: 50px;
@@ -224,14 +226,66 @@ a {
   line-height: 30px;
   width: 30px;
   height: 30px;
-  text-align: center;
 }
 
-#shortcuts_close_btn:hover {
+.modal_close:hover {
   background-color: #ccc;
 }
 
-#menu-item {
-  margin: 10px 0px 10px 0px;
+.menu-item {
+  padding: 10px 0px 10px 0px;
 }
 /* Popup box BEGIN */
+
+#reset_menu {
+  background-color: #fff;
+  box-shadow: 10px 10px 60px #555;
+  display: inline-block;
+  height: auto;
+  max-width: 551px;
+  min-height: 100px;
+  vertical-align: middle;
+  position: relative;
+  border-radius: 8px;
+  padding: 15px 5%;
+}
+
+#shortcuts_menu:hover {
+  cursor: default;
+}
+
+#reset_menu:hover {
+  cursor: default;
+}
+
+#reset_action_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.reset_button_item {
+  width: 100%;
+  padding: 15px;
+  margin: 0 10px;
+  font-size: 16px;
+  letter-spacing: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+#confirm:hover {
+  color: white;
+  background: rgba(179, 58, 58, 0.9);
+  transition: 0.5s;
+  border-radius: 5px;
+}
+
+#cancel:hover {
+  background: rgb(127, 255, 0, 0.9);
+  transition: 0.5s;
+  border-radius: 5px;
+}

@@ -53,7 +53,6 @@ window.addEventListener("DOMContentLoaded", () => {
     populateSettings();
   }
 
-  settings_obj = getSettings();
   init();
 });
 
@@ -88,6 +87,8 @@ document.addEventListener("click", () => {
 function init() {
   // Set the height and width of the canvas
   setCanvasSize();
+
+  settings_obj = getSettings();
 
   start_gdt.value = settings_obj["start_gdt"][activeTab];
   end_gdt.value = settings_obj["end_gdt"][activeTab];
@@ -237,19 +238,25 @@ function visualize() {
       return;
     }
 
+    if (reset) {
+      reset = false;
+      init();
+      return;
+    }
+
     if (switchTabs) {
       switchTabs = false;
       init();
       return;
     }
 
-    if (updateParams === true) {
+    if (updateParams) {
       updateParams = false;
       update();
       return;
     }
 
-    if (isResizing === true) {
+    if (isResizing) {
       return;
     }
 

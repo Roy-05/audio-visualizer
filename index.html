@@ -187,13 +187,29 @@
         <button id="shortcuts" class="sidenav-options">
           SHORTCUTS
         </button>
-        <div id="shortcuts_container">
+        <button id="reset" class="sidenav-options">
+          RESET
+        </button>
+        <div class="modal_container" id="shortcuts_container">
           <span class="helper"></span>
           <div id="shortcuts_menu">
-            <div id="shortcuts_close_btn">&times;</div>
-            <div id="menu-item">Toggle Drawer: D</div>
-            <div id="menu-item">Toggle FullScreen: F</div>
-            <div id="menu-item">Pause Visualization: P</div>
+            <div class="modal_close" id="shortcuts_close_btn">&times;</div>
+            <div class="menu-item">Toggle Drawer: D</div>
+            <div class="menu-item">Toggle FullScreen: F</div>
+            <div class="menu-item">Pause Visualization: P</div>
+          </div>
+        </div>
+        <div class="modal_container" id="reset_container">
+          <span class="helper"></span>
+          <div id="reset_menu">
+            <div class="modal_close" id="reset_close_btn">&times;</div>
+            <div id="reset_menu_inner">
+              <div class="menu-item">Restore to default settings?</div>
+              <div class="menu-item" id="reset_action_container">
+                <button class="reset_button_item" id="cancel">CANCEL</button>
+                <button class="reset_button_item" id="confirm">CONFIRM</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

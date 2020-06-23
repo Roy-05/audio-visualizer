@@ -21,14 +21,19 @@ const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   max_numB_label = document.getElementById("max_num_bars"),
   shortcuts_container = document.getElementById("shortcuts_container"),
   shortcuts_menu = document.getElementById("shortcuts_menu"),
-  shortcuts_close_btn = document.getElementById("shortcuts_close_btn");
+  shortcuts_close_btn = document.getElementById("shortcuts_close_btn"),
+  reset_container = document.getElementById("reset_container"),
+  reset_menu = document.getElementById("reset_menu"),
+  reset_close_btn = document.getElementById("reset_close_btn");
 
 let isDrawerClosed = true,
   updateParams = false,
   isFullScreen = false,
   isShortcutsEnabled = true,
   isShortcutMenuVisible = false,
+  isResetMenuVisible = false,
   isPaused = false,
+  reset = false,
   picker_map = {},
   color_picker_btns = [];
 
@@ -74,6 +79,8 @@ sidenav_options.forEach((btn) => {
       window.location.href = "https://github.com/Roy-05/audio-visualizer";
     } else if (btn.id === "shortcuts") {
       showShortcutsMenu();
+    } else if (btn.id === "reset") {
+      showResetMenu();
     }
   });
 });
@@ -493,5 +500,13 @@ function hideShortcutsMenu() {
     shortcuts_container.style.display = "none";
     isShortcutMenuVisible = false;
     isShortcutsEnabled = true;
+  }
+}
+
+function showResetMenu() {
+  if (!isResetMenuVisible) {
+    reset_container.style.display = "block";
+    isResetMenuVisible = true;
+    isShortcutsEnabled = false;
   }
 }
