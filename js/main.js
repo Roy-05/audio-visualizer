@@ -42,8 +42,8 @@ window.addEventListener("DOMContentLoaded", () => {
     source = audioCtx.createMediaStreamSource(stream);
 
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
-    analyser.minDecibels = -90;
-    analyser.maxDecibels = -10;
+    analyser.minDecibels = -75;
+    analyser.maxDecibels = -5;
     analyser.smoothingTimeConstant = 0.88;
 
     source.connect(analyser);
