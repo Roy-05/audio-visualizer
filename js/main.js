@@ -245,6 +245,7 @@ function visualize() {
 
     if (reset) {
       reset = false;
+      settings_obj = getSettings();
       init();
       return;
     }
