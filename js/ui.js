@@ -45,7 +45,8 @@ let isDrawerClosed = true,
   reset = false,
   picker_map = {},
   color_picker_btns = [],
-  keyMap = {};
+  keyMap = {},
+  pickers = [];
 
 let initial_settings_obj = {
   bg_color: Array(3).fill(input_color_fields["bg_color"].value),
@@ -348,36 +349,33 @@ function setContrastColor() {
 }
 
 function setUpColorPicker() {
-  // Check if color picker instantiated buttons are present already
-  let cp_btns = [...document.getElementsByClassName("color-picker-btn")];
-
-  // if there are then iteratively remove each button node from the DOM
-  cp_btns.forEach((btn) => {
+  // if color picker instantiated buttons are present already
+  // then iteratively remove each button node from the DOM
+  [...document.getElementsByClassName("color-picker-btn")].forEach((btn) => {
     btn.remove();
     color_picker_btns = []; // Reinitialize container to empty array
   });
 
   // Get each DOM Element where the color picker button element will be appended to
-  let cp_btn_containers = [...document.getElementsByClassName("cp-container")],
-    cp_btn_ids = ["start_gdt_btn", "end_gdt_btn", "bg_color_btn"];
+  let cp_initializer = {
+    container: [...document.getElementsByClassName("cp-container")],
+    cp_btn_id: ["start_gdt_btn", "end_gdt_btn", "bg_color_btn"],
+    cp_target_id: ["start_gdt", "end_gdt", "bg_color"],
+  };
 
-  // Iteratively create a color picker button and append it to the DOM container element
-  cp_btn_containers.forEach((container, i) => {
+  for (let i = 0; i < Object.keys(cp_initializer).length; i++) {
     let btn = document.createElement("button");
 
-    btn.className = "color-picker-btn";
-    btn.id = cp_btn_ids[i];
+    btn.className = `color-picker-btn`;
+    btn.id = cp_initializer["cp_btn_id"][i];
 
-    container.appendChild(btn);
-    color_picker_btns.push(btn); // Add it to our global array of color picker elements
-  });
+    cp_initializer["container"][i].appendChild(btn);
+    color_picker_btns.push(btn);
 
-  for (let i = 0, j = 0; i < color_picker_btns.length; i++, j++) {
-    let elem = input_color_fields[Object.keys(input_color_fields)[j]],
-      params = {
+    let params = {
         value: "",
-        valueElement: elem, // these two parmas indicates the element
-        styleElement: elem, // to which the color picker will be mapped to
+        valueElement: cp_initializer["cp_target_id"][i],
+        styleElement: cp_initializer["cp_target_id"][i],
         buttonHeight: 12,
         hash: true,
         width: 250,
@@ -387,16 +385,13 @@ function setUpColorPicker() {
         insetColor: "#FFF",
         backgroundColor: "#333",
         padding: 32,
-      };
+      },
+      picker = new jscolor(btn, params);
 
-    console.log(elem);
-
-    // Create a new jscolor instance for each color picker button
-    let picker = new jscolor(color_picker_btns[i], params);
-    color_picker_btns[i].addEventListener("click", toggleColorPicker);
+    btn.addEventListener("click", toggleColorPicker);
 
     // Create a color picker map, mapping the button id to the picker instance
-    picker_map[color_picker_btns[i].id] = picker;
+    picker_map[btn.id] = picker;
   }
 }
 

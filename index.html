@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Audio Visualizer</title>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
-    <script type="text/javascript" src="./libs/jscolor.js" defer></script>
+    <script type="text/javascript" src="./libs/jscolor.min.js" defer></script>
     <script type="text/javascript" src="./js/main.js" defer></script>
     <script type="text/javascript" src="./js/ui.js" defer></script>
     <link
@@ -70,7 +70,7 @@
               <input
                 type="text"
                 id="start_gdt"
-                class="settings hexcode text-field"
+                class="settings text-field"
                 name="start_gdt"
                 value="#26f596"
               />
@@ -86,9 +86,10 @@
               <input
                 type="text"
                 id="end_gdt"
-                class="settings hexcode text-field"
+                class="settings text-field"
                 name="end_gdt"
                 value="#0499f2"
+                data-jscolor=""
               />
             </div>
             <div class="settings-row">
@@ -105,6 +106,7 @@
                 class="settings text-field"
                 name="bg_color"
                 value="#00000f"
+                data-jscolor=""
               />
             </div>
             <div class="settings-row">
