@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     source = audioCtx.createMediaStreamSource(stream);
 
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
-    analyser.minDecibels = -80;
+    analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
     analyser.smoothingTimeConstant = 0.88;
 
@@ -96,6 +96,9 @@ function init() {
 
   setUpColorPicker();
 
+  // Set number of Bars
+  setNumBars(settings_obj["numBars"][activeTab]);
+
   // Set gradient
   setGradient();
 
@@ -104,8 +107,7 @@ function init() {
 
   // Set radius
   setRadius(settings_obj["radius"][activeTab]);
-  // Set number of Bars
-  setNumBars(settings_obj["numBars"][activeTab]);
+
   // Set Max Bar Height
   setBarHeight(settings_obj["barHeight"][activeTab]);
   // Set the bar width based on the size of the canvas;
@@ -113,16 +115,17 @@ function init() {
 
   // Get the x,y coordinates of each audio bar and store it in a global array
   getAudioBarCoordinates();
+
   let t1 = performance.now();
   console.log(`init took ${t1 - t0}`);
-  if (isPaused) {
-    drawDefaultCanvas();
-  } else {
+
+  if (!isPaused) {
     visualize();
   }
 }
 
 function update() {
+  let t0 = performance.now();
   // Update Background color
   setBgColor();
   // Update radius
@@ -141,10 +144,11 @@ function update() {
   // Get the x,y coordinates of each audio bar and store it in a global array
   getAudioBarCoordinates();
 
-  if (isPaused) {
-    // Draw the default canvas image
-    drawDefaultCanvas();
-  } else {
+  let t1 = performance.now();
+
+  console.log(`update took ${t1 - t0}`);
+
+  if (!isPaused) {
     // Start visualization
     visualize();
   }
@@ -235,7 +239,7 @@ function visualize() {
   canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   const draw = () => {
-    if (isPaused) {
+    if (isPaused || isResizing) {
       return;
     }
 
@@ -254,10 +258,6 @@ function visualize() {
     if (updateParams) {
       updateParams = false;
       update();
-      return;
-    }
-
-    if (isResizing) {
       return;
     }
 

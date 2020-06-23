@@ -87,7 +87,7 @@ a {
 #drawer {
   transform: translateX(-320px);
   text-decoration: inherit;
-  background: rgba(200, 200, 200, 0.05);
+  background: rgba(199, 191, 191, 0.05);
   height: 100%;
   position: fixed;
   top: 0;
@@ -155,7 +155,7 @@ a {
 
 .tab:hover {
   cursor: pointer;
-  background: rgba(127, 127, 127, 0.1);
+  background: rgba(127, 127, 127, 0.2);
   transition: 0.5s;
   border-radius: 5px;
 }
@@ -169,7 +169,7 @@ a {
   overflow: hidden;
   margin: 10px;
   border-radius: 5px;
-  color: rgba(127, 127, 127, 0.5);
+  color: rgba(127, 127, 127, 0.8);
 }
 
 .tab.active {
