@@ -39,7 +39,8 @@ let isDrawerClosed = true,
   isPaused = false,
   reset = false,
   picker_map = {},
-  color_picker_btns = [];
+  color_picker_btns = [],
+  keyMap = {};
 
 let initial_settings_obj = {
   bg_color: Array(3).fill(bg_color.value),
@@ -108,7 +109,17 @@ input_fields.forEach((elem) => {
   });
 });
 
+/**
+ * A simple way to check that only once key has been pressed.
+ * On keydown we add the key to keyMap.
+ * If other keys are pressed simultaneously the function will fail -
+ * it will only fire when keyMap has exactly one key in it.
+ */
 document.addEventListener("keydown", (e) => {
+  keyMap[e.key] = true;
+});
+
+document.addEventListener("keyup", (e) => {
   keyboardControls(e);
 });
 
@@ -256,7 +267,7 @@ function setBgColor() {
 }
 
 function keyboardControls(e) {
-  if (isShortcutsEnabled) {
+  if (isShortcutsEnabled && Object.keys(keyMap).length === 1) {
     if (e.key === "p" || e.key === "P") {
       pauseVisual();
     }
@@ -268,6 +279,8 @@ function keyboardControls(e) {
       toggleDrawer();
     }
   }
+
+  keyMap = {};
 }
 
 function pauseVisual() {
