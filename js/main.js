@@ -52,7 +52,9 @@ window.addEventListener("DOMContentLoaded", () => {
   if (localStorage.length === 0) {
     populateSettings();
   }
-
+  settings_obj = getSettings();
+  setCanvasSize();
+  setDimensions();
   init();
 });
 
@@ -71,10 +73,11 @@ window.addEventListener("resize", () => {
     if (isPaused === false && !isFullScreen) {
       PAGE_WIDTH = canvas_container.clientWidth;
       PAGE_HEIGHT = canvas_container.clientHeight;
-      init();
-    } else if (isPaused === false && isFullScreen) {
-      update();
     }
+
+    setCanvasSize();
+    setDimensions();
+    update();
   }, 300);
 });
 
@@ -85,16 +88,17 @@ document.addEventListener("click", () => {
 });
 
 function init() {
-  // Set the height and width of the canvas
-  setCanvasSize();
-
-  settings_obj = getSettings();
+  let t0 = performance.now();
 
   input_color_fields["start_gdt"].value = settings_obj["start_gdt"][activeTab];
   input_color_fields["end_gdt"].value = settings_obj["end_gdt"][activeTab];
   input_color_fields["bg_color"].value = settings_obj["bg_color"][activeTab];
 
   setUpColorPicker();
+
+  // Set gradient
+  setGradient();
+
   // Set Background color
   setBgColor();
 
@@ -105,14 +109,12 @@ function init() {
   // Set Max Bar Height
   setBarHeight(settings_obj["barHeight"][activeTab]);
   // Set the bar width based on the size of the canvas;
-  setGradient();
-  // Get the x,y coordinates of each audio bar and store it in a global array
-
   setBarWidth();
-  setDimensions();
-  // Set gradient
-  getAudioBarCoordinates();
 
+  // Get the x,y coordinates of each audio bar and store it in a global array
+  getAudioBarCoordinates();
+  let t1 = performance.now();
+  console.log(`init took ${t1 - t0}`);
   if (isPaused) {
     drawDefaultCanvas();
   } else {
@@ -121,8 +123,6 @@ function init() {
 }
 
 function update() {
-  // Set the height and width of the canvas
-  setCanvasSize();
   // Update Background color
   setBgColor();
   // Update radius
@@ -192,8 +192,9 @@ function setDimensions() {
     }
   } else if (cWidth - 20 >= CANVAS_WIDTH) {
     while (cWidth >= CANVAS_WIDTH) {
-      bar_height = bar_height - 5 > 10 ? bar_height - 5 : bar_height;
+      bar_height -= 5;
       max_radius -= 5;
+
       cWidth = (max_radius + bar_height + 5) * 2;
     }
   }

@@ -192,6 +192,7 @@ function toggleDrawer() {
  * to dynamically calculate every bar's gradient every frame.
  */
 function setGradient() {
+  let t0 = performance.now();
   GDT = new Array(numBars);
 
   // Convert the value from the input box to a valid HexString
@@ -237,6 +238,8 @@ function setGradient() {
     //Assign it to the global gradient array
     GDT[i] = `rgb(${gdt[0]},${gdt[1]},${gdt[2]})`;
   }
+  let t1 = performance.now();
+  console.log(`set gradient took: ${t1 - t0}`);
 }
 
 function setNumBars(num) {
@@ -349,6 +352,7 @@ function setContrastColor() {
 }
 
 function setUpColorPicker() {
+  let t0 = performance.now();
   // if color picker instantiated buttons are present already
   // then iteratively remove each button node from the DOM
   [...document.getElementsByClassName("color-picker-btn")].forEach((btn) => {
@@ -393,6 +397,8 @@ function setUpColorPicker() {
     // Create a color picker map, mapping the button id to the picker instance
     picker_map[btn.id] = picker;
   }
+  let t1 = performance.now();
+  console.log(`set up color picker took ${t1 - t0}`);
 }
 
 function toggleColorPicker() {
@@ -423,9 +429,10 @@ function toggleColorPicker() {
 
 function updateBarHeightSlider(max_height) {
   let min = Math.floor(max_height / 3);
-  max_height = max_height - (max_height % 20);
+  max_height = max_height > 20 ? max_height - (max_height % 20) : 20;
+
   min_height = min - (min % 20);
-  min_height = min < 10 ? 10 : min_height;
+  min_height = min < 20 ? 20 : min_height;
   barHeight_slider["slider"].max = max_height;
   barHeight_slider["slider"].min = min_height;
 
@@ -448,8 +455,10 @@ function updateBarHeightSlider(max_height) {
 
 function updateRadiusSlider(max_radius) {
   let min_radius = Math.floor(max_radius * 0.667);
-  max_radius = max_radius - (max_radius % 20);
+  max_radius = max_radius > 20 ? max_radius - (max_radius % 20) : 20;
+
   min_radius = min_radius - (min_radius % 20);
+  min_radius = min_radius < 20 ? 20 : min_radius;
   radius_slider["slider"].max = max_radius;
   radius_slider["slider"].min = min_radius;
   if (RADIUS > max_radius) {
