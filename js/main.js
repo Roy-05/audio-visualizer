@@ -42,8 +42,8 @@ window.addEventListener("DOMContentLoaded", () => {
     source = audioCtx.createMediaStreamSource(stream);
 
     //Source: https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
-    analyser.minDecibels = -75;
-    analyser.maxDecibels = -5;
+    analyser.minDecibels = -80;
+    analyser.maxDecibels = -10;
     analyser.smoothingTimeConstant = 0.88;
 
     source.connect(analyser);
@@ -90,9 +90,9 @@ function init() {
 
   settings_obj = getSettings();
 
-  start_gdt.value = settings_obj["start_gdt"][activeTab];
-  end_gdt.value = settings_obj["end_gdt"][activeTab];
-  bg_color.value = settings_obj["bg_color"][activeTab];
+  input_color_fields["start_gdt"].value = settings_obj["start_gdt"][activeTab];
+  input_color_fields["end_gdt"].value = settings_obj["end_gdt"][activeTab];
+  input_color_fields["bg_color"].value = settings_obj["bg_color"][activeTab];
 
   setUpColorPicker();
   // Set Background color
@@ -126,11 +126,11 @@ function update() {
   // Update Background color
   setBgColor();
   // Update radius
-  setRadius(radius_slider.value);
+  setRadius(radius_slider["slider"].value);
   // Update number of Bars
-  setNumBars(audio_slider.value);
+  setNumBars(numBars_slider["slider"].value);
   // Set Max Bar Height
-  setBarHeight(bar_height_slider.value);
+  setBarHeight(barHeight_slider["slider"].value);
   // Update gradient
   setGradient();
 
@@ -178,8 +178,8 @@ function setCanvasSize() {
 }
 
 function setDimensions() {
-  let max_radius = parseInt(max_radius_label.innerText, 10),
-    bar_height = parseInt(max_barH_label.innerText, 10),
+  let max_radius = parseInt(radius_slider["max_label"].innerText, 10),
+    bar_height = parseInt(barHeight_slider["max_label"].innerText, 10),
     cWidth = (max_radius + bar_height + 5) * 2;
 
   // The 20 is to verify that cWidth can satify first iteration of while loop

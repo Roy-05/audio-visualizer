@@ -1,34 +1,39 @@
 const sidenav_options = [...document.getElementsByClassName("sidenav-options")],
   settings_tabs = [...document.getElementsByClassName("tab")],
-  closebtn = document.getElementById("closebtn"),
-  submit = document.getElementById("submit"),
+  closebtn = document.getElementById("drawer_closebtn"),
   drawer = document.getElementById("drawer"),
-  canvasCtr = document.getElementById("canvas-container"),
-  settings = [...document.getElementsByClassName("settings")],
-  input_fields = [...document.getElementsByTagName("input")],
-  start_gdt = document.getElementById("start_gdt"),
-  end_gdt = document.getElementById("end_gdt"),
-  bg_color = document.getElementById("bg_color"),
-  input_color_fields = [start_gdt, end_gdt, bg_color],
-  audio_slider = document.getElementById("audio_slider"),
-  radius_slider = document.getElementById("radius_slider"),
-  bar_height_slider = document.getElementById("bar_height_slider"),
-  min_barH_label = document.getElementById("min_bar_height"),
-  max_barH_label = document.getElementById("max_bar_height"),
-  min_radius_label = document.getElementById("min_radius"),
-  max_radius_label = document.getElementById("max_radius"),
-  min_numB_label = document.getElementById("min_num_bars"),
-  max_numB_label = document.getElementById("max_num_bars"),
-  shortcuts_container = document.getElementById("shortcuts_container"),
-  shortcuts_menu = document.getElementById("shortcuts_menu"),
-  shortcuts_close_btn = document.getElementById("shortcuts_close_btn"),
-  reset_container = document.getElementById("reset_container"),
-  reset_menu = document.getElementById("reset_menu"),
-  reset_cancel_btns = [
-    ...document.getElementsByClassName("cancel_reset"),
-    reset_container,
-  ],
-  reset_confirm = document.getElementById("confirm");
+  settings_fields = [...document.getElementsByClassName("settings")],
+  input_color_fields = {
+    start_gdt: document.getElementById("start_gdt"),
+    end_gdt: document.getElementById("end_gdt"),
+    bg_color: document.getElementById("bg_color"),
+  },
+  numBars_slider = {
+    slider: document.getElementById("numBars_slider"),
+    min_label: document.getElementById("min_num_bars"),
+    max_label: document.getElementById("max_num_bars"),
+  },
+  radius_slider = {
+    slider: document.getElementById("radius_slider"),
+    min_label: document.getElementById("min_radius"),
+    max_label: document.getElementById("max_radius"),
+  },
+  barHeight_slider = {
+    slider: document.getElementById("bar_height_slider"),
+    min_label: document.getElementById("min_bar_height"),
+    max_label: document.getElementById("max_bar_height"),
+  },
+  shortcut_modal_elems = {
+    container: document.getElementById("shortcuts_container"),
+    menu: document.getElementById("shortcuts_menu"),
+    close_btn: document.getElementById("shortcuts_close_btn"),
+  },
+  reset_modal_elems = {
+    container: document.getElementById("reset_container"),
+    menu: document.getElementById("reset_menu"),
+    close_btn: [...document.getElementsByClassName("cancel_reset")],
+    confirm: document.getElementById("confirm"),
+  };
 
 let isDrawerClosed = true,
   updateParams = false,
@@ -43,12 +48,12 @@ let isDrawerClosed = true,
   keyMap = {};
 
 let initial_settings_obj = {
-  bg_color: Array(3).fill(bg_color.value),
-  start_gdt: Array(3).fill(start_gdt.value),
-  end_gdt: Array(3).fill(end_gdt.value),
-  radius: Array(3).fill(parseInt(radius_slider.value, 10)),
-  numBars: Array(3).fill(parseInt(audio_slider.value, 10)),
-  barHeight: Array(3).fill(parseInt(bar_height_slider.value, 10)),
+  bg_color: Array(3).fill(input_color_fields["bg_color"].value),
+  start_gdt: Array(3).fill(input_color_fields["start_gdt"].value),
+  end_gdt: Array(3).fill(input_color_fields["end_gdt"].value),
+  radius: Array(3).fill(parseInt(radius_slider["slider"].value, 10)),
+  numBars: Array(3).fill(parseInt(numBars_slider["slider"].value, 10)),
+  barHeight: Array(3).fill(parseInt(barHeight_slider["slider"].value, 10)),
 };
 
 let toggleSidenavOptions,
@@ -73,14 +78,14 @@ settings_tabs.forEach((tab) => {
   });
 });
 
-shortcuts_container.addEventListener("click", hideShortcutsMenu);
-shortcuts_close_btn.addEventListener("click", hideShortcutsMenu);
+shortcut_modal_elems["container"].addEventListener("click", hideShortcutsMenu);
+shortcut_modal_elems["close_btn"].addEventListener("click", hideShortcutsMenu);
 
-reset_cancel_btns.forEach((btn) => {
+reset_modal_elems["close_btn"].forEach((btn) => {
   btn.addEventListener("click", hideResetMenu);
 });
 
-reset_confirm.addEventListener("click", () => {
+reset_modal_elems["confirm"].addEventListener("click", () => {
   clearSettings();
   populateSettings();
   reset = true;
@@ -100,12 +105,17 @@ sidenav_options.forEach((btn) => {
   });
 });
 
-input_fields.forEach((elem) => {
+settings_fields.forEach((elem) => {
   elem.addEventListener("focus", () => {
     isShortcutsEnabled = false;
   });
+
   elem.addEventListener("blur", () => {
     isShortcutsEnabled = true;
+  });
+
+  elem.addEventListener("change", () => {
+    updateParams = true;
   });
 });
 
@@ -125,12 +135,6 @@ document.addEventListener("keyup", (e) => {
 
 closebtn.addEventListener("click", () => {
   toggleDrawer();
-});
-
-settings.forEach((elem) => {
-  elem.addEventListener("change", () => {
-    updateParams = true;
-  });
 });
 
 canvas.addEventListener("fullscreenchange", () => {
@@ -155,7 +159,7 @@ function toggleDrawer() {
     clearTimeout(toggleSidenavOptions);
     // Remove a -400px translate from the div and shift the rest of the page 400px
     drawer.style.transform = `translateX(0)`;
-    canvasCtr.style.marginLeft = `${DRAWER_WIDTH}px`;
+    canvas_container.style.marginLeft = `${DRAWER_WIDTH}px`;
 
     sidenav_options.forEach((btn) => {
       btn.style.display = "none";
@@ -167,7 +171,7 @@ function toggleDrawer() {
     }
 
     drawer.style.transform = `translateX(-${DRAWER_WIDTH}px)`;
-    canvasCtr.style.marginLeft = "0";
+    canvas_container.style.marginLeft = "0";
 
     // Show the hamburger icon again after 0.5s + 0.05s delay
     // i.e once the drawer is hidden (check ui.css ln 21)
@@ -195,8 +199,8 @@ function setGradient() {
 
   // Change the value in the input box with the updated value
   // This is useful to handle invalid inputs
-  start_gdt.value = start;
-  end_gdt.value = end;
+  input_color_fields["start_gdt"].value = start;
+  input_color_fields["end_gdt"].value = end;
 
   // Push updated data to local storage
   settings_obj["start_gdt"][activeTab] = start;
@@ -237,21 +241,21 @@ function setGradient() {
 function setNumBars(num) {
   num = parseInt(num, 10);
   numBars = num;
-  audio_slider.value = num;
+  numBars_slider["slider"].value = num;
   settings_obj["numBars"][activeTab] = num;
 }
 
 function setRadius(r) {
   r = parseInt(r, 10);
   RADIUS = r;
-  radius_slider.value = r;
+  radius_slider["slider"].value = r;
   settings_obj["radius"][activeTab] = r;
 }
 
 function setBarHeight(num) {
   num = parseInt(num, 10);
   MAX_BAR_HEIGHT = num;
-  bar_height_slider.value = num;
+  barHeight_slider["slider"].value = num;
   settings_obj["barHeight"][activeTab] = num;
 }
 
@@ -260,7 +264,7 @@ function setBgColor() {
   page_container.style.background = color;
   canvas.style.background = color;
 
-  bg_color.value = color;
+  input_color_fields["bg_color"].value = color;
   settings_obj["bg_color"][activeTab] = color;
 
   setContrastColor();
@@ -368,22 +372,24 @@ function setUpColorPicker() {
     color_picker_btns.push(btn); // Add it to our global array of color picker elements
   });
 
-  // Set up jscolor parameters for each button mapping them to the corresponding input field
-  input_color_fields.forEach((elem, i) => {
-    let params = {
-      value: "",
-      valueElement: elem, // these two parmas indicates the element
-      styleElement: elem, // to which the color picker will be mapped to
-      buttonHeight: 12,
-      hash: true,
-      width: 250,
-      height: 150,
-      position: "right",
-      borderColor: "#FFF",
-      insetColor: "#FFF",
-      backgroundColor: "#333",
-      padding: 32,
-    };
+  for (let i = 0, j = 0; i < color_picker_btns.length; i++, j++) {
+    let elem = input_color_fields[Object.keys(input_color_fields)[j]],
+      params = {
+        value: "",
+        valueElement: elem, // these two parmas indicates the element
+        styleElement: elem, // to which the color picker will be mapped to
+        buttonHeight: 12,
+        hash: true,
+        width: 250,
+        height: 150,
+        position: "right",
+        borderColor: "#FFF",
+        insetColor: "#FFF",
+        backgroundColor: "#333",
+        padding: 32,
+      };
+
+    console.log(elem);
 
     // Create a new jscolor instance for each color picker button
     let picker = new jscolor(color_picker_btns[i], params);
@@ -391,7 +397,7 @@ function setUpColorPicker() {
 
     // Create a color picker map, mapping the button id to the picker instance
     picker_map[color_picker_btns[i].id] = picker;
-  });
+  }
 }
 
 function toggleColorPicker() {
@@ -425,8 +431,8 @@ function updateBarHeightSlider(max_height) {
   max_height = max_height - (max_height % 20);
   min_height = min - (min % 20);
   min_height = min < 10 ? 10 : min_height;
-  bar_height_slider.max = max_height;
-  bar_height_slider.min = min_height;
+  barHeight_slider["slider"].max = max_height;
+  barHeight_slider["slider"].min = min_height;
 
   // Clamp bar height to both extremes
   if (MAX_BAR_HEIGHT > max_height) {
@@ -435,28 +441,33 @@ function updateBarHeightSlider(max_height) {
     MAX_BAR_HEIGHT = min_height;
   }
 
-  bar_height_slider.value = MAX_BAR_HEIGHT;
+  barHeight_slider["slider"].value = MAX_BAR_HEIGHT;
 
-  updateSliderLabels(min_barH_label, max_barH_label, min_height, max_height);
+  updateSliderLabels(
+    barHeight_slider["min_label"],
+    barHeight_slider["max_label"],
+    min_height,
+    max_height
+  );
 }
 
 function updateRadiusSlider(max_radius) {
   let min_radius = Math.floor(max_radius * 0.667);
   max_radius = max_radius - (max_radius % 20);
   min_radius = min_radius - (min_radius % 20);
-  radius_slider.max = max_radius;
-  radius_slider.min = min_radius;
+  radius_slider["slider"].max = max_radius;
+  radius_slider["slider"].min = min_radius;
   if (RADIUS > max_radius) {
     RADIUS = max_radius;
   } else if (RADIUS < min_radius) {
     RADIUS = min_radius;
   }
 
-  radius_slider.value = RADIUS;
+  radius_slider["slider"].value = RADIUS;
 
   updateSliderLabels(
-    min_radius_label,
-    max_radius_label,
+    radius_slider["min_label"],
+    radius_slider["max_label"],
     min_radius,
     max_radius
   );
@@ -464,7 +475,7 @@ function updateRadiusSlider(max_radius) {
 
 function updateNumBarSlider(max_radius) {
   let max_circumference = 2 * Math.PI * max_radius,
-    min_circumference = 2 * Math.PI * radius_slider.min;
+    min_circumference = 2 * Math.PI * radius_slider["slider"].min;
   let max_bars = Math.floor(max_circumference / (MIN_BAR_WIDTH * 2)),
     min_bars = Math.floor(min_circumference / (MAX_BAR_WIDTH * 2));
 
@@ -472,8 +483,8 @@ function updateNumBarSlider(max_radius) {
   min_bars = min_bars - (min_bars % 50);
   min_bars = min_bars < 50 ? 50 : min_bars;
 
-  audio_slider.max = max_bars;
-  audio_slider.min = min_bars;
+  numBars_slider["slider"].max = max_bars;
+  numBars_slider["slider"].min = min_bars;
 
   if (numBars > max_bars) {
     numBars = max_bars;
@@ -481,9 +492,14 @@ function updateNumBarSlider(max_radius) {
     numBars = min_bars;
   }
 
-  audio_slider.value = numBars;
+  numBars_slider["slider"].value = numBars;
 
-  updateSliderLabels(min_numB_label, max_numB_label, min_bars, max_bars);
+  updateSliderLabels(
+    numBars_slider["min_label"],
+    numBars_slider["max_label"],
+    min_bars,
+    max_bars
+  );
 }
 
 /**
@@ -511,7 +527,7 @@ function updateSliderLabels(
 
 function showShortcutsMenu() {
   if (!isShortcutMenuVisible) {
-    shortcuts_container.style.display = "block";
+    shortcut_modal_elems["container"].style.display = "block";
     isShortcutMenuVisible = true;
     isShortcutsEnabled = false;
   }
@@ -519,7 +535,7 @@ function showShortcutsMenu() {
 
 function hideShortcutsMenu() {
   if (isShortcutMenuVisible) {
-    shortcuts_container.style.display = "none";
+    shortcut_modal_elems["container"].style.display = "none";
     isShortcutMenuVisible = false;
     isShortcutsEnabled = true;
   }
@@ -527,7 +543,7 @@ function hideShortcutsMenu() {
 
 function showResetMenu() {
   if (!isResetMenuVisible) {
-    reset_container.style.display = "block";
+    reset_modal_elems["container"].style.display = "block";
     isResetMenuVisible = true;
     isShortcutsEnabled = false;
   }
@@ -535,7 +551,7 @@ function showResetMenu() {
 
 function hideResetMenu() {
   if (isResetMenuVisible) {
-    reset_container.style.display = "none";
+    reset_modal_elems["container"].style.display = "none";
     isResetMenuVisible = false;
     isShortcutsEnabled = true;
   }

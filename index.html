@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div>
-                <button id="closebtn">
+                <button id="drawer_closebtn">
                   &times;
                 </button>
               </div>
@@ -109,25 +109,25 @@
             </div>
             <div class="settings-row">
               <div>
-                <label class="settings-label" for="audio_slider"
+                <label class="settings-label" for="numBars_slider"
                   >Number of Audio Bars:</label
                 >
               </div>
             </div>
             <div class="settings-row">
               <div class="range_slider">
-                <label id="min_num_bars" for="audio_slider">50</label>
+                <label id="min_num_bars" for="numBars_slider">50</label>
                 <input
                   type="range"
-                  name="audio_slider"
-                  id="audio_slider"
+                  name="numBars_slider"
+                  id="numBars_slider"
                   class="settings"
                   min="50"
                   max="250"
                   step="10"
                   value="150"
                 />
-                <label id="max_num_bars" for="audio_slider">250</label>
+                <label id="max_num_bars" for="numBars_slider">250</label>
               </div>
             </div>
             <div class="settings-row">
@@ -199,7 +199,7 @@
             <div class="menu-item">Pause Visualization: P</div>
           </div>
         </div>
-        <div class="modal_container" id="reset_container">
+        <div class="modal_container cancel_reset" id="reset_container">
           <span class="helper"></span>
           <div id="reset_menu">
             <div class="modal_close cancel_reset" id="reset_close_btn">
