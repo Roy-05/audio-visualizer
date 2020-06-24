@@ -45,10 +45,6 @@ button {
 
 /* --------------- UI CSS BELOW: ---------------  */
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
 #sidenav {
   display: flex;
   flex-direction: row;
