@@ -700,6 +700,7 @@ function toggleFullScreen() {
   if (!document.fullscreenElement) {
     canvas.requestFullscreen();
     // Hide the cursor on full screen
+    canvas.style.cursor = "none";
     canvas.addEventListener("mousemove", handleMouseMove);
   } else if (document.exitFullscreen) {
     document.exitFullscreen();
