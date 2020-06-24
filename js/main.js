@@ -2,8 +2,8 @@
 
 //Global Variables:
 const canvas = document.getElementById("audio-canvas"),
-  canvasCtx = canvas.getContext("2d"),
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
+  canvasCtx = canvas.getContext("2d"),
   analyser = audioCtx.createAnalyser(),
   page_container = document.getElementById("main-container"),
   canvas_container = document.getElementById("canvas-container"),
@@ -81,11 +81,15 @@ window.addEventListener("resize", () => {
   }, 300);
 });
 
-document.addEventListener("click", () => {
+page_container.addEventListener("click", resumeAudioContext);
+
+function resumeAudioContext() {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
   }
-});
+
+  page_container.removeEventListener("click", resumeAudioContext);
+}
 
 function init() {
   let t0 = performance.now();
@@ -119,9 +123,7 @@ function init() {
   let t1 = performance.now();
   console.log(`init took ${t1 - t0}`);
 
-  if (!isPaused) {
-    visualize();
-  }
+  visualize();
 }
 
 function update() {
@@ -148,10 +150,7 @@ function update() {
 
   console.log(`update took ${t1 - t0}`);
 
-  if (!isPaused) {
-    // Start visualization
-    visualize();
-  }
+  visualize();
 }
 
 function setCanvasSize() {
@@ -182,28 +181,28 @@ function setCanvasSize() {
 }
 
 function setDimensions() {
-  let max_radius = parseInt(radius_slider["max_label"].innerText, 10),
-    bar_height = parseInt(barHeight_slider["max_label"].innerText, 10),
-    cWidth = (max_radius + bar_height + 5) * 2;
+  let max_radius = parseInt(radius_slider["slider"].max, 10),
+    max_height = parseInt(barHeight_slider["slider"].max, 10),
+    cWidth = (max_radius + max_height + 5) * 2;
 
   // The 20 is to verify that cWidth can satify first iteration of while loop
   // need to better handle this
   if (cWidth + 20 <= CANVAS_WIDTH) {
     while (cWidth <= CANVAS_WIDTH) {
-      bar_height += 5;
+      max_height += 5;
       max_radius += 5;
-      cWidth = (max_radius + bar_height + 5) * 2;
+      cWidth = (max_radius + max_height + 5) * 2;
     }
   } else if (cWidth - 20 >= CANVAS_WIDTH) {
     while (cWidth >= CANVAS_WIDTH) {
-      bar_height -= 5;
+      max_height -= 5;
       max_radius -= 5;
 
-      cWidth = (max_radius + bar_height + 5) * 2;
+      cWidth = (max_radius + max_height + 5) * 2;
     }
   }
   updateRadiusSlider(max_radius);
-  updateBarHeightSlider(bar_height);
+  updateBarHeightSlider(max_height);
   updateNumBarSlider(max_radius);
 }
 
@@ -239,7 +238,13 @@ function visualize() {
   canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   const draw = () => {
-    if (isPaused || isResizing) {
+    if (isResizing) {
+      return;
+    }
+
+    if (updateParams) {
+      updateParams = false;
+      update();
       return;
     }
 
@@ -256,9 +261,7 @@ function visualize() {
       return;
     }
 
-    if (updateParams) {
-      updateParams = false;
-      update();
+    if (isPaused) {
       return;
     }
 
