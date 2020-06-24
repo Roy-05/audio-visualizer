@@ -275,39 +275,8 @@ canvas.addEventListener("fullscreenchange", () => {
  */
 
 /**
- *
+ * Resume the audio context on first click, then remove the event listening for it.
  */
-function init() {
-  input_color_fields["start_gdt"].value = settings_obj["start_gdt"][activeTab];
-  input_color_fields["end_gdt"].value = settings_obj["end_gdt"][activeTab];
-  input_color_fields["bg_color"].value = settings_obj["bg_color"][activeTab];
-
-  setUpColorPicker();
-
-  // Set number of Bars
-  setNumBars(settings_obj["numBars"][activeTab]);
-
-  // Set gradient
-  setGradient();
-
-  // Set Background color
-  setBgColor();
-
-  // Set radius
-  setRadius(settings_obj["radius"][activeTab]);
-
-  // Set Max Bar Height
-  setBarHeight(settings_obj["barHeight"][activeTab]);
-  // Set the bar width based on the size of the canvas;
-  setBarWidth();
-
-  // Get the x,y coordinates of each audio bar and store it in a global array
-  getAudioBarCoordinates();
-
-  visualize();
-}
-
-// Resume the audio context on first click, then remove the event listening for it
 function resumeAudioContext() {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
@@ -316,13 +285,59 @@ function resumeAudioContext() {
   page_container.removeEventListener("click", resumeAudioContext);
 }
 
-function update() {
-  // Update Background color
+/**
+ * Call to initialize all canvas visualizations dependencies (eg. DOMContentLoad, switch tabs) etc.
+ */
+function init() {
+  /**
+   * The value of the input color fields need to initialized first so that
+   * jscolor has an initial value to refer to
+   */
+  input_color_fields["start_gdt"].value = settings_obj["start_gdt"][activeTab];
+  input_color_fields["end_gdt"].value = settings_obj["end_gdt"][activeTab];
+  input_color_fields["bg_color"].value = settings_obj["bg_color"][activeTab];
+
+  // Set up jscolor-picker with the initialized values
+  setUpColorPicker();
+
+  // Set the number of Bars
+  setNumBars(settings_obj["numBars"][activeTab]);
+
+  // Store the gradient in a global gradient object
+  setGradient();
+
+  // Set the Background color
   setBgColor();
-  // Update radius
+
+  // Set the radius
+  setRadius(settings_obj["radius"][activeTab]);
+
+  // Set theMax Bar Height
+  setBarHeight(settings_obj["barHeight"][activeTab]);
+
+  // Set the bar width based on the size of the canvas;
+  setBarWidth();
+
+  // Get the x,y coordinates of each audio bar and store it in a global array
+  setAudioBarCoordinates();
+
+  // Begin visualization
+  visualize();
+}
+
+/**
+ * Call to update the visualization dependencies.
+ */
+function update() {
+  // Update the Background color
+  setBgColor();
+
+  // Update the radius
   setRadius(radius_slider["slider"].value);
+
   // Update number of Bars
   setNumBars(numBars_slider["slider"].value);
+
   // Set Max Bar Height
   setBarHeight(barHeight_slider["slider"].value);
   // Update gradient
@@ -332,88 +347,30 @@ function update() {
 
   // Set the bar width based on the size of the canvas;
   setBarWidth();
+
   // Get the x,y coordinates of each audio bar and store it in a global array
-  getAudioBarCoordinates();
+  setAudioBarCoordinates();
 
   visualize();
 }
 
-function setCanvasSize() {
-  // Get the smaller dimension to use as limit to set canvas size
-  let minD = Math.min(CANVAS_CONTAINER_HEIGHT, CANVAS_CONTAINER_WIDTH);
-
-  // Check if there is the extra space needed to fit the drawer else reduce canvas size
-  if (window.innerWidth - DRAWER_WIDTH < minD) {
-    minD = window.innerWidth - DRAWER_WIDTH;
-  }
-
-  // Set canvas width and height to that value
-  CANVAS_WIDTH = minD;
-  CANVAS_HEIGHT = minD;
-
-  // Set CSS width/height
-  // This will create the box that will contain the canvas
-  canvas.style.width = CANVAS_WIDTH + "px";
-  canvas.style.height = CANVAS_HEIGHT + "px";
-
-  // Scale for dpi for retina display
-  // This will set the width and height for the canvas coordinate system
-  canvas.width = Math.floor(CANVAS_WIDTH * DPI);
-  canvas.height = Math.floor(CANVAS_HEIGHT * DPI);
-
-  // Scale the canvas accordingly
-  canvasCtx.scale(DPI, DPI);
-}
-
-function setDimensions() {
-  let max_radius = parseInt(radius_slider["slider"].max, 10),
-    max_height = parseInt(barHeight_slider["slider"].max, 10),
-    cWidth = (max_radius + max_height + 5) * 2;
-
-  // The 20 is to verify that cWidth can satify first iteration of while loop
-  // need to better handle this
-  if (cWidth + 20 <= CANVAS_WIDTH) {
-    while (cWidth <= CANVAS_WIDTH) {
-      max_height += 5;
-      max_radius += 5;
-      cWidth = (max_radius + max_height + 5) * 2;
-    }
-  } else if (cWidth - 20 >= CANVAS_WIDTH) {
-    while (cWidth >= CANVAS_WIDTH) {
-      max_height -= 5;
-      max_radius -= 5;
-
-      cWidth = (max_radius + max_height + 5) * 2;
-    }
-  }
-  updateRadiusSlider(max_radius);
-  updateBarHeightSlider(max_height);
-  updateNumBarSlider(max_radius);
-}
-
-function getAudioBarCoordinates() {
-  // Get starting points for each audio bar and store it in a global array
-  let degree = 180;
-  points = new Array(numBars);
-  for (let i = 0; i < numBars; i++) {
-    points[i] = [
-      CANVAS_WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
-      CANVAS_HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
-    ];
-    degree += 360 / numBars;
-  }
-}
-
+/**
+ * Render the canvas visualization.
+ */
 function visualize() {
-  //Create Analyser Node to extract data from Audio Source
-  analyser.fftSize = numBars > 512 ? 4096 : 2048;
+  // Set the Analyser Node FFT size.
+  analyser.fftSize = numBars > 512 ? 4096 : 2048; // If the numBars is large, increase FFT size
 
+  // Buffer Length is half the fft size
   const bufferLength = analyser.frequencyBinCount;
   let dataArray = new Uint8Array(bufferLength);
 
+  // Clear the canvas before render
   canvasCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+  // The loop function for visualization
   const draw = () => {
+    // Before each render check if there is any state changes and act accordingly.
     if (isResizing) {
       return;
     }
@@ -462,98 +419,99 @@ function visualize() {
   draw();
 }
 
-function drawAudioBar(ctx, point, degree, color) {
-  ctx.save();
-  ctx.translate(point[0], point[1]);
-  ctx.rotate((degree * Math.PI) / 180);
-  roundRect(ctx, -barWidth / 2, 0, barWidth, barHeight, 2, color);
-  ctx.restore();
-}
+/**
+ * --------------------------------------------------------------------------------
+ * SETTER FUNCTIONS
+ * Set THE values of various canvas and UI dependencies on the basis of the current state.
+ * --------------------------------------------------------------------------------
+ */
 
-function setBarWidth() {
-  barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 2));
-  barWidth = barWidth <= MIN_BAR_WIDTH ? MIN_BAR_WIDTH : barWidth;
+/**
+ * Set the size of the canvas based on the current size of the page.
+ */
+function setCanvasSize() {
+  // Get the smaller dimension to use as limit to set canvas size
+  let minD = Math.min(CANVAS_CONTAINER_HEIGHT, CANVAS_CONTAINER_WIDTH);
+
+  // Check if there is the extra space needed to fit the drawer else reduce canvas size
+  if (window.innerWidth - DRAWER_WIDTH < minD) {
+    minD = window.innerWidth - DRAWER_WIDTH;
+  }
+
+  // Set canvas width and height to that value
+  CANVAS_WIDTH = minD;
+  CANVAS_HEIGHT = minD;
+
+  // Set CSS width/height
+  // This will create the box that will contain the canvas
+  canvas.style.width = CANVAS_WIDTH + "px";
+  canvas.style.height = CANVAS_HEIGHT + "px";
+
+  // Scale for dpi for retina display
+  // This will set the width and height for the canvas coordinate system
+  canvas.width = Math.floor(CANVAS_WIDTH * DPI);
+  canvas.height = Math.floor(CANVAS_HEIGHT * DPI);
+
+  // Scale the canvas accordingly
+  canvasCtx.scale(DPI, DPI);
 }
 
 /**
- * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
- * Edited by Me for the specific use-case.
- * Draws a rounded rectangle using the current state of the canvas.
- * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x      The top left x coordinate
- * @param {Number} y      The top left y coordinate
- * @param {Number} width  The width of the rectangle
- * @param {Number} height The height of the rectangle
- * @param {Number} radius The corner radius
- * @param {String} color  The fill color of the rectangle
+ * Set the minimum/maximum values for the UI range inputs based on the size of the canvas.
  */
-function roundRect(ctx, x, y, width, height, radius, color) {
-  radius = width > 2 ? radius : width - 1;
+function setDimensions() {
+  let max_radius = parseInt(radius_slider["slider"].max, 10),
+    max_height = parseInt(barHeight_slider["slider"].max, 10),
+    cWidth = (max_radius + max_height + 5) * 2;
 
-  radius = { tl: radius, tr: radius, br: radius, bl: radius };
-  ctx.beginPath();
-  ctx.moveTo(x + radius.tl, y);
-  ctx.lineTo(x + width - radius.tr, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-  ctx.lineTo(x + width, y + height - radius.br);
-  ctx.quadraticCurveTo(
-    x + width,
-    y + height,
-    x + width - radius.br,
-    y + height
-  );
-  ctx.lineTo(x + radius.bl, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-  ctx.lineTo(x, y + radius.tl);
-  ctx.quadraticCurveTo(x, y, x + radius.tl, y);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-function toggleFullScreen() {
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen();
-    canvas.addEventListener("mousemove", handleMouseMove);
-  } else if (document.exitFullscreen) {
-    document.exitFullscreen();
-    canvas.removeEventListener("mousemove", handleMouseMove);
-    canvas.style.cursor = "default";
-  }
-}
-
-function toggleDrawer() {
-  drawer.style.width = `${DRAWER_WIDTH}px`;
-  // Open drawer if closed else close it
-
-  if (isDrawerClosed) {
-    clearTimeout(toggleSidenavOptions);
-    // Remove a -400px translate from the div and shift the rest of the page 400px
-    drawer.style.transform = `translateX(0)`;
-    canvas_container.style.marginLeft = `${DRAWER_WIDTH}px`;
-
-    sidenav_options.forEach((btn) => {
-      btn.style.display = "none";
-    });
-  } else {
-    // Hide any open pickers on drawer close
-    for (let picker in picker_map) {
-      picker_map[picker].hide();
+  // The 20 is to verify that cWidth can satify first iteration of while loop
+  // need to better handle this
+  if (cWidth + 20 <= CANVAS_WIDTH) {
+    while (cWidth <= CANVAS_WIDTH) {
+      max_height += 5;
+      max_radius += 5;
+      cWidth = (max_radius + max_height + 5) * 2;
     }
+  } else if (cWidth - 20 >= CANVAS_WIDTH) {
+    while (cWidth >= CANVAS_WIDTH) {
+      max_height -= 5;
+      max_radius -= 5;
 
-    drawer.style.transform = `translateX(-${DRAWER_WIDTH}px)`;
-    canvas_container.style.marginLeft = "0";
-
-    // Show the hamburger icon again after 0.5s + 0.05s delay
-    // i.e once the drawer is hidden (check ui.css ln 21)
-    toggleSidenavOptions = setTimeout(() => {
-      sidenav_options.forEach((btn) => {
-        btn.style.display = "block";
-      });
-    }, 550);
+      cWidth = (max_radius + max_height + 5) * 2;
+    }
   }
 
-  isDrawerClosed = !isDrawerClosed;
+  // Update each Input Range
+  updateRadiusSlider(max_radius);
+  updateBarHeightSlider(max_height);
+  updateNumBarSlider(max_radius);
+}
+
+/**
+ * Get the (x,y) coordinate of each audio bar.
+ * Store it in a global array to use to render each audio bar.
+ */
+function setAudioBarCoordinates() {
+  // Get starting points for each audio bar and store it in a global array
+  let degree = 180;
+  points = new Array(numBars);
+  for (let i = 0; i < numBars; i++) {
+    points[i] = [
+      CANVAS_WIDTH / 2 + Math.cos((degree * Math.PI) / 180) * RADIUS,
+      CANVAS_HEIGHT / 2 + Math.sin((degree * Math.PI) / 180) * RADIUS,
+    ];
+    degree += 360 / numBars;
+  }
+}
+
+/**
+ * Set the Width of the audio bar based on the circumference of the circle
+ * and the number of bars.
+ */
+function setBarWidth() {
+  // We do numBars*2 to create a bar width of space between each bar
+  barWidth = Math.floor((2 * Math.PI * RADIUS) / (numBars * 2));
+  barWidth = barWidth <= MIN_BAR_WIDTH ? MIN_BAR_WIDTH : barWidth;
 }
 
 /**
@@ -609,6 +567,10 @@ function setGradient() {
   }
 }
 
+/**
+ *
+ * @param {String} num The value to set as the number of audio bars
+ */
 function setNumBars(num) {
   num = parseInt(num, 10);
   numBars = num;
@@ -616,6 +578,10 @@ function setNumBars(num) {
   settings_obj["numBars"][activeTab] = num;
 }
 
+/**
+ *
+ * @param {String} r The value to set as the radius of the visualization
+ */
 function setRadius(r) {
   r = parseInt(r, 10);
   RADIUS = r;
@@ -623,6 +589,10 @@ function setRadius(r) {
   settings_obj["radius"][activeTab] = r;
 }
 
+/**
+ *
+ * @param {String} num The value to set as the max height of each audio bar
+ */
 function setBarHeight(num) {
   num = parseInt(num, 10);
   MAX_BAR_HEIGHT = num;
@@ -630,6 +600,9 @@ function setBarHeight(num) {
   settings_obj["barHeight"][activeTab] = num;
 }
 
+/**
+ * Set the background color based on the current value of the jscolor input field
+ */
 function setBgColor() {
   let color = picker_map["bg_color_btn"].toHEXString();
   page_container.style.background = color;
@@ -641,79 +614,9 @@ function setBgColor() {
   setContrastColor();
 }
 
-function keyboardControls(e) {
-  if (isShortcutsEnabled && Object.keys(keyMap).length === 1) {
-    if (e.key === "p" || e.key === "P") {
-      pauseVisual();
-    }
-    if ((e.key === "f" || e.key === "F") && isDrawerClosed) {
-      toggleFullScreen();
-    }
-
-    if ((e.key === "D" || e.key === "d") && !isFullScreen) {
-      toggleDrawer();
-    }
-  }
-
-  keyMap = {};
-}
-
-function pauseVisual() {
-  isPaused = !isPaused;
-
-  if (!isPaused) {
-    update();
-  }
-}
-
 /**
- * --------------------------------------------------------------------------------
- * HANDLE LOCAL STORAGE
- * These functions take setting inputs from the user and updates the local storage.
- * --------------------------------------------------------------------------------
+ * Set the color of the text on the basis of the background for good contrast
  */
-
-function populateSettings() {
-  let initial_settings_obj = {
-    bg_color: Array(3).fill(input_color_fields["bg_color"].value),
-    start_gdt: Array(3).fill(input_color_fields["start_gdt"].value),
-    end_gdt: Array(3).fill(input_color_fields["end_gdt"].value),
-    radius: Array(3).fill(parseInt(radius_slider["slider"].value, 10)),
-    numBars: Array(3).fill(parseInt(numBars_slider["slider"].value, 10)),
-    barHeight: Array(3).fill(parseInt(barHeight_slider["slider"].value, 10)),
-  };
-
-  for (let key in initial_settings_obj) {
-    localStorage.setItem(key, JSON.stringify(initial_settings_obj[key]));
-  }
-}
-
-function updateSettings() {
-  for (let key in settings_obj) {
-    localStorage.setItem(key, JSON.stringify(settings_obj[key]));
-  }
-}
-
-function clearSettings() {
-  localStorage.clear();
-}
-
-function getSettings() {
-  let settings = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    settings[key] = JSON.parse(localStorage.getItem(key));
-  }
-
-  return settings;
-}
-
-/**
- * --------------------------------------------------------------------------------
- * END OF LOCAL STORAGE FUNCTIONS
- * --------------------------------------------------------------------------------
- */
-
 function setContrastColor() {
   // isLight() returns true if the grayscale of the selected color is closer to white than black
   let color = picker_map["bg_color_btn"].isLight() ? "#000000" : "#ffffff";
@@ -727,6 +630,9 @@ function setContrastColor() {
   });
 }
 
+/**
+ * Create HTML button elements and map each button to a jscolor instance.
+ */
 function setUpColorPicker() {
   // if color picker instantiated buttons are present already
   // then iteratively remove each button node from the DOM
@@ -767,14 +673,423 @@ function setUpColorPicker() {
       },
       picker = new jscolor(btn, params);
 
-    btn.addEventListener("click", toggleColorPicker);
+    btn.addEventListener("click", addColorPickerCloseBtn);
 
     // Create a color picker map, mapping the button id to the picker instance
     picker_map[btn.id] = picker;
   }
 }
 
-function toggleColorPicker() {
+/**
+ * --------------------------------------------------------------------------------
+ * END OF SETTER FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * --------------------------------------------------------------------------------
+ * HANDLE USER INTERACTIONS
+ * Functions to handle state changes on user interaction
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * Toggle full screen based on user interaction
+ */
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen();
+    // Hide the cursor on full screen
+    canvas.addEventListener("mousemove", handleMouseMove);
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+    canvas.removeEventListener("mousemove", handleMouseMove);
+    // Reset the cursor to default
+    canvas.style.cursor = "default";
+  }
+}
+
+/**
+ * Toggle sidenav drawer on user interaction
+ */
+function toggleDrawer() {
+  drawer.style.width = `${DRAWER_WIDTH}px`;
+  // Open drawer if closed else close it
+
+  if (isDrawerClosed) {
+    clearTimeout(toggleSidenavOptions);
+    // Remove a -400px translate from the div and shift the rest of the page 400px
+    drawer.style.transform = `translateX(0)`;
+    canvas_container.style.marginLeft = `${DRAWER_WIDTH}px`;
+
+    sidenav_options.forEach((btn) => {
+      btn.style.display = "none";
+    });
+  } else {
+    // Hide any open pickers on drawer close
+    for (let picker in picker_map) {
+      picker_map[picker].hide();
+    }
+
+    drawer.style.transform = `translateX(-${DRAWER_WIDTH}px)`;
+    canvas_container.style.marginLeft = "0";
+
+    // Show the hamburger icon again after 0.5s + 0.05s delay
+    // i.e once the drawer is hidden (check ui.css ln 21)
+    toggleSidenavOptions = setTimeout(() => {
+      sidenav_options.forEach((btn) => {
+        btn.style.display = "block";
+      });
+    }, 550);
+  }
+
+  isDrawerClosed = !isDrawerClosed;
+}
+
+/**
+ * Toggle pause on user interaction
+ */
+function pauseVisual() {
+  isPaused = !isPaused;
+
+  if (!isPaused) {
+    update();
+  }
+}
+
+/**
+ * Show the shortcut menu on user interaction
+ */
+function showShortcutsMenu() {
+  if (!isShortcutMenuVisible) {
+    shortcut_modal_elems["container"].style.display = "block";
+    isShortcutMenuVisible = true;
+    isShortcutsEnabled = false;
+  }
+}
+
+/**
+ * Hide the shortcut menu on user interaction
+ */
+function hideShortcutsMenu() {
+  if (isShortcutMenuVisible) {
+    shortcut_modal_elems["container"].style.display = "none";
+    isShortcutMenuVisible = false;
+    isShortcutsEnabled = true;
+  }
+}
+
+/**
+ * Show the reset menu on user interaction
+ */
+function showResetMenu() {
+  if (!isResetMenuVisible) {
+    reset_modal_elems["container"].style.display = "block";
+    isResetMenuVisible = true;
+    isShortcutsEnabled = false;
+  }
+}
+
+/**
+ * Hide the reset menu on user interaction
+ */
+function hideResetMenu() {
+  if (isResetMenuVisible) {
+    reset_modal_elems["container"].style.display = "none";
+    isResetMenuVisible = false;
+    isShortcutsEnabled = true;
+  }
+}
+
+/**
+ * --------------------------------------------------------------------------------
+ * END OF USER INTERACTION FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ *
+ * @param {Event} e The result of the Keyup event
+ */
+function keyboardControls(e) {
+  if (isShortcutsEnabled && Object.keys(keyMap).length === 1) {
+    if (e.key === "p" || e.key === "P") {
+      pauseVisual();
+    }
+    if ((e.key === "f" || e.key === "F") && isDrawerClosed) {
+      toggleFullScreen();
+    }
+
+    if ((e.key === "D" || e.key === "d") && !isFullScreen) {
+      toggleDrawer();
+    }
+  }
+
+  keyMap = {};
+}
+
+/**
+ * --------------------------------------------------------------------------------
+ * HANDLE LOCAL STORAGE
+ * These functions take setting inputs from the user and updates the local storage.
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * Initialize local storage with a settings object of default values.
+ */
+function populateSettings() {
+  // The default settings to fall back to
+  let initial_settings_obj = {
+    bg_color: ["#00000f", "#00000f", "#00000f"],
+    start_gdt: ["#26f596", "#26f596", "#26f596"],
+    end_gdt: ["#0499f2", "#0499f2", "#0499f2"],
+    radius: [140, 140, 140],
+    numBars: [150, 150, 150],
+    barHeight: [160, 160, 160],
+  };
+  for (let key in initial_settings_obj) {
+    localStorage.setItem(key, JSON.stringify(initial_settings_obj[key]));
+  }
+}
+
+/**
+ * Push the updated values of the settings object to local storage.
+ */
+function updateSettings() {
+  for (let key in settings_obj) {
+    localStorage.setItem(key, JSON.stringify(settings_obj[key]));
+  }
+}
+
+/**
+ * Clear local storage.
+ */
+function clearSettings() {
+  localStorage.clear();
+}
+
+/**
+ * Get the data stored in local storage and return the string as an object.
+ */
+function getSettings() {
+  let settings = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    settings[key] = JSON.parse(localStorage.getItem(key));
+  }
+
+  return settings;
+}
+
+/**
+ * --------------------------------------------------------------------------------
+ * END OF LOCAL STORAGE FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * --------------------------------------------------------------------------------
+ * INPUT RANGE SLIDER FUNCTIONS
+ * Functions to change input slider values on state change.
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * Update the bar height range input.
+ * It takes the maximum value for the slider and sets the minimum and current value accordingly.
+ * @param {Number} max_height The maximum height value for the bar height slider
+ */
+function updateBarHeightSlider(max_height) {
+  let min = Math.floor(max_height / 3);
+
+  // Round values to multiple of 20 and clamp it against a minimum value of 20
+  max_height = max_height > 20 ? max_height - (max_height % 20) : 20;
+  min_height = min > 20 ? min - (min % 20) : 20;
+
+  // Update the slider max/min values
+  barHeight_slider["slider"].max = max_height;
+  barHeight_slider["slider"].min = min_height;
+
+  // Clamp previously user selected bar height against both extremes
+  if (MAX_BAR_HEIGHT > max_height) {
+    MAX_BAR_HEIGHT = max_height;
+  } else if (MAX_BAR_HEIGHT < min_height) {
+    MAX_BAR_HEIGHT = min_height;
+  }
+
+  barHeight_slider["slider"].value = MAX_BAR_HEIGHT;
+
+  // Update the Slider label with the determined values
+  updateSliderLabels(
+    barHeight_slider["min_label"],
+    barHeight_slider["max_label"],
+    min_height,
+    max_height
+  );
+}
+
+/**
+ * Update the radius range input.
+ * It takes the maximum value for the slider and sets the minimum and current value accordingly.
+ * @param {Number} max_radius The maximum radius value for the radius slider
+ */
+function updateRadiusSlider(max_radius) {
+  let min_radius = Math.floor(max_radius * 0.667);
+
+  // Round values to multiple of 20 and clamp it against a minimum value of 20
+  max_radius = max_radius > 20 ? max_radius - (max_radius % 20) : 20;
+  min_radius = min_radius > 20 ? min_radius - (min_radius % 20) : 20;
+
+  // Update the slider max/min values
+  radius_slider["slider"].max = max_radius;
+  radius_slider["slider"].min = min_radius;
+
+  // Clamp previously user selected radius against both extremes
+  if (RADIUS > max_radius) {
+    RADIUS = max_radius;
+  } else if (RADIUS < min_radius) {
+    RADIUS = min_radius;
+  }
+
+  radius_slider["slider"].value = RADIUS;
+
+  // Update the Slider label with the determined values
+  updateSliderLabels(
+    radius_slider["min_label"],
+    radius_slider["max_label"],
+    min_radius,
+    max_radius
+  );
+}
+
+/**
+ * Update the numBars range input.
+ * It takes the maximum value for the slider and sets the minimum and current value accordingly.
+ * @param {Number} max_radius The maximum radius value for the radius slider
+ */
+function updateNumBarSlider(max_radius) {
+  let max_circumference = 2 * Math.PI * max_radius,
+    min_circumference = 2 * Math.PI * radius_slider["slider"].min,
+    max_bars = Math.floor(max_circumference / (MIN_BAR_WIDTH * 2)),
+    min_bars = Math.floor(min_circumference / (MAX_BAR_WIDTH * 2));
+
+  // Round value to multiple of 50 and clamp it against a minimum value of 50
+  max_bars = max_bars > 50 ? max_bars - (max_bars % 50) : 50;
+  min_bars = min_bars > 50 ? min_bars - (min_bars % 50) : 50;
+
+  // Update the slider max/min values
+  numBars_slider["slider"].max = max_bars;
+  numBars_slider["slider"].min = min_bars;
+
+  // Clamp previously user selected numBars against both extremes
+  if (numBars > max_bars) {
+    numBars = max_bars;
+  } else if (numBars < min_bars) {
+    numBars = min_bars;
+  }
+
+  numBars_slider["slider"].value = numBars;
+
+  // Update the Slider label with the determined values
+  updateSliderLabels(
+    numBars_slider["min_label"],
+    numBars_slider["max_label"],
+    min_bars,
+    max_bars
+  );
+}
+
+/**
+ * Update the range input by update the HTML element with a given value
+ * @param {HTMLElement} min_label DOM Node containing slider's mininum value label
+ * @param {HTMLElement} max_label DOM Node containing slider's maximum value label
+ * @param {Number} min_label_data New data value that will replace old minimum label value
+ * @param {Number} max_label_data New data value that will replace old maximum label value
+ */
+function updateSliderLabels(
+  min_label,
+  max_label,
+  min_label_data,
+  max_label_data
+) {
+  max_label.removeChild(max_label.firstChild);
+  min_label.removeChild(min_label.firstChild);
+
+  let maxTextNode = document.createTextNode(max_label_data);
+  let minTextNode = document.createTextNode(min_label_data);
+
+  max_label.appendChild(maxTextNode);
+  min_label.appendChild(minTextNode);
+}
+
+/**
+ * --------------------------------------------------------------------------------
+ * END OF INPUT RANGE SLIDER FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * --------------------------------------------------------------------------------
+ * HELPER FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
+
+/**
+ * Draw each individual audio bar in the provide canvas context
+ * @param {CanvasRenderingContext2D} ctx The current canvas context
+ * @param {Array} point A 2-D array containing the starting position of the audio bar.
+ * @param {Number} degree The degree to which the audio bar should be rotated. Value in degrees.
+ * @param {String} color A string in RGB(...) format to set as fill color for the audio bar.
+ */
+function drawAudioBar(ctx, point, degree, color) {
+  ctx.save();
+  ctx.translate(point[0], point[1]);
+  ctx.rotate((degree * Math.PI) / 180);
+  roundRect(ctx, -barWidth / 2, 0, barWidth, barHeight, 2, color);
+  ctx.restore();
+}
+
+/**
+ * Source: https://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
+ * Edited by Me for the specific use-case.
+ * Draws a rounded rectangle using the current state of the canvas.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Number} x      The top left x coordinate
+ * @param {Number} y      The top left y coordinate
+ * @param {Number} width  The width of the rectangle
+ * @param {Number} height The height of the rectangle
+ * @param {Number} radius The corner radius
+ * @param {String} color  The fill color of the rectangle
+ */
+function roundRect(ctx, x, y, width, height, radius, color) {
+  radius = width > 2 ? radius : width - 1;
+
+  radius = { tl: radius, tr: radius, br: radius, bl: radius };
+  ctx.beginPath();
+  ctx.moveTo(x + radius.tl, y);
+  ctx.lineTo(x + width - radius.tr, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+  ctx.lineTo(x + width, y + height - radius.br);
+  ctx.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - radius.br,
+    y + height
+  );
+  ctx.lineTo(x + radius.bl, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+  ctx.lineTo(x, y + radius.tl);
+  ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+/**
+ * Append a close button to the currently open jscolor instance.
+ */
+function addColorPickerCloseBtn() {
   // Append a custom close button to the color_picker on the fly
   let jscolor_picker = document.getElementsByClassName("jscolor-picker")[0],
     close_btn = document.createElement("button");
@@ -800,140 +1115,9 @@ function toggleColorPicker() {
   Object.assign(close_btn.style, styles);
 }
 
-function updateBarHeightSlider(max_height) {
-  let min = Math.floor(max_height / 3);
-  max_height = max_height > 20 ? max_height - (max_height % 20) : 20;
-
-  min_height = min - (min % 20);
-  min_height = min < 20 ? 20 : min_height;
-  barHeight_slider["slider"].max = max_height;
-  barHeight_slider["slider"].min = min_height;
-
-  // Clamp bar height to both extremes
-  if (MAX_BAR_HEIGHT > max_height) {
-    MAX_BAR_HEIGHT = max_height;
-  } else if (MAX_BAR_HEIGHT < min_height) {
-    MAX_BAR_HEIGHT = min_height;
-  }
-
-  barHeight_slider["slider"].value = MAX_BAR_HEIGHT;
-
-  updateSliderLabels(
-    barHeight_slider["min_label"],
-    barHeight_slider["max_label"],
-    min_height,
-    max_height
-  );
-}
-
-function updateRadiusSlider(max_radius) {
-  let min_radius = Math.floor(max_radius * 0.667);
-  max_radius = max_radius > 20 ? max_radius - (max_radius % 20) : 20;
-
-  min_radius = min_radius - (min_radius % 20);
-  min_radius = min_radius < 20 ? 20 : min_radius;
-  radius_slider["slider"].max = max_radius;
-  radius_slider["slider"].min = min_radius;
-  if (RADIUS > max_radius) {
-    RADIUS = max_radius;
-  } else if (RADIUS < min_radius) {
-    RADIUS = min_radius;
-  }
-
-  radius_slider["slider"].value = RADIUS;
-
-  updateSliderLabels(
-    radius_slider["min_label"],
-    radius_slider["max_label"],
-    min_radius,
-    max_radius
-  );
-}
-
-function updateNumBarSlider(max_radius) {
-  let max_circumference = 2 * Math.PI * max_radius,
-    min_circumference = 2 * Math.PI * radius_slider["slider"].min;
-  let max_bars = Math.floor(max_circumference / (MIN_BAR_WIDTH * 2)),
-    min_bars = Math.floor(min_circumference / (MAX_BAR_WIDTH * 2));
-
-  max_bars = max_bars - (max_bars % 50);
-  min_bars = min_bars - (min_bars % 50);
-  min_bars = min_bars < 50 ? 50 : min_bars;
-
-  numBars_slider["slider"].max = max_bars;
-  numBars_slider["slider"].min = min_bars;
-
-  if (numBars > max_bars) {
-    numBars = max_bars;
-  } else if (numBars < min_bars) {
-    numBars = min_bars;
-  }
-
-  numBars_slider["slider"].value = numBars;
-
-  updateSliderLabels(
-    numBars_slider["min_label"],
-    numBars_slider["max_label"],
-    min_bars,
-    max_bars
-  );
-}
-
 /**
- *
- * @param {HTMLElement} min_label DOM Node containing slider's mininum value label
- * @param {HTMLElement} max_label DOM Node containing slider's maximum value label
- * @param {Number} min_label_data New data value that will replace old minimum label value
- * @param {Number} max_label_data New data value that will replace old maximum label value
+ * In fullscreen mode, show the cursor on mousemove, else hide it after 500ms
  */
-function updateSliderLabels(
-  min_label,
-  max_label,
-  min_label_data,
-  max_label_data
-) {
-  max_label.removeChild(max_label.firstChild);
-  min_label.removeChild(min_label.firstChild);
-
-  let maxTextNode = document.createTextNode(max_label_data);
-  let minTextNode = document.createTextNode(min_label_data);
-
-  max_label.appendChild(maxTextNode);
-  min_label.appendChild(minTextNode);
-}
-
-function showShortcutsMenu() {
-  if (!isShortcutMenuVisible) {
-    shortcut_modal_elems["container"].style.display = "block";
-    isShortcutMenuVisible = true;
-    isShortcutsEnabled = false;
-  }
-}
-
-function hideShortcutsMenu() {
-  if (isShortcutMenuVisible) {
-    shortcut_modal_elems["container"].style.display = "none";
-    isShortcutMenuVisible = false;
-    isShortcutsEnabled = true;
-  }
-}
-
-function showResetMenu() {
-  if (!isResetMenuVisible) {
-    reset_modal_elems["container"].style.display = "block";
-    isResetMenuVisible = true;
-    isShortcutsEnabled = false;
-  }
-}
-
-function hideResetMenu() {
-  if (isResetMenuVisible) {
-    reset_modal_elems["container"].style.display = "none";
-    isResetMenuVisible = false;
-    isShortcutsEnabled = true;
-  }
-}
-
 function handleMouseMove() {
   clearTimeout(mouseMoveEnd);
   canvas.style.cursor = "default";
@@ -942,3 +1126,9 @@ function handleMouseMove() {
     canvas.style.cursor = "none";
   }, 500);
 }
+
+/**
+ * --------------------------------------------------------------------------------
+ * END OF HELPER FUNCTIONS
+ * --------------------------------------------------------------------------------
+ */
