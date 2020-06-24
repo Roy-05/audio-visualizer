@@ -43,7 +43,8 @@ let isDrawerClosed = true,
   isResetMenuVisible = false,
   isPaused = false,
   reset = false,
-  isFirstLoad = false,
+  isMouseMoving = false,
+  mouseMoveEnd,
   picker_map = {},
   color_picker_btns = [],
   keyMap = {},
@@ -146,10 +147,11 @@ canvas.addEventListener("fullscreenchange", () => {
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     canvas.requestFullscreen();
-    // canvas.style.cursor = "none";
+    canvas.addEventListener("mousemove", handleMouseMove);
   } else if (document.exitFullscreen) {
     document.exitFullscreen();
-    // canvas.style.removeProperty("cursor");
+    canvas.removeEventListener("mousemove", handleMouseMove);
+    canvas.style.cursor = "default";
   }
 }
 
@@ -444,10 +446,6 @@ function updateBarHeightSlider(max_height) {
     MAX_BAR_HEIGHT = min_height;
   }
 
-  if (reset || isFirstLoad) {
-    MAX_BAR_HEIGHT = (max_height + min_height) / 2;
-  }
-
   barHeight_slider["slider"].value = MAX_BAR_HEIGHT;
 
   updateSliderLabels(
@@ -470,10 +468,6 @@ function updateRadiusSlider(max_radius) {
     RADIUS = max_radius;
   } else if (RADIUS < min_radius) {
     RADIUS = min_radius;
-  }
-
-  if (reset || isFirstLoad) {
-    RADIUS = (max_radius + min_radius) / 2;
   }
 
   radius_slider["slider"].value = RADIUS;
@@ -503,10 +497,6 @@ function updateNumBarSlider(max_radius) {
     numBars = max_bars;
   } else if (numBars < min_bars) {
     numBars = min_bars;
-  }
-
-  if (reset || isFirstLoad) {
-    numBars = (max_bars + min_bars) / 2;
   }
 
   numBars_slider["slider"].value = numBars;
@@ -572,4 +562,13 @@ function hideResetMenu() {
     isResetMenuVisible = false;
     isShortcutsEnabled = true;
   }
+}
+
+function handleMouseMove() {
+  clearTimeout(mouseMoveEnd);
+  canvas.style.cursor = "default";
+
+  mouseMoveEnd = setTimeout(() => {
+    canvas.style.cursor = "none";
+  }, 500);
 }
