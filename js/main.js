@@ -359,7 +359,7 @@ function update() {
  */
 function visualize() {
   // Set the Analyser Node FFT size.
-  analyser.fftSize = numBars > 512 ? 4096 : 2048; // If the numBars is large, increase FFT size
+  analyser.fftSize = numBars > 512 ? 2048 : 1024; // If the numBars is large, increase FFT size
 
   // Buffer Length is half the fft size
   const bufferLength = analyser.frequencyBinCount;
