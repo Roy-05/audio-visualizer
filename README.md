@@ -1,20 +1,24 @@
-# Audio Visualizer
+# Audio Visualizer 
 
-A simple web app to visualize sound using the FFT ([Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform)) algorithm built in the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+A simple yet highly customizable [Web App](https://roy-05.github.io/audio-visualizer/) for dynamically generating cool visualizations on your music.  Just fire up your playlist, turn on the visualizer, lean back, and enjoy!
 
-## TODO:
+## Features:
 
-- [x] ~Need to stop requests to draw function on pause~
-- [x] ~Convert horizontal visualization into circular~
-- [x] ~Fix Canvas Blur for high DPI screens~
-- [ ] Refactor
-- [ ] CSS tasks:
+The Audio Visualizer UI provides numerous options to customize and personalize the visualizer to your liking:  
+  1. Create beautiful color gradients for the audio visualizations. By changing both the start and end color values, the potential for generating unique color gradients are limitless!  
+  
+  2. Change the background color – Keep the default background, or pick your own color that will complement the chosen color gradient.  
+  
+<p align="center">
+    <img src="https://github.com/Roy-05/audio-visualizer/blob/master/assets/change-color.gif" width="500" height="286" />
+</p>
 
-  - ~Format Audio Bar heights~
-  - ~Format Canvas Size and position in middle of the screen~
-  - ~Make canvas size and no. of Audio Bars responsive~
-  - ~Make Audio Bars have rounded edges~
-  - ~Add background, button CSS and general improvements~
-  - Add transition effect on pause for audio bars
+  3. Customize the number of audio bars, the radius of the visualizer, and even the max height for the audio bar!
 
-- [ ] Responsiveness
+<p align="center">
+    <img src="https://github.com/Roy-05/audio-visualizer/blob/master/assets/change-slider-vals.gif" width="500" height="286" />
+</p>
+
+## Questions? Comments? 
+
+Feel free to fork the repository and tweak the code to your heart's content! Have an idea you would like to implement? Raise an issue, make a pull request or contact me at saket.roy@hotmail.com
