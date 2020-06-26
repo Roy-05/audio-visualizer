@@ -1,20 +1,10 @@
-# Audio Visualizer
+# Audio Visualizer 
 
-A simple web app to visualize sound using the FFT ([Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform)) algorithm built in the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+A simple yet highly customizable [Web App](https://roy-05.github.io/audio-visualizer/) for dynamically generating cool visualizations on your music.  Just fire up your playlist, turn on the visualizer, lean back, and enjoy!
 
-## TODO:
+## Features:
 
-- [x] ~Need to stop requests to draw function on pause~
-- [x] ~Convert horizontal visualization into circular~
-- [x] ~Fix Canvas Blur for high DPI screens~
-- [ ] Refactor
-- [ ] CSS tasks:
-
-  - ~Format Audio Bar heights~
-  - ~Format Canvas Size and position in middle of the screen~
-  - ~Make canvas size and no. of Audio Bars responsive~
-  - ~Make Audio Bars have rounded edges~
-  - ~Add background, button CSS and general improvements~
-  - Add transition effect on pause for audio bars
-
-- [ ] Responsiveness
+The Audio Visualizer UI provides numerous options to customize and personalize the visualizer to your liking –  
+  * Create beautiful color gradients for the audio visualizations. By changing both the start and end color values, the potential for generating unique color gradients are limitless!  
+  * Change the background color – Keep the default background, or pick your own color that will complement the chosen color gradient.  
+  * Set the 
